@@ -3,18 +3,197 @@
 xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout">
 <head>
 	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<title>Inky</title>
+	<!-- 합쳐지고 최소화된 최신 CSS -->
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap.min.css">
+	<!-- 부가적인 테마 -->
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap-theme.min.css">
+	<style>
+	html,body{
+		margin:0;
+	}
+	hr{
+		border-width:5px;
+	}
+	@media (min-width:768px){
+		#topNav{
+			display:none;
+		}
+		#sideBigNav{
+			height: 100%;
+	  		width: 200px;
+	  		position: fixed;
+	  		z-index: 1;
+	  		top: 0;
+	  		left: 0;
+	  		background-color: blue;
+	  		overflow-x: hidden;
+		}
+		section{
+			margin-left:200px;
+		}
+		footer{
+			margin:0;
+			padding:0;
+			margin-left:200px;
+		}
+		.inky{
+			text-align:center;
+			color:white;
+			padding-top:5px;
+			font-weight:bold;
+		}
+		.memberBtn{
+			list-style-type:none;
+			margin:0;
+			padding:0;
+			overflow:hidden;
+			width:200px;
+			margin-top:30px;
+		}
+		.memberBtn li{
+			float:left;
+			padding:10px 0;
+			border :1px solid #fff;
+		}
+		.memberBtn li:first-child{
+			border-left:none;
+		}
+		.memberBtn li:last-child{
+			border-left:none;
+		}
+		.memberBtn li a{
+			display:block;
+			color:white;
+			text-align:center;
+			text-decoration:none;
+			width:99px;
+		}
+		
+		.articleMenu{
+			list-style-type: none;
+  			margin: 0;
+  			padding: 0;
+  			width: 200px;
+  			margin-top:200px;
+		}
+		.articleMenu li{
+			padding:20px 10px;
+		}
+		.articleMenu li a{
+			display:block;
+			color:white;
+			text-decoration:none;
+		}
+	}
+	@media (max-width:768px){
+		#sideBigNav{
+			display:none;
+		}	
+		#topNav{ 
+			position:fixed;
+			height: 50px;
+	  		width: 100%;
+	  		z-index: 1;
+	  		top: 0;
+	  		background-color: blue;
+		}
+		#topNav .inky{
+			position:absolute;
+			top: 50%;  
+    		left: 50%; 
+    		transform: translate(-50%, -100%);
+    		 
+			color:white;
+			font-weight:bold;
+		}
+		#topNav .glyphicon-th-list{
+			position:absolute;
+			top: 50%;
+			left:5%;
+			transform: translate(-5%, -50%);
+			
+			color:white;
+		}
+		
+		#topNav .glyphicon-pencil{
+			position:absolute;
+			top: 50%;
+			left:90%;
+			transform: translate(-90%, -50%);
+			
+			color:white;
+		}
+		#topNav .glyphicon-user{
+			position:absolute;
+			top: 50%;
+			left:95%;
+			transform: translate(-95%, -50%);
+			
+			color:white;
+		}
+		section{
+			margin-top:50px;
+		}
+	}
+	</style>
 </head>
 <body>
-	<div class="header">
-	HEADER
+	<div id="sideBigNav">
+		<h1 class="inky">INKY</h1>
+		<ul class="memberBtn">
+			<li>
+				<a>
+					<i class="glyphicon glyphicon-pencil"></i>
+					</i><span>로그인</span>
+				</a>
+			</li>
+			<li>
+				<a>
+					<i class="glyphicon glyphicon-user"></i>
+					<span>회원가입</span>
+				</a>
+			</li>
+		</ul>
+		<ul class="articleMenu">
+			<li>
+				<a>
+					<i class="glyphicon glyphicon-heart-empty"></i>
+					<span>커뮤니티</span>
+				</a>
+			</li>
+			<li>
+				<a>
+					<i class="glyphicon glyphicon-heart-empty"></i>
+					<span>커뮤니티</span>
+				</a>
+			</li>
+			<li>
+				<a>
+					<i class="glyphicon glyphicon-heart-empty"></i>
+					<span>커뮤니티</span>
+				</a>
+			</li>
+		</ul>
 	</div>
-	<div layout:fragment="content">
+	<div id="topNav">
+		<i class="glyphicon glyphicon-th-list"></i>
+		<h1 class="inky">INKY</h1>
+		<i class="glyphicon glyphicon-pencil"></i>
+		<i class="glyphicon glyphicon-user"></i>
+	</div>
+	<section layout:fragment="content">
 	
-	</div>
-	<div class="footer">
-	FOOTER
-	</div>
+	</section>
+	<footer>
+	<hr>
+	<h1>FOOTER</h1>
+	</footer>
+	<!-- jQuery (부트스트랩의 자바스크립트 플러그인을 위해 필요합니다) -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
+    <!-- 합쳐지고 최소화된 최신 자바스크립트 -->
+	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/js/bootstrap.min.js"></script>
 	<th:block layout:fragment="script"></th:block>
 </body>
 </html>
