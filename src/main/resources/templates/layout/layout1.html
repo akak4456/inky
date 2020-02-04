@@ -16,8 +16,11 @@ xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout">
 	hr{
 		border-width:5px;
 	}
+	a{
+		text-decoration:none;
+	}
 	@media (min-width:768px){
-		#topNav{
+		#topNav,#topNavExtend{
 			display:none;
 		}
 		#sideBigNav{
@@ -27,7 +30,7 @@ xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout">
 	  		z-index: 1;
 	  		top: 0;
 	  		left: 0;
-	  		background-color: blue;
+	  		background-color: rgb(0, 89, 171);
 	  		overflow-x: hidden;
 		}
 		section{
@@ -97,7 +100,7 @@ xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout">
 	  		width: 100%;
 	  		z-index: 1;
 	  		top: 0;
-	  		background-color: blue;
+	  		background-color: rgb(0, 89, 171);
 		}
 		#topNav .inky{
 			position:absolute;
@@ -133,6 +136,27 @@ xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout">
 			
 			color:white;
 		}
+		#topNavExtend{
+			display:none;
+			background-color:rgb(0, 89, 171);
+			position:fixed;
+			width:100%;
+			height:150px;
+		}
+		.articleTopMenu {
+			list-style-type: none;
+  			margin: 0;
+  			padding: 0;
+  			width:100%;
+		}
+		.articleTopMenu li{
+			width:100%;
+			height:50px;
+			text-align:center;
+		}
+		.articleTopMenu li a{
+			color:white;
+		}
 		section{
 			margin-top:50px;
 		}
@@ -140,49 +164,73 @@ xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout">
 	</style>
 </head>
 <body>
-	<div id="sideBigNav">
-		<h1 class="inky">INKY</h1>
-		<ul class="memberBtn">
-			<li>
-				<a>
-					<i class="glyphicon glyphicon-pencil"></i>
-					</i><span>로그인</span>
-				</a>
-			</li>
-			<li>
-				<a>
-					<i class="glyphicon glyphicon-user"></i>
-					<span>회원가입</span>
-				</a>
-			</li>
-		</ul>
-		<ul class="articleMenu">
-			<li>
-				<a>
-					<i class="glyphicon glyphicon-heart-empty"></i>
-					<span>커뮤니티</span>
-				</a>
-			</li>
-			<li>
-				<a>
-					<i class="glyphicon glyphicon-heart-empty"></i>
-					<span>커뮤니티</span>
-				</a>
-			</li>
-			<li>
-				<a>
-					<i class="glyphicon glyphicon-heart-empty"></i>
-					<span>커뮤니티</span>
-				</a>
-			</li>
-		</ul>
-	</div>
-	<div id="topNav">
-		<i class="glyphicon glyphicon-th-list"></i>
-		<h1 class="inky">INKY</h1>
-		<i class="glyphicon glyphicon-pencil"></i>
-		<i class="glyphicon glyphicon-user"></i>
-	</div>
+	<nav>
+		<div id="sideBigNav">
+			<h1 class="inky">INKY</h1>
+			<ul class="memberBtn">
+				<li>
+					<a>
+						<i class="glyphicon glyphicon-pencil"></i>
+						</i><span>로그인</span>
+					</a>
+				</li>
+				<li>
+					<a>
+						<i class="glyphicon glyphicon-user"></i>
+						<span>회원가입</span>
+					</a>
+				</li>
+			</ul>
+			<ul class="articleMenu">
+				<li>
+					<a>
+						<i class="glyphicon glyphicon-search"></i>
+						<span>QnA</span>
+					</a>
+				</li>
+				<li>
+					<a>
+						<i class="glyphicon glyphicon-heart-empty"></i>
+						<span>커뮤니티</span>
+					</a>
+				</li>
+				<li>
+					<a>
+						<i class="glyphicon glyphicon-star-empty"></i>
+						<span>Tech</span>
+					</a>
+				</li>
+			</ul>
+		</div>
+		<div id="topNav">
+			<i class="glyphicon glyphicon-th-list"></i>
+			<h1 class="inky">INKY</h1>
+			<i class="glyphicon glyphicon-pencil"></i>
+			<i class="glyphicon glyphicon-user"></i>
+		</div>
+		<div id="topNavExtend">
+			<ul class="articleTopMenu">
+				<li>
+					<a>
+						<i class="glyphicon glyphicon-search"></i>
+						<span>QnA</span>
+					</a>
+				</li>
+				<li>
+					<a>
+						<i class="glyphicon glyphicon-heart-empty"></i>
+						<span>커뮤니티</span>
+					</a>
+				</li>
+				<li>
+					<a>
+						<i class="glyphicon glyphicon-star-empty"></i>
+						<span>Tech</span>
+					</a>
+				</li>
+			</ul>
+		</div>
+	</nav>
 	<section layout:fragment="content">
 	
 	</section>
@@ -194,6 +242,19 @@ xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
     <!-- 합쳐지고 최소화된 최신 자바스크립트 -->
 	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/js/bootstrap.min.js"></script>
+	<script>
+		var isOpenTopNavExtend = false;
+		$(document).ready(function(){
+			$(".glyphicon-th-list").on("click",function(e){
+				if(isOpenTopNavExtend){
+					$("#topNavExtend").css("display","none");
+				}else{
+					$("#topNavExtend").css("display","block");
+				}
+				isOpenTopNavExtend = !isOpenTopNavExtend;
+			});
+		});
+	</script>
 	<th:block layout:fragment="script"></th:block>
 </body>
 </html>
