@@ -5,7 +5,7 @@ var boardManager = (function(){
 		console.log(obj);
 		$.ajax({
 			type:'post',
-			url:'/articles/communitywrite',
+			url:'/community/write',
 			data:JSON.stringify(obj),
 			beforeSend:function(xhr){
 				xhr.setRequestHeader(obj.csrf.headerName,obj.csrf.token);

@@ -38,13 +38,13 @@ layout:decorate="~{/layout/layout1}">
 <script src="https://cdn.ckeditor.com/ckeditor5/16.0.0/classic/ckeditor.js"></script>
 <script th:inline="javascript" th:src="@{'/js/board.js'}"></script>
 <script th:inline="javascript" th:src="@{'/js/classiceditor.js'}"></script>
+<script th:inline="javascript" th:src="@{'/js/isEmpty.js'}"></script>
 <script th:inline="javascript">
-
+var csrf = JSON.parse('[[${_csrf}]]');
 $(document).ready(function(){
-	var csrf = JSON.parse('[[${_csrf}]]');
 	console.log(csrf);
 	$("#submit").on("click",function(e){
-		const editorData = editor.getData();
+		const editorData = editoro.getData();
 		//console.log(editorData);
 		var saveData = {
 			userid:$("input[name='writer']").val(),

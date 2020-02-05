@@ -1,74 +1,100 @@
-function ajax_file_upload(p) {		
-	if (!p.files || !p.loader || !p.path) return new XMLHttpRequest;		
-	var formData = new FormData();
-	for (var idx in p.files) {
-		formData.append("uploadfile", p.files[idx]);
-	}
-	formData.append("path", p.path);		
-	return $.ajax({
-		url: '/api/common/fileupload',
-		processData: false,
-		contentType: false,
-		data: formData,
-		type: 'POST',
-		onprogress: function (e) {
-			p.fn_progress && p.fn_progress(e);
-		},
-		success: function(e){
-			p.fn_success && p.fn_success(e);
-		},
-		error: function (e) {
-			p.fn_error && p.fn_error;
-		},
-		abort: function (e) {
-			p.fn_abort && p.fn_abort(e);
-		}
-	});
+class MyUploadAdapter {
+    constructor( loader ) {
+        // The file loader instance to use during the upload.
+        this.loader = loader;
+    }
+    // Starts the upload process.
+    upload() {
+        return this.loader.file
+            .then( file => new Promise( ( resolve, reject ) => {
+                this._initRequest();
+                this._initListeners( resolve, reject, file );
+                this._sendRequest( file );
+            } ) );
+    }
+    // Aborts the upload process.
+    abort() {
+        if ( this.xhr ) {
+            this.xhr.abort();
+        }
+    }
+    // Initializes the XMLHttpRequest object using the URL passed to the constructor.
+    _initRequest() {
+        const xhr = this.xhr = new XMLHttpRequest();
+        // Note that your request may look different. It is up to you and your editor
+        // integration to choose the right communication channel. This example uses
+        // a POST request with JSON as a data structure but your configuration
+        // could be different.
+        xhr.open( 'POST', '/fileupload', true );
+        xhr.responseType = 'json';
+    }
+    // Initializes XMLHttpRequest listeners.
+    _initListeners( resolve, reject, file ) {
+        const xhr = this.xhr;
+        const loader = this.loader;
+        const genericErrorText = `Couldn't upload file: ${ file.name }.`;
+        xhr.addEventListener( 'error', () => reject( genericErrorText ) );
+        xhr.addEventListener( 'abort', () => reject() );
+        xhr.addEventListener( 'load', () => {
+            const response = xhr.response;
+            console.log("response:"+response);
+            // This example assumes the XHR server's "response" object will come with
+            // an "error" which has its own "message" that can be passed to reject()
+            // in the upload promise.
+            //
+            // Your integration may handle upload errors in a different way so make sure
+            // it is done properly. The reject() function must be called when the upload fails.
+            if ( !response || response.error ) {
+                return reject( response && response.error ? response.error.message : genericErrorText );
+            }
+            // If the upload is successful, resolve the upload promise with an object containing
+            // at least the "default" URL, pointing to the image on the server.
+            // This URL will be used to display the image in the content. Learn more in the
+            // UploadAdapter#upload documentation.
+            resolve( {
+                default: response.url
+            } );
+        } );
+        // Upload progress when it is supported. The file loader has the #uploadTotal and #uploaded
+        // properties which are used e.g. to display the upload progress bar in the editor
+        // user interface.
+        if ( xhr.upload ) {
+            xhr.upload.addEventListener( 'progress', evt => {
+                if ( evt.lengthComputable ) {
+                    loader.uploadTotal = evt.total;
+                    loader.uploaded = evt.loaded;
+                }
+            } );
+        }
+    }
+    // Prepares the data and sends the request.
+    _sendRequest( file ) {
+        // Prepare the form data.
+        const data = new FormData();
+        data.append( 'upload', file );
+        // Important note: This is the right place to implement security mechanisms
+        // like authentication and CSRF protection. For instance, you can use
+        // XMLHttpRequest.setRequestHeader() to set the request headers containing
+        // the CSRF token generated earlier by your application.
+        this.xhr.setRequestHeader(csrf.headerName,csrf.token);
+        // Send the request.
+        this.xhr.send( data );
+    }
 }
-var CustomUploadAdapter = function (loader, path, fn_resolve) {
-	this.constructor = function ( loader ) {
-		this.loader = loader;
-		this.path = path;
-		this.fn_resolve = fn_resolve;
-	};
-	this.upload = function () {
-		return new Promise(function (resolve, reject) {
-			this.xhr = ajax_file_upload({
-				loader: loader,
-				resolve: resolve,
-				reject: reject,
-				files: [loader.file],
-				path: path,
-				fn_progress: function (e) {
-					e.lengthComputable && (loader.uploadTotal = e.total, loader.uploaded = e.loaded);
-				},
-				fn_success: function (e) {
-					resolve(fn_resolve && fn_resolve(e));
-				},
-				fn_error: function (e) {
-					reject("upload fail =>" + `${loader.file.name}.`);
-				},
-				fn_abort: reject
-			});
-		});
-	};
-	this.abort = function () {
-		return this.xhr.abort && this.xhr.abort();
-	}
-};
 
+// ...
+
+function MyCustomUploadAdapterPlugin( editor ) {
+    editor.plugins.get( 'FileRepository' ).createUploadAdapter = ( loader ) => {
+        // Configure the URL to the upload script in your back-end here!
+        return new MyUploadAdapter( loader );
+    };
+}
 ClassicEditor.create( document.querySelector( '#editor' ), {
-	language:"ko"
+	extraPlugins: [ MyCustomUploadAdapterPlugin ]
 })
 .then(function (editor) {
 	editoro = editor;
-	editor.plugins.get("FileRepository").createUploadAdapter = function (loader) {
-		return new CustomUploadAdapter(loader, "/images/board/press", function (result) {
-			var fileSeq = isEmpty(result[0]) ? "noimage" : result[0];
-			var imageUrl = window.location.protocol + "//" + window.location.host + "/image/" + fileSeq;
-			return {"default" : imageUrl};
-		});
-	};
 })
 .catch(function (error) {
 	console.log( error );
