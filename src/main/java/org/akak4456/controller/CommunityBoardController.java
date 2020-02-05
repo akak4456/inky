@@ -1,7 +1,5 @@
 package org.akak4456.controller;
 
-import javax.annotation.security.PermitAll;
-
 import org.akak4456.domain.CommunityBoard;
 import org.akak4456.persistence.CommunityBoardRepository;
 import org.akak4456.vo.BoardForm;
@@ -31,5 +29,9 @@ public class CommunityBoardController {
 		board.setContent(boardForm.getContent());
 		repo.save(board);
 		return new ResponseEntity<>("success",HttpStatus.OK);
+	}
+	@PostMapping("/communityUpload")
+	public ResponseEntity<Void> uploadFile(String encodedFile){
+		return new ResponseEntity<>(HttpStatus.OK);
 	}
 }

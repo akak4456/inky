@@ -37,17 +37,9 @@ layout:decorate="~{/layout/layout1}">
 <th:block layout:fragment="script">
 <script src="https://cdn.ckeditor.com/ckeditor5/16.0.0/classic/ckeditor.js"></script>
 <script th:inline="javascript" th:src="@{'/js/board.js'}"></script>
+<script th:inline="javascript" th:src="@{'/js/classiceditor.js'}"></script>
 <script th:inline="javascript">
-let editor;
 
-ClassicEditor
-    .create( document.querySelector( '#editor' ))
-    .then( newEditor => {
-        editor = newEditor;
-    } )
-    .catch( error => {
-        console.error( error );
-    } );
 $(document).ready(function(){
 	var csrf = JSON.parse('[[${_csrf}]]');
 	console.log(csrf);
