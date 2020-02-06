@@ -46,11 +46,27 @@ $(document).ready(function(){
 	$("#submit").on("click",function(e){
 		const editorData = editoro.getData();
 		//console.log(editorData);
+		var images = $("figure img");
+		console.log(images.length);
+		var fileForm = []
+		for(var i=0;i<images.length;i++){
+			var imageSrc = $(images.get(i)).attr('src');
+			//console.log(imageSrc);
+			var firstIdx = imageSrc.indexOf('/',1);
+			var lastIdx = imageSrc.lastIndexOf('/');
+			//console.log(firstIdx+" "+lastIdx);
+			var uploadPath = imageSrc.substring(firstIdx+1,lastIdx);
+			var uploadFileName = imageSrc.substring(lastIdx+1);
+			//console.log(uploadPath+" "+uploadFileName);
+			var fForm = {"uploadPath":uploadPath,"uploadFileName":uploadFileName};
+			fileForm.push(fForm);
+		}
 		var saveData = {
 			userid:$("input[name='writer']").val(),
 			kind:$("input[name='kind']").val(),
 			title:$("input[name='title']").val(),
 			content:editorData,
+			fileForm:fileForm,
 			csrf:csrf
 		};
 		boardManager.add(saveData,function(result){

@@ -2,14 +2,12 @@ package org.akak4456.domain;
 
 import java.sql.Timestamp;
 
-import javax.persistence.Column;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.MappedSuperclass;
 
 import org.hibernate.annotations.CreationTimestamp;
-import org.hibernate.annotations.UpdateTimestamp;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -17,20 +15,15 @@ import lombok.Setter;
 @Getter
 @Setter
 @MappedSuperclass
-public abstract class Board {
+public class UploadFile {
 	@Id
 	@GeneratedValue(strategy=GenerationType.IDENTITY)
-	private Long bno;
+	private Long fno;
 	
-	private String title;
+	private String uploadPath;
 	
-	private String userid;
-	@Column(columnDefinition = "TEXT")
-	private String content;
+	private String uploadFileName;
 	
 	@CreationTimestamp
 	private Timestamp regdate;
-	
-	@UpdateTimestamp
-	private Timestamp updatedate;
 }

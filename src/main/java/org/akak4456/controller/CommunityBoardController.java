@@ -1,12 +1,16 @@
 package org.akak4456.controller;
 
 import org.akak4456.domain.CommunityBoard;
-import org.akak4456.persistence.CommunityBoardRepository;
+import org.akak4456.service.CommunityBoardService;
 import org.akak4456.vo.BoardForm;
+import org.akak4456.vo.PageMaker;
+import org.akak4456.vo.PageVO;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -20,12 +24,22 @@ import lombok.extern.java.Log;
 @RequestMapping("/community/**")
 public class CommunityBoardController {
 	@Autowired
-	private CommunityBoardRepository repo;
-	@GetMapping("/") 
-	public ModelAndView method2() { 
+	private CommunityBoardService communityBoardService;
+	@GetMapping("/list") 
+	public ModelAndView method2(PageVO pageVO) { 
+		Page<CommunityBoard> boards = communityBoardService.getListWithPaging(null, null, 
+				pageVO.makePageable(0, "bno"));
 		ModelAndView modelAndView = new ModelAndView(); 
+		modelAndView.addObject("result", new PageMaker<CommunityBoard>(boards));
 		modelAndView.setViewName("/community/community.html"); 
 		return modelAndView; 
+	}
+	@GetMapping("/getOne/{bno}")
+	public ModelAndView getBoard(@PathVariable("bno")Long bno,PageVO pageVO) {
+		ModelAndView modelAndView = new ModelAndView(); 
+		modelAndView.addObject("board",communityBoardService.getOne(bno));
+		modelAndView.setViewName("/community/communityOneBoard.html");
+		return modelAndView;
 	}
 	@GetMapping("/write") 
 	public ModelAndView writeget() { 
@@ -36,11 +50,7 @@ public class CommunityBoardController {
 	@PostMapping("/write")
 	public ResponseEntity<String> addBoard(@RequestBody BoardForm boardForm){
 		log.info("addBoard..."+boardForm);
-		CommunityBoard board = new CommunityBoard();
-		board.setUserid(boardForm.getUserid());
-		board.setTitle(boardForm.getTitle());
-		board.setContent(boardForm.getContent());
-		repo.save(board);
+		communityBoardService.save(boardForm);
 		return new ResponseEntity<>("success",HttpStatus.OK);
 	}
 }
