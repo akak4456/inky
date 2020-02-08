@@ -255,6 +255,10 @@ xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout">
 			});
 		});
 	</script>
+	<form id='f1' action="/community/" method="get">
+		<input type='hidden' name='page' th:value=${pageVO.page}>
+		<input type='hidden' name='size' th:value=${pageVO.size}>
+	</form>
 	<th:block layout:fragment="script"></th:block>
 </body>
 </html>

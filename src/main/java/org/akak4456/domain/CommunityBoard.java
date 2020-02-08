@@ -1,6 +1,7 @@
 package org.akak4456.domain;
 
 import java.util.List;
+import java.util.Set;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
@@ -22,7 +23,7 @@ public class CommunityBoard extends Board {
 	@OneToMany(mappedBy="board", cascade=CascadeType.ALL)
 	private List<CommunityReply> replies;
 	
-	@OneToMany(cascade=CascadeType.ALL)
+	@OneToMany(cascade=CascadeType.ALL,orphanRemoval=true)
 	@JoinColumn(name="bno")
 	private List<CommunityUploadFile> uploads;
 }

@@ -9,4 +9,5 @@ public interface CommunityBoardService {
 	public boolean save(BoardForm boardForm);
 	public Page<CommunityBoard> getListWithPaging(String type, String keyword, Pageable pageable);
 	public CommunityBoard getOne(Long bno);
+	public boolean update(BoardForm boardForm);
 }

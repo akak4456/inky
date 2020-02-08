@@ -26,4 +26,6 @@ public class UploadFile {
 	
 	@CreationTimestamp
 	private Timestamp regdate;
+	
+	
 }
