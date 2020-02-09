@@ -43,9 +43,14 @@ layout:decorate="~{/layout/layout1}">
 var csrf = JSON.parse('[[${_csrf}]]');
 $(document).ready(function(){
 	console.log(csrf);
+	var formObj = $("#f1");
 	$("#submit").on("click",function(e){
 		boardManager.add(boardManager.submitData(editoro),function(result){
-			alert(result);
+			alert("새글이 등록되었습니다!");
+			var url = "/community/list";
+			console.log(url);
+			formObj.attr("action",url);
+			formObj.submit();
 		})
 	});
 });

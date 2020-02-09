@@ -1,5 +1,6 @@
 package org.akak4456.service;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -83,6 +84,19 @@ public class CommunityBoardServiceImpl implements CommunityBoardService{
 		log.info("communityUploadFiles..."+communityUploadFiles);
 		board.setUploads(communityUploadFiles);
 		board = repo.save(board);
+		return true;
+	}
+	@Override
+	public boolean deleteBoard(Long bno) {
+		// TODO Auto-generated method stub
+		//파일부터 삭제
+		List<CommunityUploadFile> uploadFiles = repo.findById(bno).get().getUploads();
+		for(CommunityUploadFile uploadFile:uploadFiles) {
+			File file = new File("C:\\upload\\"+uploadFile.getUploadPath()+"\\"+uploadFile.getUploadFileName());
+			if(!file.delete())
+				return false;
+		}
+		repo.deleteById(bno);
 		return true;
 	}
 }

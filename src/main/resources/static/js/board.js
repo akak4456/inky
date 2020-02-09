@@ -63,9 +63,21 @@ var boardManager = (function(){
 		};
 		return saveData;
 	}
+	var deleteBoard = function(obj,callback){
+		console.log("deleteBoard...");
+		$.ajax({
+			type:"delete",
+			url:"/community/delete/"+obj.bno,
+			beforeSend:function(xhr){
+				xhr.setRequestHeader(obj.csrf.headerName,obj.csrf.token);
+			},
+			success:callback
+		});
+	}
 	return {
 		add : add,
 		modify: modify,
+		deleteBoard:deleteBoard,
 		submitData: submitData
 	};
 })();

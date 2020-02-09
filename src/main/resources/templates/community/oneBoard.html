@@ -49,14 +49,20 @@ layout:decorate="~{/layout/layout1}">
 <script th:inline="javascript">
 $(document).ready(function(e){
 	editoro.setData([[${board.content}]]);
-	var pageVOURL = "page="+[[${pageVO.page}]]+"&size="+[[${pageVO.size}]];
+	var formObj = $("#f1");
 	$("#retBtn").on("click",function(e){
 		e.preventDefault();
-		window.location.href = "/community/list?"+pageVOURL;
+		var url = "/community/list";
+		console.log(url);
+		formObj.attr("action",url);
+		formObj.submit();
 	});
 	$("#modifyBtn").on("click",function(e){
 		e.preventDefault();
-		window.location.href = "/community/modify/"+[[${board.bno}]]+"?"+pageVOURL;
+		var url = "/community/modify/"+[[${board.bno}]];
+		console.log(url);
+		formObj.attr("action",url);
+		formObj.submit();
 	});
 });
 </script>

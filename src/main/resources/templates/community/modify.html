@@ -48,14 +48,27 @@ var csrf = JSON.parse('[[${_csrf}]]');
 $(document).ready(function(){
 	console.log(csrf);
 	editoro.setData([[${board.content}]]);
-	var pageVOURL = "page="+[[${pageVO.page}]]+"&size="+[[${pageVO.size}]];
+	var formObj = $("#f1");
 	$("#modify").on("click",function(e){
 		var saveData = boardManager.submitData(editoro);
 		saveData.bno = [[${board.bno}]];
 		saveData.regdate = [[${board.regdate}]];
 		boardManager.modify(saveData,function(result){
 			alert("수정하였습니다");
-			window.location.href = "/community/list?"+pageVOURL;
+			var url = "/community/getOne/"+[[${board.bno}]];
+			console.log(url);
+			formObj.attr("action",url);
+			formObj.submit();
+		})
+	});
+	$("#delete").on("click",function(e){
+		var deleteData = {bno:[[${board.bno}]],csrf:csrf};
+		boardManager.deleteBoard(deleteData,function(result){
+			alert("삭제하였습니다.");
+			var url = "/community/list";
+			console.log(url);
+			formObj.attr("action",url);
+			formObj.submit();
 		})
 	});
 });
