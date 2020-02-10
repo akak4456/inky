@@ -62,4 +62,13 @@ public class CommunityReplyRepositoryTests {
 		Page<CommunityReply> ret = repo.getListWithPaging(pageVO.makePageable(1, "rno"));
 		ret.getContent().forEach(r->log.info(r.getRno()+" "+r.getReply()));
 	}
+	@Test
+	public void testFor() {
+		List<Integer> intList = null;
+		if(intList != null) {
+			for(Integer i:intList) {
+				System.out.println(i);
+			}
+		}
+	}
 }
