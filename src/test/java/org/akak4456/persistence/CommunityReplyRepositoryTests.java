@@ -26,7 +26,7 @@ public class CommunityReplyRepositoryTests {
 	@Autowired
 	private CommunityReplyRepository repo;
 
-	@Test
+	//@Test
 	public void generateReply() {
 		CommunityBoard board = new CommunityBoard();
 		board.setBno(2L);
@@ -47,11 +47,19 @@ public class CommunityReplyRepositoryTests {
 				reply.setBoard(board);
 				reply.setReplier("user" + t);
 				reply.setReply("대댓글" + t);
+				reply.setParent(parentReply);
 				repo.save(reply);
 				childReply.add(reply);
 			});
 			parentReply.setChildren(childReply);
 			repo.save(parentReply);
 		}
+	}
+	@Test
+	public void testPaging() {
+		PageVO pageVO = new PageVO();
+		pageVO.setSize(20);
+		Page<CommunityReply> ret = repo.getListWithPaging(pageVO.makePageable(1, "rno"));
+		ret.getContent().forEach(r->log.info(r.getRno()+" "+r.getReply()));
 	}
 }
