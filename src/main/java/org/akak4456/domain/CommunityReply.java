@@ -1,8 +1,13 @@
 package org.akak4456.domain;
 
+import java.util.List;
+
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.Index;
+import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
 import lombok.EqualsAndHashCode;
@@ -20,4 +25,8 @@ indexes = {@Index(unique=false,columnList="board_bno")})
 public class CommunityReply extends Reply {
 	@ManyToOne
 	private CommunityBoard board;
+	
+	@OneToMany
+	@JoinColumn(name = "parent_rno")
+    private List<CommunityReply> children;
 }
