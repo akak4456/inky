@@ -55,10 +55,9 @@ var boardManager = (function(){
 		}
 		var saveData = {
 			userid:$("input[name='writer']").val(),
-			kind:$("input[name='kind']").val(),
 			title:$("input[name='title']").val(),
 			content:editorData,
-			fileForm:fileForm,
+			uploads:fileForm,
 			csrf:csrf
 		};
 		return saveData;

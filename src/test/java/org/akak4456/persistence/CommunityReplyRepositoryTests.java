@@ -7,6 +7,7 @@ import java.util.stream.IntStream;
 
 import org.akak4456.domain.CommunityBoard;
 import org.akak4456.domain.CommunityReply;
+import org.akak4456.domain.Reply;
 import org.akak4456.vo.PageVO;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -37,38 +38,33 @@ public class CommunityReplyRepositoryTests {
 			reply.setBoard(board);
 			reply.setReplier("user" + i);
 			reply.setReply("댓글" + i);
-			repo.save(reply);
+			reply = repo.save(reply);
 		});
 		for (Long i = 1L; i <= 100L; i++) {
 			CommunityReply parentReply = repo.findById(i).get();
-			List<CommunityReply> childReply = new ArrayList<>();
 			IntStream.range(0, 10).forEach(t -> {
 				CommunityReply reply = new CommunityReply();
 				reply.setBoard(board);
 				reply.setReplier("user" + t);
 				reply.setReply("대댓글" + t);
-				reply.setParent(parentReply);
-				repo.save(reply);
-				childReply.add(reply);
+				reply.setParent_rno(parentReply.getRno());
+				reply = repo.save(reply);
 			});
-			parentReply.setChildren(childReply);
-			repo.save(parentReply);
 		}
 	}
 	@Test
 	public void testPaging() {
 		PageVO pageVO = new PageVO();
-		pageVO.setSize(20);
-		Page<CommunityReply> ret = repo.getListWithPaging(pageVO.makePageable(1, "rno"));
-		ret.getContent().forEach(r->log.info(r.getRno()+" "+r.getReply()));
+		pageVO.setPage(3);
+		Page<CommunityReply> replies = repo.findAll(repo.makePredicate(),pageVO.makePageable(1, "path"));
+		replies.getContent().forEach(r->log.info(r.getRno()+" "+r.getReply()));
 	}
-	@Test
-	public void testFor() {
-		List<Integer> intList = null;
-		if(intList != null) {
-			for(Integer i:intList) {
-				System.out.println(i);
-			}
-		}
-	}
+	/*
+	 * @Test public void testPaging() { PageVO pageVO = new PageVO();
+	 * pageVO.setSize(20); Page<CommunityReply> ret =
+	 * repo.getListWithPaging(pageVO.makePageable(1, "rno"));
+	 * ret.getContent().forEach(r->log.info(r.getRno()+" "+r.getReply())); } //@Test
+	 * public void testFor() { List<Integer> intList = null; if(intList != null) {
+	 * for(Integer i:intList) { System.out.println(i); } } }
+	 */
 }

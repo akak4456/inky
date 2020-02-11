@@ -84,7 +84,7 @@ layout:decorate="~{/layout/layout1}">
 </head>
 <section layout:fragment="content">
 <div class="panel-heading">
-	<h2>커뮤니티</h2> 
+	<h2>[[${boardkindKO}]]</h2> 
 	<button class="btn btn-success" id="writeNewBoard">새글쓰기</button>
 </div>
 <div class="panel-heading2">
@@ -150,13 +150,13 @@ $(document).ready(function(){
 	var formObj = $("#f1");
 	$("li a").on("click",function(e){
 		e.preventDefault();
-		var url = "/community/getOne/"+$(this).attr('href');
+		var url = "/"+[[${boardkindEN}]]+"/getOne/"+$(this).attr('href');
 		console.log(url);
 		formObj.attr("action",url);
 		formObj.submit();
 	});
 	$("#writeNewBoard").on("click",function(e){
-		var url = "/community/write";
+		var url = "/"+[[${boardkindEN}]]+"/write";
 		console.log(url);
 		formObj.attr("action",url);
 		formObj.submit();

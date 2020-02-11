@@ -14,7 +14,7 @@ layout:decorate="~{/layout/layout1}">
 </head>
 <section layout:fragment="content">
 <div class="panel-heading">
-<h1>커뮤니티</h1>
+<h1>[[${boardkindKO}]]</h1>
 </div>
 <div class="panel-body">
 	<div class="form-group">
@@ -24,10 +24,6 @@ layout:decorate="~{/layout/layout1}">
 	<div class="form-group">
 		<label>작성일</label>
 		<input class="form-control" type="text" name="regdate" th:value="${#dates.format(board.regdate,'yyyy-MM-dd')}" readonly="readonly">
-	</div>
-	<div class="form-group">
-		<label>게시판 종류</label>
-		<input class="form-control" type="text" name="kind" value="community" readonly="readonly">
 	</div>
 	<div class="form-group">
 		<label>제목</label>
@@ -52,14 +48,14 @@ $(document).ready(function(e){
 	var formObj = $("#f1");
 	$("#retBtn").on("click",function(e){
 		e.preventDefault();
-		var url = "/community/list";
+		var url = "/"+[[${boardkindEN}]]+"/list";
 		console.log(url);
 		formObj.attr("action",url);
 		formObj.submit();
 	});
 	$("#modifyBtn").on("click",function(e){
 		e.preventDefault();
-		var url = "/community/modify/"+[[${board.bno}]];
+		var url = "/"+[[${boardkindEN}]]+"/modify/"+[[${board.bno}]];
 		console.log(url);
 		formObj.attr("action",url);
 		formObj.submit();

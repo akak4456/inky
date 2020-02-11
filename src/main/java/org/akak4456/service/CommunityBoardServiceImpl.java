@@ -1,7 +1,6 @@
 package org.akak4456.service;
 
 import java.io.File;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -10,7 +9,6 @@ import javax.transaction.Transactional;
 import org.akak4456.domain.CommunityBoard;
 import org.akak4456.domain.CommunityUploadFile;
 import org.akak4456.persistence.CommunityBoardRepository;
-import org.akak4456.vo.BoardForm;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -25,24 +23,11 @@ public class CommunityBoardServiceImpl implements CommunityBoardService{
 	private CommunityBoardRepository repo;
 	@Transactional
 	@Override
-	public boolean save(BoardForm boardForm)  {
-		CommunityBoard board = new CommunityBoard();
-		board.setUserid(boardForm.getUserid());
-		board.setTitle(boardForm.getTitle());
-		board.setContent(boardForm.getContent());
+	public boolean save(CommunityBoard board)  {
 		/*
 		 * boardForm.getFileForm().forEach(fileForm->{ log.info("fileForm: "+fileForm);
 		 * });
 		 */
-		List<CommunityUploadFile> communityUploadFiles = new ArrayList<>();
-		boardForm.getFileForm().forEach(fileForm->{
-			CommunityUploadFile uploadFile = new CommunityUploadFile();
-			uploadFile.setUploadPath(fileForm.getUploadPath());
-			uploadFile.setUploadFileName(fileForm.getUploadFileName());
-			communityUploadFiles.add(uploadFile);
-		});
-		board.setUploads(communityUploadFiles);
-		
 		board = repo.save(board);
 		return true;
 	}
@@ -61,28 +46,8 @@ public class CommunityBoardServiceImpl implements CommunityBoardService{
 		return null;
 	}
 	@Override
-	public boolean update(BoardForm boardForm) {
+	public boolean update(CommunityBoard board) {
 		// TODO Auto-generated method stub
-		CommunityBoard board = new CommunityBoard();
-		board.setBno(boardForm.getBno());
-		board.setUserid(boardForm.getUserid());
-		board.setTitle(boardForm.getTitle());
-		board.setContent(boardForm.getContent());
-		board.setRegdate(boardForm.getRegdate());
-		/*
-		 * boardForm.getFileForm().forEach(fileForm->{ log.info("fileForm: "+fileForm);
-		 * });
-		 */
-		List<CommunityUploadFile> communityUploadFiles = new ArrayList<>();
-		boardForm.getFileForm().forEach(fileForm->{
-			CommunityUploadFile uploadFile = new CommunityUploadFile();
-			uploadFile.setUploadPath(fileForm.getUploadPath());
-			uploadFile.setUploadFileName(fileForm.getUploadFileName());
-			log.info("fileForm..."+fileForm);
-			communityUploadFiles.add(uploadFile);
-		});
-		log.info("communityUploadFiles..."+communityUploadFiles);
-		board.setUploads(communityUploadFiles);
 		board = repo.save(board);
 		return true;
 	}

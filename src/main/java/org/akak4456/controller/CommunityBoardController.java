@@ -2,7 +2,6 @@ package org.akak4456.controller;
 
 import org.akak4456.domain.CommunityBoard;
 import org.akak4456.service.CommunityBoardService;
-import org.akak4456.vo.BoardForm;
 import org.akak4456.vo.PageMaker;
 import org.akak4456.vo.PageVO;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -33,8 +32,10 @@ public class CommunityBoardController {
 				pageVO.makePageable(0, "bno"));
 		ModelAndView modelAndView = new ModelAndView(); 
 		modelAndView.addObject("pageVO",pageVO);
+		modelAndView.addObject("boardkindKO","커뮤니티");
+		modelAndView.addObject("boardkindEN","community");
 		modelAndView.addObject("result", new PageMaker<CommunityBoard>(boards));
-		modelAndView.setViewName("/community/list.html"); 
+		modelAndView.setViewName("/board/list.html"); 
 		return modelAndView; 
 	}
 	@GetMapping("/getOne/{bno}")
@@ -42,7 +43,9 @@ public class CommunityBoardController {
 		ModelAndView modelAndView = new ModelAndView(); 
 		modelAndView.addObject("board",communityBoardService.getOne(bno));
 		modelAndView.addObject("pageVO", pageVO);
-		modelAndView.setViewName("/community/oneBoard.html");
+		modelAndView.addObject("boardkindKO","커뮤니티");
+		modelAndView.addObject("boardkindEN","community");
+		modelAndView.setViewName("/board/oneBoard.html");
 		return modelAndView;
 	}
 	@GetMapping("/modify/{bno}")
@@ -50,26 +53,30 @@ public class CommunityBoardController {
 		ModelAndView modelAndView = new ModelAndView();
 		modelAndView.addObject("board",communityBoardService.getOne(bno));
 		modelAndView.addObject("pageVO",pageVO);
-		modelAndView.setViewName("/community/modify");
+		modelAndView.addObject("boardkindKO","커뮤니티");
+		modelAndView.addObject("boardkindEN","community");
+		modelAndView.setViewName("/board/modify");
 		return modelAndView;
 	}
 	@GetMapping("/write") 
 	public ModelAndView writeget(PageVO pageVO) { 
 		ModelAndView modelAndView = new ModelAndView(); 
 		modelAndView.addObject("pageVO",pageVO);
-		modelAndView.setViewName("/community/write.html"); 
+		modelAndView.addObject("boardkindKO","커뮤니티");
+		modelAndView.addObject("boardkindEN","community");
+		modelAndView.setViewName("/board/write.html"); 
 		return modelAndView; 
 	}
 	@PostMapping("/write")
-	public ResponseEntity<String> addBoard(@RequestBody BoardForm boardForm){
-		log.info("addBoard..."+boardForm);
-		communityBoardService.save(boardForm);
+	public ResponseEntity<String> addBoard(@RequestBody CommunityBoard board){
+		log.info("addBoard..."+board);
+		communityBoardService.save(board);
 		return new ResponseEntity<>("success",HttpStatus.OK);
 	}
 	@PutMapping("/modify/{bno}")
-	public ResponseEntity<String> modifyBoard(@RequestBody BoardForm boardForm){
-		log.info("modifyBoard..."+boardForm);
-		communityBoardService.update(boardForm);
+	public ResponseEntity<String> modifyBoard(@RequestBody CommunityBoard board){
+		log.info("modifyBoard..."+board);
+		communityBoardService.update(board);
 		return new ResponseEntity<>("success",HttpStatus.OK);
 	}
 	@DeleteMapping("/delete/{bno}")

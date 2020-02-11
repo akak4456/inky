@@ -7,9 +7,6 @@ layout:decorate="~{/layout/layout1}">
 		.ck-editor__editable_inline {
    	 		min-height: 400px;
 		}
-		.pull-right{
-			margin-right:5px;
-		}
 	</style>
 </head>
 <section layout:fragment="content">
@@ -19,23 +16,18 @@ layout:decorate="~{/layout/layout1}">
 <div class="panel-body">
 	<div class="form-group">
 		<label>작성자</label>
-		<input class="form-control" type="text" name="writer" th:value="${board.userid}" readonly="readonly">
-	</div>
-	<div class="form-group">
-		<label>게시판 종류</label>
-		<input class="form-control" type="text" name="kind" value="community" readonly="readonly">
+		<input class="form-control" type="text" name="writer" value="user00" readonly="readonly">
 	</div>
 	<div class="form-group">
 		<label>제목</label>
-		<input class="form-control" type="text" name="title" th:value="${board.title}" placeholder="제목을 입력해주세요.">
+		<input class="form-control" type="text" name="title" placeholder="제목을 입력해주세요.">
 	</div>
 	<div class="form-group">
 		<label>내용</label>
 		<div id="editor"></div>
 	</div>
 	<button class="btn pull-left">취소</button>
-	<button class="btn btn-primary pull-right" id="modify">수정하기</button>
-	<button class="btn btn-danger pull-right" id="delete">삭제하기</button>
+	<button class="btn btn-primary pull-right" id="submit">새 글 작성</button>
 </div>
 </section>
 <th:block layout:fragment="script">
@@ -47,25 +39,11 @@ layout:decorate="~{/layout/layout1}">
 var csrf = JSON.parse('[[${_csrf}]]');
 $(document).ready(function(){
 	console.log(csrf);
-	editoro.setData([[${board.content}]]);
 	var formObj = $("#f1");
-	$("#modify").on("click",function(e){
-		var saveData = boardManager.submitData(editoro);
-		saveData.bno = [[${board.bno}]];
-		saveData.regdate = [[${board.regdate}]];
-		boardManager.modify(saveData,function(result){
-			alert("수정하였습니다");
-			var url = "/community/getOne/"+[[${board.bno}]];
-			console.log(url);
-			formObj.attr("action",url);
-			formObj.submit();
-		})
-	});
-	$("#delete").on("click",function(e){
-		var deleteData = {bno:[[${board.bno}]],csrf:csrf};
-		boardManager.deleteBoard(deleteData,function(result){
-			alert("삭제하였습니다.");
-			var url = "/community/list";
+	$("#submit").on("click",function(e){
+		boardManager.add(boardManager.submitData(editoro),function(result){
+			alert("새글이 등록되었습니다!");
+			var url = "/"+[[${boardkindEN}]]+"/list";
 			console.log(url);
 			formObj.attr("action",url);
 			formObj.submit();

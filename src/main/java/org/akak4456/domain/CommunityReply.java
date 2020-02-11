@@ -26,12 +26,4 @@ indexes = {@Index(unique=false,columnList="board_bno")})
 public class CommunityReply extends Reply {
 	@ManyToOne
 	private CommunityBoard board;
-	
-	@OneToMany
-	@JoinColumn(name = "parent_rno")
-    private List<CommunityReply> children;
-	
-	@ManyToOne(fetch=FetchType.LAZY)
-	@JoinColumn(name = "parent_rno",insertable=false,updatable=false)
-	private CommunityReply parent;
 }
