@@ -18,7 +18,7 @@ import lombok.extern.java.Log;
 
 @Service
 @Log
-public class CommunityBoardServiceImpl implements CommunityBoardService{
+public class CommunityBoardServiceImpl implements BoardService<CommunityBoard>{
 	@Autowired
 	private CommunityBoardRepository repo;
 	@Transactional

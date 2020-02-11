@@ -1,7 +1,7 @@
 package org.akak4456.controller;
 
 import org.akak4456.domain.CommunityBoard;
-import org.akak4456.service.CommunityBoardService;
+import org.akak4456.service.BoardService;
 import org.akak4456.vo.PageMaker;
 import org.akak4456.vo.PageVO;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,7 +25,7 @@ import lombok.extern.java.Log;
 @RequestMapping("/community/**")
 public class CommunityBoardController {
 	@Autowired
-	private CommunityBoardService communityBoardService;
+	private BoardService communityBoardService;
 	@GetMapping("/list") 
 	public ModelAndView method2(PageVO pageVO) { 
 		Page<CommunityBoard> boards = communityBoardService.getListWithPaging(null, null, 

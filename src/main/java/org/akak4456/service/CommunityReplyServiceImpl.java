@@ -6,7 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
-public class CommunityReplyServiceImpl implements CommunityReplyService {
+public class CommunityReplyServiceImpl implements ReplyService<CommunityReply> {
 	@Autowired
 	private CommunityReplyRepository replyRepo;
 	@Override
