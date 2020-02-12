@@ -5,6 +5,7 @@ import org.akak4456.service.BoardService;
 import org.akak4456.vo.PageMaker;
 import org.akak4456.vo.PageVO;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -25,6 +26,7 @@ import lombok.extern.java.Log;
 @RequestMapping("/community/**")
 public class CommunityBoardController {
 	@Autowired
+	@Qualifier("communityBoardServiceImpl")
 	private BoardService communityBoardService;
 	@GetMapping("/list") 
 	public ModelAndView method2(PageVO pageVO) { 

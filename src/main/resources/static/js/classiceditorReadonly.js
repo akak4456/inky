@@ -1,6 +1,6 @@
 let editoro;
 ClassicEditor
-        .create( document.querySelector( '#editor' ) ,{
+        .create( document.querySelector( '.editor' ) ,{
         	toolbar:[]
         })
         .catch( error => {

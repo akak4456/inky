@@ -4,11 +4,20 @@ layout:decorate="~{/layout/layout1}">
 <head>
 	<meta charset="utf-8">
 	<style>
-		.ck-editor__editable_inline {
+		.board-body .ck-editor__editable_inline {
    	 		min-height: 400px;
 		}
 		.btn{
 			margin-right:5px;
+		}
+		ul{
+			list-style-type:none;
+		}
+		.replier span{
+			font-size:20px;
+		}
+		.reply-content .ck-editor__main{
+			background-color:red;
 		}
 	</style>
 </head>
@@ -16,7 +25,7 @@ layout:decorate="~{/layout/layout1}">
 <div class="panel-heading">
 <h1>[[${boardkindKO}]]</h1>
 </div>
-<div class="panel-body">
+<div class="panel-body board-body">
 	<div class="form-group">
 		<label>작성자</label>
 		<input class="form-control" type="text" name="writer" th:value="${board.userid}" readonly="readonly">
@@ -31,21 +40,63 @@ layout:decorate="~{/layout/layout1}">
 	</div>
 	<div class="form-group">
 		<label>내용</label>
-		<div id="editor"></div>
+		<div class="editor"></div>
 	</div>
 	<button class="btn btn-primary pull-right" id="retBtn">돌아가기</button>
 	<button class="btn btn-primary pull-right">추천하기</button>
 	<button class="btn btn-danger pull-right" id="modifyBtn">수정/삭제</button>
 </div>
-
+<div class="panel-body text-center">
+	<div class="reply-content">
+	</div>
+</div>
+<div class="panel-body reply-edit text-center">
+	<div>
+		<table>
+			<tr>
+				<td>댓글작성자</td>
+			</tr>
+		</table>
+	</div>
+	<div class='editor-reply' id='editor-reply-edit'></div>
+	<div>
+		<button class="btn btn-success">등록</button>
+		<button class="btn btn-primary">취소</button>
+	</div>
+</div>
+<div class="text-center">
+	<ul class="pagination">
+	
+	</ul>
+</div>
 </section>
 <th:block layout:fragment="script">
 <script src="https://cdn.ckeditor.com/ckeditor5/16.0.0/classic/ckeditor.js"></script>
 <script th:inline="javascript" th:src="@{'/js/classiceditorReadonly.js'}"></script>
+<script th:inline="javascript" th:src="@{'/js/reply.js'}"></script>
 <script th:inline="javascript">
+var csrf = JSON.parse('[[${_csrf}]]');
 $(document).ready(function(e){
+	//답글창
+	var replyEditoro;
+	ClassicEditor.create( document.querySelector( '#editor-reply-edit' ), {
+		toolbar: [ 'bold', 'italic', 'link' ]
+	})
+	.then(function (editor) {
+		replyEditoro = editor;
+	})
+	.catch(function (error) {
+		console.log( error );
+	} );
+	//답글창
 	editoro.setData([[${board.content}]]);
 	var formObj = $("#f1");
+	var boardBno = [[${board.bno}]];
+	replyMainAddress = [[${boardkindEN}]];
+	var replyContent = $(".reply-content");
+	var replyPaging = $(".pagination");
+	//reply 처음 불러오기
+	replyManager.getList(boardBno,{page:0},replyContent,replyPaging);
 	$("#retBtn").on("click",function(e){
 		e.preventDefault();
 		var url = "/"+[[${boardkindEN}]]+"/list";
@@ -59,6 +110,18 @@ $(document).ready(function(e){
 		console.log(url);
 		formObj.attr("action",url);
 		formObj.submit();
+	});
+	$(".reply-edit .btn-success").on("click",function(e){
+		//답글 작성 버튼
+		replyManager.add("user00",null,boardBno,replyEditoro,function(result){
+			alert("성공하였습니다!");
+			showList(result,replyContent,replyPaging);
+			replyEditoro.setData("");
+		})
+	});
+	$(".reply-edit .btn-primary").on("click",function(e){
+		//답글 작성 버튼
+		replyEditoro.setData("");
 	});
 });
 </script>

@@ -56,7 +56,7 @@ public class CommunityReplyRepositoryTests {
 	public void testPaging() {
 		PageVO pageVO = new PageVO();
 		pageVO.setPage(3);
-		Page<CommunityReply> replies = repo.findAll(repo.makePredicate(),pageVO.makePageable(1, "path"));
+		Page<CommunityReply> replies = repo.findAll(repo.makePredicate(2L),pageVO.makePageable(1, "path"));
 		replies.getContent().forEach(r->log.info(r.getRno()+" "+r.getReply()));
 	}
 	/*

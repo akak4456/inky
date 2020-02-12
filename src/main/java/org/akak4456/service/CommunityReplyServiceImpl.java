@@ -5,7 +5,11 @@ import org.akak4456.persistence.CommunityReplyRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.stereotype.Service;
 
+import lombok.extern.java.Log;
+@Service
+@Log
 public class CommunityReplyServiceImpl implements ReplyService<CommunityReply> {
 	@Autowired
 	private CommunityReplyRepository replyRepo;
@@ -24,9 +28,9 @@ public class CommunityReplyServiceImpl implements ReplyService<CommunityReply> {
 	}
 
 	@Override
-	public Page<CommunityReply> getListWithPaging(Pageable pageable) {
+	public Page<CommunityReply> getListWithPaging(Long bno,Pageable pageable) {
 		// TODO Auto-generated method stub
-		return null;
+		return replyRepo.findAll(replyRepo.makePredicate(bno), pageable);
 		//return replyRepo.findAll(replyRepo.makePredicate(),pageable);
 	}
 

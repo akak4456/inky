@@ -10,12 +10,13 @@ import com.querydsl.core.BooleanBuilder;
 import com.querydsl.core.types.Predicate;
 
 public interface CommunityReplyRepository extends CrudRepository<CommunityReply, Long>,QuerydslPredicateExecutor<CommunityReply>{
-	public default Predicate makePredicate() {
+	public default Predicate makePredicate(Long bno) {
 		BooleanBuilder builder = new BooleanBuilder();
 		
 		QCommunityReply reply = QCommunityReply.communityReply;
 		
 		builder.and(reply.rno.gt(0));
+		builder.and(reply.board.bno.eq(bno));
 		return builder;
-	}
+	} 
 }

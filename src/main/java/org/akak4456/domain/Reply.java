@@ -11,6 +11,8 @@ import javax.persistence.PostPersist;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+
 import lombok.Getter;
 import lombok.Setter;
 
@@ -29,9 +31,10 @@ public abstract class Reply {
 	private String reply;
 	
 	private String replier;
-	
+	@JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
 	@CreationTimestamp
 	private Timestamp replydate;
+	@JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
 	@UpdateTimestamp
 	private Timestamp updatedate;
 	

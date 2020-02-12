@@ -16,13 +16,16 @@ public class PageVO {
 		this.page = 1;
 		this.size = DEFAULT_SIZE;
 	}
-	
+	public PageVO(int page) {
+		this.page = page;
+		this.size = DEFAULT_SIZE;
+	}
 	public int getPage() {
 		return page;
 	}
 	
 	public void setPage(int page) {
-		this.page = page <= 0? 1 : page;
+		this.page = page <= 0? 0 : page;
 	}
 	
 	public int getSize() {
