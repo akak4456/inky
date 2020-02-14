@@ -91,7 +91,7 @@ $(document).ready(function(e){
 	//답글창
 	editoro.setData([[${board.content}]]);
 	var formObj = $("#f1");
-	var boardBno = [[${board.bno}]];
+	boardBno = [[${board.bno}]];
 	replyMainAddress = [[${boardkindEN}]];
 	var replyContent = $(".reply-content");
 	var replyPaging = $(".pagination");
@@ -123,6 +123,7 @@ $(document).ready(function(e){
 		//답글 작성 버튼
 		replyEditoro.setData("");
 	});
+	
 });
 </script>
 </th:block>

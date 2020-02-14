@@ -21,6 +21,8 @@ import lombok.extern.java.Log;
 public class CommunityBoardServiceImpl implements BoardService<CommunityBoard>{
 	@Autowired
 	private CommunityBoardRepository repo;
+	@Autowired
+	private FileService fileService;
 	@Transactional
 	@Override
 	public boolean save(CommunityBoard board)  {
@@ -57,9 +59,9 @@ public class CommunityBoardServiceImpl implements BoardService<CommunityBoard>{
 		//파일부터 삭제
 		List<CommunityUploadFile> uploadFiles = repo.findById(bno).get().getUploads();
 		for(CommunityUploadFile uploadFile:uploadFiles) {
-			File file = new File("C:\\upload\\"+uploadFile.getUploadPath()+"\\"+uploadFile.getUploadFileName());
-			if(!file.delete())
+			if(!fileService.deleteFile("/"+uploadFile.getUploadPath(), uploadFile.getUploadFileName())) {
 				return false;
+			}
 		}
 		repo.deleteById(bno);
 		return true;

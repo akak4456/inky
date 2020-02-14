@@ -10,7 +10,9 @@ import java.util.Date;
 import java.util.List;
 import java.util.UUID;
 
+import org.akak4456.service.FileService;
 import org.akak4456.vo.FileUpload;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -27,41 +29,21 @@ import lombok.extern.java.Log;
 @RestController
 @Log
 public class FileUploadController {
+	@Autowired
+	private FileService fileService;
 	@PostMapping("/fileupload")
 	public ResponseEntity<FileUpload> upload(@RequestParam("upload") List<MultipartFile> uploadfile) throws Exception {
-		log.info("originalfileName: "+uploadfile.get(0).getOriginalFilename());
-		//folder create
-		SimpleDateFormat format1 = new SimpleDateFormat ( "yyyy/MM/dd");
-		Date time = new Date();
-		String time1 = format1.format(time);
-		String folderName = "C:/upload/"+time1;
-		Path path = Paths.get(folderName);
-		
-		if(!Files.exists(path)) {
-			Files.createDirectories(path);
-		}
-		//file create
-		String fileName = null;
-		for(MultipartFile multipart:uploadfile) {
-			UUID uuid = UUID.randomUUID();
-			fileName = uuid.toString()+"_"+multipart.getOriginalFilename();
-			Path filepath = Paths.get(folderName, uuid.toString()+"_"+multipart.getOriginalFilename());
-			multipart.transferTo(filepath);
-		}
+		String uploadPath = fileService.uploadFile(uploadfile);
 		FileUpload fileUpload = new FileUpload();
-		fileUpload.setUrl("/fileget/"+time1+"/"+fileName);
+		fileUpload.setUrl(uploadPath);
 		return new ResponseEntity<>(fileUpload,HttpStatus.OK);
 	}
 	
 	@GetMapping("/fileget/{year}/{month}/{day}/{fileName}")
 	public ResponseEntity<byte[]> imageRead(@PathVariable("year") String year,@PathVariable("month") String month,
 			@PathVariable("day")String day,@PathVariable("fileName") String fileName){
-		String totalFileName = "C:/upload/"+year+"/"+month+"/"+day+"/"+fileName;
-		log.info("totalFileName: "+totalFileName);
-		File file = new File(totalFileName);
-		
+		File file = fileService.getFile("/"+year+"/"+month+"/"+day+"/", fileName);
 		log.info("file: "+file);
-		
 		ResponseEntity<byte[]> result = null;
 		try {
 			HttpHeaders header = new HttpHeaders();
