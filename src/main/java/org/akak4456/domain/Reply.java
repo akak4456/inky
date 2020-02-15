@@ -2,11 +2,13 @@ package org.akak4456.domain;
 
 import java.sql.Timestamp;
 
+import javax.persistence.Column;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.MappedSuperclass;
 import javax.persistence.PostPersist;
+import javax.persistence.PostUpdate;
 
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
@@ -37,8 +39,10 @@ public abstract class Reply {
 	@JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
 	@UpdateTimestamp
 	private Timestamp updatedate;
-	
+	@Column(columnDefinition = "char(1) default 'N'")
+	private char isdelete;
 	@PostPersist
+	@PostUpdate
 	public void onLoad() {
 		String str1 = "";
 		//백진법으로 path저장

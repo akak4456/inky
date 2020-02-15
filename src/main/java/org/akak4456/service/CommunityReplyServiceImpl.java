@@ -23,7 +23,9 @@ public class CommunityReplyServiceImpl implements ReplyService<CommunityReply> {
 	@Override
 	public boolean updateReply(CommunityReply reply) {
 		// TODO Auto-generated method stub
-		replyRepo.save(reply);
+		CommunityReply newReply = replyRepo.findById(reply.getRno()).get();
+		newReply.setReply(reply.getReply());
+		replyRepo.save(newReply);
 		return true;
 	}
 
@@ -38,7 +40,9 @@ public class CommunityReplyServiceImpl implements ReplyService<CommunityReply> {
 	public boolean deleteReply(Long rno) {
 		// TODO Auto-generated method stub
 		CommunityReply newReply = replyRepo.findById(rno).get();
+		newReply.setReplier("삭제된 작성자");
 		newReply.setReply("삭제된 내용");
+		newReply.setIsdelete('Y');
 		replyRepo.save(newReply);
 		return true;
 	}

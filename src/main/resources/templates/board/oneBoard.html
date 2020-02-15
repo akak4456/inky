@@ -77,26 +77,10 @@ layout:decorate="~{/layout/layout1}">
 <script th:inline="javascript">
 var csrf = JSON.parse('[[${_csrf}]]');
 $(document).ready(function(e){
-	//답글창
-	var replyEditoro;
-	ClassicEditor.create( document.querySelector( '#editor-reply-edit' ), {
-		toolbar: [ 'bold', 'italic', 'link' ]
-	})
-	.then(function (editor) {
-		replyEditoro = editor;
-	})
-	.catch(function (error) {
-		console.log( error );
-	} );
-	//답글창
+	//게시판 관련
 	editoro.setData([[${board.content}]]);
-	var formObj = $("#f1");
 	boardBno = [[${board.bno}]];
-	replyMainAddress = [[${boardkindEN}]];
-	var replyContent = $(".reply-content");
-	var replyPaging = $(".pagination");
-	//reply 처음 불러오기
-	replyManager.getList(boardBno,{page:0},replyContent,replyPaging);
+	var formObj = $("#f1");
 	$("#retBtn").on("click",function(e){
 		e.preventDefault();
 		var url = "/"+[[${boardkindEN}]]+"/list";
@@ -111,19 +95,10 @@ $(document).ready(function(e){
 		formObj.attr("action",url);
 		formObj.submit();
 	});
-	$(".reply-edit .btn-success").on("click",function(e){
-		//답글 작성 버튼
-		replyManager.add("user00",null,boardBno,replyEditoro,function(result){
-			alert("성공하였습니다!");
-			showList(result,replyContent,replyPaging);
-			replyEditoro.setData("");
-		})
-	});
-	$(".reply-edit .btn-primary").on("click",function(e){
-		//답글 작성 버튼
-		replyEditoro.setData("");
-	});
 	
+	//댓글 관련
+	replyMainAddress = [[${boardkindEN}]];
+	replyInit();
 });
 </script>
 </th:block>
