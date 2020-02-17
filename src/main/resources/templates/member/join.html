@@ -1,0 +1,25 @@
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="utf-8">
+<title>Inky</title>
+</head>
+<body>
+	<form method="post">
+		<p>
+			<label for="username">Username</label>
+			<input type="text" id="username" name="uid" value="user88"/>
+		</p>
+		<p>
+			<label for="password">Password</label>
+			<input type="text" id="password" name="upw" value="pw88"/>
+		</p>
+		<p>
+			<label for="uname">Username</label>
+			<input type="text" id="uname" name="uname" value="asdf"/>
+		</p>
+		<input type="hidden" th:name="${_csrf.parameterName}"
+		th:value="${_csrf.token}"/>
+		<button type="submit" class="btn">join</button>
+	</form>
+</body>
+</html>

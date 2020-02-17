@@ -30,7 +30,7 @@ public class CommunityBoardController {
 	private BoardService communityBoardService;
 	@GetMapping("/list") 
 	public ModelAndView method2(PageVO pageVO) { 
-		Page<CommunityBoard> boards = communityBoardService.getListWithPaging(null, null, 
+		Page<CommunityBoard> boards = communityBoardService.getListWithPaging(pageVO.getType(), pageVO.getKeyword(), 
 				pageVO.makePageable(0, "bno"));
 		ModelAndView modelAndView = new ModelAndView(); 
 		modelAndView.addObject("pageVO",pageVO);

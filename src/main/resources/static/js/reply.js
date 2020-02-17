@@ -101,7 +101,7 @@ function showList(result,replyContent,replyPaging){
 	str += "			</tr>";
 	str += "		</table>";
 	str += "	</div>";
-	str += "	<div class='editor-reply' id='editor-reply"+i+"'></div>";
+	str += "	<div class='text-left editor-reply'>"+c.reply+"</div>";
 	str += "</div>";
 	if(c.isdelete == "N"){
 	str += "<div class='reply-btns' data-replier='"+c.replier+"' data-idx='"+i+"' data-rno='"+c.rno+"' data-parent_rno='"+c.parent_rno+"'>";
@@ -112,21 +112,6 @@ function showList(result,replyContent,replyPaging){
 	}
 	str += "<hr>";
 	replyContent.html(str);
-	for(let i=0;i<replies.length;i++){
-		//댓글창에 에디트 추가
-		ClassicEditor
-	        .create( document.querySelector( '#editor-reply'+i ) ,{
-	        	toolbar:[]
-	        })
-	        .catch( error => {
-	            console.error( error );
-	        } )
-			.then(function(editor){
-				editor.isReadOnly = true;
-				editor.setData(replies[i]);
-				//editor.data.set(replies[i]);
-			});
-	}
 	//댓글창 만들기
 	$(".reply-btns .btn-primary").on("click",function(e){
 		//댓글수정버튼 클릭
