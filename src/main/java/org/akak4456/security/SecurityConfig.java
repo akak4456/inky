@@ -29,8 +29,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 		//Board 관련 URL mapping
 		http.authorizeRequests().antMatchers("/*/list").permitAll();
 		http.authorizeRequests().antMatchers("/*/getOne").permitAll();
+		http.authorizeRequests().antMatchers("/*/write").hasAnyRole("BASIC","ADMIN");
 		http.authorizeRequests().antMatchers("/*/modify").hasRole("BASIC");
-		http.authorizeRequests().antMatchers("/*/write").hasRole("BASIC");
 		http.authorizeRequests().antMatchers("/*/delete").hasRole("BASIC");
 		//Reply 관련 URL mapping
 		

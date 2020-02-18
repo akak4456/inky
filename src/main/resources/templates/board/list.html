@@ -1,5 +1,6 @@
 <html xmlns:th="http://www.thymeleaf.org"
 	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	xmlns:sec="http://www.thymeleaf.org/extras/spring-security"
 	layout:decorate="~{/layout/layout1}">
 <head>
 <meta charset="utf-8">
@@ -46,12 +47,17 @@
 				<li class="list-group-item" th:each="board:${result.result.content}">
 					<table width="100%">
 						<tr>
-							<td class="bno">#[[${board.bno}]]</td>
-							<td class="status" rowspan="2">aaa</td>
-							<td class="profile" rowspan="2">bbb</td>
+							<td class="bno" width="60%">#[[${board.bno}]]</td>
+							<td rowspan="2" width="30%">[[${board.userid}]]</td>
+							<td rowspan="2" width="20%">
+							[[${#strings.replace(board.regdate,'T',' ')}]]
+							</td>
+							
+							
+						
 						</tr>
 						<tr>
-							<td class="title"><a th:href="${board.bno}">[[${board.title}]]</a>
+							<td class="title" colspan="2"><a th:href="${board.bno}">[[${board.title}]]</a>
 							</td>
 						</tr>
 					</table>
@@ -79,7 +85,7 @@
 	<script th:inline="javascript">
 $(document).ready(function(){
 	var formObj = $("#f1");
-	$(".panel-body li a").on("click",function(e){
+	$(".card-body li a").on("click",function(e){
 		e.preventDefault();
 		var url = "/"+[[${boardkindEN}]]+"/getOne/"+$(this).attr('href');
 		console.log(url);

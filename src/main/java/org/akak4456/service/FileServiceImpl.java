@@ -46,7 +46,7 @@ public class FileServiceImpl implements FileService {
 	@Override
 	public File getFile(String path,String fileName) {
 		// TODO Auto-generated method stub
-		String totalFileName = pathPrefix+fileName;
+		String totalFileName = pathPrefix+path+"/"+fileName;
 		log.info("totalFileName: "+totalFileName);
 		File file = new File(totalFileName);
 		return file;

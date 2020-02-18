@@ -54,7 +54,6 @@ var boardManager = (function(){
 			fileForm.push(fForm);
 		}
 		var saveData = {
-			userid:$("input[name='writer']").val(),
 			title:$("input[name='title']").val(),
 			content:editorData,
 			uploads:fileForm,

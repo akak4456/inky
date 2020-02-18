@@ -1,6 +1,6 @@
 package org.akak4456.domain;
 
-import java.sql.Timestamp;
+import java.time.LocalDateTime;
 
 import javax.persistence.Column;
 import javax.persistence.GeneratedValue;
@@ -35,10 +35,10 @@ public abstract class Reply {
 	private String replier;
 	@JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
 	@CreationTimestamp
-	private Timestamp replydate;
+	private LocalDateTime replydate;
 	@JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
 	@UpdateTimestamp
-	private Timestamp updatedate;
+	private LocalDateTime updatedate;
 	@Column(columnDefinition = "char(1) default 'N'")
 	private char isdelete;
 	@PostPersist

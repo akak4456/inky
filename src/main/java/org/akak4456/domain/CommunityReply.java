@@ -1,5 +1,6 @@
 package org.akak4456.domain;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.Index;
 import javax.persistence.ManyToOne;
@@ -21,6 +22,6 @@ indexes = {@Index(unique=false,columnList="board_bno")})
 @EqualsAndHashCode(of="rno")
 public class CommunityReply extends Reply {
 	@JsonIgnore
-	@ManyToOne
+	@ManyToOne(cascade=CascadeType.ALL)
 	private CommunityBoard board;
 }

@@ -1,41 +1,47 @@
 <html xmlns:th="http://www.thymeleaf.org"
-xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
-layout:decorate="~{/layout/layout1}">
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	xmlns:sec="http://www.thymeleaf.org/extras/spring-security"
+	layout:decorate="~{/layout/layout1}">
 <head>
-	<meta charset="utf-8">
-	<style>
-		.ck-editor__editable_inline {
-   	 		min-height: 400px;
-		}
-	</style>
+<meta charset="utf-8">
+<style>
+.ck-editor__editable_inline {
+	min-height: 400px;
+}
+</style>
 </head>
 <section layout:fragment="content">
-<div class="panel-heading">
-<h1>새 글 쓰기</h1>
-</div>
-<div class="panel-body">
-	<div class="form-group">
-		<label>작성자</label>
-		<input class="form-control" type="text" name="writer" value="user00" readonly="readonly">
+
+	<div class="card">
+		<div class="card-header">
+			<h1>새 글 쓰기</h1>
+		</div>
+		<div class="card-body">
+			<div class="form-group" th:with="member=${#authentication.principal}">
+				<label>작성자</label> <input class="form-control" type="text"
+					name="writer" th:value="${member.Username}" readonly="readonly">
+			</div>
+			<div class="form-group">
+				<label>제목</label> <input class="form-control" type="text"
+					name="title" placeholder="제목을 입력해주세요.">
+			</div>
+			<div class="form-group">
+				<label>내용</label>
+				<div id="editor"></div>
+			</div>
+			<button class="btn float-right">취소</button>
+			<button class="btn btn-primary float-right" id="submit">새 글
+				작성</button>
+		</div>
 	</div>
-	<div class="form-group">
-		<label>제목</label>
-		<input class="form-control" type="text" name="title" placeholder="제목을 입력해주세요.">
-	</div>
-	<div class="form-group">
-		<label>내용</label>
-		<div id="editor"></div>
-	</div>
-	<button class="btn pull-left">취소</button>
-	<button class="btn btn-primary pull-right" id="submit">새 글 작성</button>
-</div>
 </section>
 <th:block layout:fragment="script">
-<script src="https://cdn.ckeditor.com/ckeditor5/16.0.0/classic/ckeditor.js"></script>
-<script th:inline="javascript" th:src="@{'/js/board.js'}"></script>
-<script th:inline="javascript" th:src="@{'/js/classiceditor.js'}"></script>
-<script th:inline="javascript" th:src="@{'/js/isEmpty.js'}"></script>
-<script th:inline="javascript">
+	<script
+		src="https://cdn.ckeditor.com/ckeditor5/16.0.0/classic/ckeditor.js"></script>
+	<script th:inline="javascript" th:src="@{'/js/board.js'}"></script>
+	<script th:inline="javascript" th:src="@{'/js/classiceditor.js'}"></script>
+	<script th:inline="javascript" th:src="@{'/js/isEmpty.js'}"></script>
+	<script th:inline="javascript">
 var csrf = JSON.parse('[[${_csrf}]]');
 $(document).ready(function(){
 	console.log(csrf);

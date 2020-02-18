@@ -1,6 +1,6 @@
 package org.akak4456.domain;
 
-import java.sql.Timestamp;
+import java.time.LocalDateTime;
 
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -25,7 +25,8 @@ public class UploadFile {
 	private String uploadFileName;
 	
 	@CreationTimestamp
-	private Timestamp regdate;
+	private LocalDateTime
+	regdate;
 	
 	
 }

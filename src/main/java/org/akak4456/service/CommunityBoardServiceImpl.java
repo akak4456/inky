@@ -50,7 +50,15 @@ public class CommunityBoardServiceImpl implements BoardService<CommunityBoard>{
 	@Override
 	public boolean update(CommunityBoard board) {
 		// TODO Auto-generated method stub
-		board = repo.save(board);
+		//log.info("uploads..."+(board.getUploads()==null));
+		CommunityBoard newBoard = repo.findById(board.getBno()).get();
+		newBoard.setContent(board.getContent());
+		newBoard.setTitle(board.getTitle());
+		newBoard.getUploads().clear();
+		if(board.getUploads().size() > 0) {
+			newBoard.getUploads().addAll(board.getUploads());
+		}
+		newBoard = repo.save(newBoard);
 		return true;
 	}
 	@Override

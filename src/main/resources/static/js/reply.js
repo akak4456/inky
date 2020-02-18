@@ -169,6 +169,7 @@ function showList(result,replyContent,replyPaging){
 		//대댓글을 달게 해주기
 		let rereplyEditoro;
 		$(".rereply-edit").remove();
+		$(".reply-btns").css("display","none");
 		//기존의 대댓글 에디트 창 삭제
 		var idx = $(this).data("idx");
 		var rno = $(this).data("rno");
@@ -187,6 +188,7 @@ function showList(result,replyContent,replyPaging){
 			};
 			replyManager.add(saveData,boardBno,function(result){
 				alert("댓글을 달았습니다!");
+				$(".reply-btns").css("display","block");
 				if(replies.length == 10)
 					//현재 페이지 번호에 댓글이 10개 이상이었으면 다음 페이지로 가라
 					pageNum++;
@@ -195,6 +197,7 @@ function showList(result,replyContent,replyPaging){
 		});
 		$(".rereply-edit .btn-primary").on("click",function(e){
 			$(".rereply-edit").remove();
+			$(".reply-btns").css("display","block");
 		});
 		ClassicEditor.create( document.querySelector( '#editor-rereply-edit' ), {
 			toolbar: [ 'bold', 'italic', 'link' ]
@@ -211,7 +214,7 @@ function showList(result,replyContent,replyPaging){
 	str = "";
 	if(result.prevPage != null){
 	str += "<li class='page-item'>";
-	str += "	<a href='"+(result.prevPage.pageNumber+1)+"'>이전</a>";
+	str += "	<a class='page-link' href='"+(result.prevPage.pageNumber+1)+"'>이전</a>";
 	str += "</li>";
 	}
 	for(var i=0;i<result.pageList.length;i++){
@@ -220,12 +223,12 @@ function showList(result,replyContent,replyPaging){
 	if(p.pageNumber+1==pageNum)
 	active = 'active';
 	str += "<li class='page-item "+active+"'>";
-	str += "	<a href='"+(p.pageNumber+1)+"'>"+(p.pageNumber+1)+"</a>";
+	str += "	<a class='page-link' href='"+(p.pageNumber+1)+"'>"+(p.pageNumber+1)+"</a>";
 	str += "</li>";
 	}
 	if(result.nextPage != null){
 	str += "<li class='page-item'>";
-	str += "	<a href='"+(result.nextPage.pageNumber+1)+"'>다음</a>";
+	str += "	<a class='page-link' href='"+(result.nextPage.pageNumber+1)+"'>다음</a>";
 	str += "</li>";
 	}
 	replyPaging.html(str);

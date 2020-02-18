@@ -1,6 +1,6 @@
 package org.akak4456.domain;
 
-import java.sql.Timestamp;
+import java.time.LocalDateTime;
 
 import javax.persistence.Column;
 import javax.persistence.GeneratedValue;
@@ -10,6 +10,8 @@ import javax.persistence.MappedSuperclass;
 
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
+
+import com.fasterxml.jackson.annotation.JsonFormat;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -28,9 +30,11 @@ public abstract class Board {
 	@Column(columnDefinition = "TEXT")
 	private String content;
 	
+	@JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
 	@CreationTimestamp
-	private Timestamp regdate;
+	private LocalDateTime regdate;
 	
+	@JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
 	@UpdateTimestamp
-	private Timestamp updatedate;
+	private LocalDateTime updatedate;
 }
