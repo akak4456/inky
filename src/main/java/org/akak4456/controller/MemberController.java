@@ -3,6 +3,8 @@ package org.akak4456.controller;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.transaction.Transactional;
+
 import org.akak4456.domain.Member;
 import org.akak4456.domain.MemberRole;
 import org.akak4456.persistence.MemberRepository;
@@ -30,7 +32,7 @@ public class MemberController {
 	public void join() {
 		
 	}
-	
+	@Transactional
 	@PostMapping("/join")
 	public String joinPost(@ModelAttribute("member")Member member) {
 		log.info("MEMBER: "+member);

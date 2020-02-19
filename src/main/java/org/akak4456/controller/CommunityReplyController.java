@@ -10,6 +10,8 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.annotation.Secured;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -43,6 +45,7 @@ public class CommunityReplyController {
 		PageMaker<CommunityReply> replies = new PageMaker<CommunityReply>(result);
 		return new ResponseEntity<>(replies,HttpStatus.OK);
 	}
+	@Secured({"ROLE_BASIC","ROLE_ADMIN"})
 	@PostMapping("/write/{bno}")
 	public ResponseEntity<String> write(@RequestBody CommunityReply reply,@PathVariable("bno")Long bno){
 		log.info("addReply..."+bno);
@@ -52,12 +55,14 @@ public class CommunityReplyController {
 		replyService.addReply(reply);
 		return new ResponseEntity<>("success",HttpStatus.OK);
 	}
+	@PreAuthorize("#userid == authentication.principal.member.uid")
 	@DeleteMapping("/delete/{rno}")
-	public ResponseEntity<String> deleteReply(@PathVariable("rno") Long rno){
+	public ResponseEntity<String> deleteReply(@PathVariable("rno") Long rno,String userid){
 		log.info("deleteReply..."+rno);
 		replyService.deleteReply(rno);
 		return new ResponseEntity<>("success",HttpStatus.OK);
 	}
+	@PreAuthorize("#reply.replier == authentication.principal.member.uid")
 	@PutMapping("/modify/{bno}")
 	public ResponseEntity<String> modifyReply(@PathVariable("bno") Long bno, @RequestBody CommunityReply reply){
 		log.info("modifyReply..."+bno);

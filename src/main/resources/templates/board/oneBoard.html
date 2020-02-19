@@ -27,7 +27,7 @@ ul {
 </style>
 </head>
 <section layout:fragment="content">
-	<div class="card">
+	<div class="card" th:with="auth=${#authentication.principal} ">
 		<div class="card-header">
 			<h1>[[${boardkindKO}]]</h1>
 		</div>
@@ -42,7 +42,7 @@ ul {
 					th:value="${#strings.replace(board.regdate,'T',' ')}"
 					readonly="readonly">
 			</div>
-			<div th:if="${board.regdate != board.updatedate}"class="form-group">
+			<div th:if="${board.regdate != board.updatedate}" class="form-group">
 				<label>수정일</label> <input class="form-control" type="text"
 					name="regdate"
 					th:value="${#strings.replace(board.updatedate,'T',' ')}"
@@ -58,7 +58,9 @@ ul {
 			</div>
 			<button class="btn btn-primary float-right" id="retBtn">돌아가기</button>
 			<button class="btn btn-primary float-right">추천하기</button>
-			<button class="btn btn-danger float-right" id="modifyBtn">수정/삭제</button>
+			<button
+				th:if="${auth} ne 'anonymousUser' and ${auth.member.uid} eq ${board.userid}"
+				class="btn btn-danger float-right" id="modifyBtn">수정/삭제</button>
 		</div>
 		<div class="card-body text-center">
 			<div class="reply-content"></div>
@@ -68,7 +70,8 @@ ul {
 
 			</ul>
 		</div>
-		<div class="card-body reply-edit text-center">
+		<div th:if="${auth} ne 'anonymousUser'"
+			class="card-body reply-edit text-center">
 			<div>
 				<table>
 					<tr>
@@ -82,6 +85,8 @@ ul {
 				<button class="btn btn-primary">취소</button>
 			</div>
 		</div>
+		<div th:if="${auth} eq 'anonymousUser'"
+			class="card-body reply-edit text-center">댓글을 작성하시려면 <a href="#" id="gotoLogin">로그인</a>을 하세요!</div>
 	</div>
 </section>
 <th:block layout:fragment="script">
@@ -97,10 +102,12 @@ $(document).ready(function(e){
 	editoro.setData([[${board.content}]]);
 	boardBno = [[${board.bno}]];
 	var formObj = $("#f1");
+	var loc = window.location.href.substring(window.location.href.indexOf("/"));
 	$("#retBtn").on("click",function(e){
 		e.preventDefault();
 		var url = "/"+[[${boardkindEN}]]+"/list";
 		console.log(url);
+		formObj.find("[name='dest']").val(loc);
 		formObj.attr("action",url);
 		formObj.submit();
 	});
@@ -108,12 +115,22 @@ $(document).ready(function(e){
 		e.preventDefault();
 		var url = "/"+[[${boardkindEN}]]+"/modify/"+[[${board.bno}]];
 		console.log(url);
+		formObj.find("[name='dest']").val(loc);
+		formObj.attr("action",url);
+		formObj.submit();
+	});
+	$("#gotoLogin").on("click",function(e){
+		e.preventDefault();
+		var url = "/login";
+		console.log(url);
+		formObj.find("[name='dest']").val(loc);
 		formObj.attr("action",url);
 		formObj.submit();
 	});
 	
 	//댓글 관련
 	replyMainAddress = [[${boardkindEN}]];
+	uid = [[${#authentication.principal} eq 'anonymousUser'?null:${#authentication.principal.member.uid}]];
 	replyInit();
 });
 </script>

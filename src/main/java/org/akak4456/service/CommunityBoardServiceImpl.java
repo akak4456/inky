@@ -55,7 +55,7 @@ public class CommunityBoardServiceImpl implements BoardService<CommunityBoard>{
 		newBoard.setContent(board.getContent());
 		newBoard.setTitle(board.getTitle());
 		newBoard.getUploads().clear();
-		if(board.getUploads().size() > 0) {
+		if(board.getUploads() != null&&board.getUploads().size() > 0) {
 			newBoard.getUploads().addAll(board.getUploads());
 		}
 		newBoard = repo.save(newBoard);

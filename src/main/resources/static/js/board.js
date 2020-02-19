@@ -13,6 +13,7 @@ var boardManager = (function(){
 			contentType:"application/json",
 			success:callback,
 			error:function(error){
+				alert("추가할 수 없습니다!");
 				console.log(error);
 			}
 		});
@@ -31,11 +32,12 @@ var boardManager = (function(){
 			contentType:"application/json",
 			success:callback,
 			error:function(error){
+				alert("수정하지 못하였습니다!");
 				console.log(error);
 			}
 		});
 	}
-	var submitData = function(editoro){
+	var getFileForm = function(editoro){
 		const editorData = editoro.getData();
 		//console.log(editorData);
 		var images = $("figure img");
@@ -53,29 +55,27 @@ var boardManager = (function(){
 			var fForm = {"uploadPath":uploadPath,"uploadFileName":uploadFileName};
 			fileForm.push(fForm);
 		}
-		var saveData = {
-			title:$("input[name='title']").val(),
-			content:editorData,
-			uploads:fileForm,
-			csrf:csrf
-		};
-		return saveData;
 	}
 	var deleteBoard = function(obj,callback){
 		console.log("deleteBoard...");
 		$.ajax({
 			type:"delete",
 			url:"/community/delete/"+obj.bno,
+			data:obj.userid,
 			beforeSend:function(xhr){
 				xhr.setRequestHeader(obj.csrf.headerName,obj.csrf.token);
 			},
-			success:callback
+			success:callback,
+			error:function(error){
+				alert("삭제하지못했습니다!");
+				console.log(error);
+			}
 		});
 	}
 	return {
 		add : add,
 		modify: modify,
 		deleteBoard:deleteBoard,
-		submitData: submitData
+		getFileForm: getFileForm
 	};
 })();

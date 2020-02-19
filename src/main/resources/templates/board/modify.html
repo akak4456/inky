@@ -50,23 +50,36 @@ $(document).ready(function(){
 	console.log(csrf);
 	editoro.setData([[${board.content}]]);
 	var formObj = $("#f1");
+	var loc = window.location.href.substring(window.location.href.indexOf("/"));
 	$("#modify").on("click",function(e){
-		var saveData = boardManager.submitData(editoro);
-		saveData.bno = [[${board.bno}]];
+		var saveData = {
+			title:$("input[name='title']").val(),
+			content:editoro.getData(),
+			uploads:boardManager.getFileForm(editoro),
+			userid:[[${#authentication.principal.member.uid}]],
+			csrf:csrf,
+			bno:[[${board.bno}]]
+		};
 		boardManager.modify(saveData,function(result){
 			alert("수정하였습니다");
 			var url = "/"+[[${boardkindEN}]]+"/getOne/"+[[${board.bno}]];
 			console.log(url);
+			formObj.find("[name='dest']").val(loc);
 			formObj.attr("action",url);
 			formObj.submit();
 		})
 	});
 	$("#delete").on("click",function(e){
-		var deleteData = {bno:[[${board.bno}]],csrf:csrf};
+		var deleteData = {
+			userid:[[${#authentication.principal.member.uid}]],
+			bno:[[${board.bno}]],
+			csrf:csrf
+		};
 		boardManager.deleteBoard(deleteData,function(result){
 			alert("삭제하였습니다.");
 			var url = "/"+[[${boardkindEN}]]+"/list";
 			console.log(url);
+			formObj.find("[name='dest']").val(loc);
 			formObj.attr("action",url);
 			formObj.submit();
 		})

@@ -85,16 +85,19 @@
 	<script th:inline="javascript">
 $(document).ready(function(){
 	var formObj = $("#f1");
+	var loc = window.location.href.substring(window.location.href.indexOf("/"));
 	$(".card-body li a").on("click",function(e){
 		e.preventDefault();
 		var url = "/"+[[${boardkindEN}]]+"/getOne/"+$(this).attr('href');
 		console.log(url);
+		formObj.find("[name='dest']").val(loc);
 		formObj.attr("action",url);
 		formObj.submit();
 	});
 	$("#writeNewBoard").on("click",function(e){
 		var url = "/"+[[${boardkindEN}]]+"/write";
 		console.log(url);
+		formObj.find("[name='dest']").val(loc);
 		formObj.attr("action",url);
 		formObj.submit();
 	});
@@ -102,6 +105,7 @@ $(document).ready(function(){
 		e.preventDefault();
 		var url ="/"+[[${boardkindEN}]]+"/list";
 		console.log(url);
+		formObj.find("[name='dest']").val(loc);
 		formObj.attr("action",url);
 		formObj.find("[name='page']").val($(this).attr("href"));
 		formObj.submit();
@@ -110,6 +114,7 @@ $(document).ready(function(){
 		//검색하기 버튼을 눌렀을 때
 		var url ="/"+[[${boardkindEN}]]+"/list";
 		console.log(url);
+		formObj.find("[name='dest']").val(loc);
 		formObj.attr("action",url);
 		var typeStr = $("#searchType").find(":selected").val();
 		var keywordStr = $("#searchKeyword").val();

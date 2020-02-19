@@ -26,7 +26,7 @@ public class FileServiceImpl implements FileService {
 		SimpleDateFormat format1 = new SimpleDateFormat ( "yyyy/MM/dd");
 		Date time = new Date();
 		String time1 = format1.format(time);
-		String folderName = "C:/upload/"+time1;
+		String folderName = pathPrefix+"/"+time1;
 		Path path = Paths.get(folderName);
 		
 		if(!Files.exists(path)) {
@@ -37,8 +37,9 @@ public class FileServiceImpl implements FileService {
 		for(MultipartFile multipart:uploadfile) {
 			UUID uuid = UUID.randomUUID();
 			fileName = uuid.toString()+"_"+multipart.getOriginalFilename();
-			Path filepath = Paths.get(folderName, uuid.toString()+"_"+multipart.getOriginalFilename());
-			multipart.transferTo(filepath);
+			String totalFileName = folderName+"/"+fileName;
+			File tofile = new File(totalFileName);
+			multipart.transferTo(tofile);
 		}
 		return "/fileget/"+time1+"/"+fileName;
 	}

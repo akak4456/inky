@@ -1,41 +1,43 @@
 var replyMainAddress="";
+var uid;
 var boardBno;
 var pageNum;
 function replyInit(){
-	let replyEditoro;
-	ClassicEditor.create( document.querySelector( '#editor-reply-edit' ), {
-		toolbar: [ 'bold', 'italic', 'link' ]
-	})
-	.then(function (editor) {
-		replyEditoro = editor;
-	})
-	.catch(function (error) {
-		console.log( error );
-	} );
+	//reply 처음 불러오기
 	var replyContent = $(".reply-content");
 	var replyPaging = $(".pagination");
-	//reply 처음 불러오기
 	replyManager.getList(boardBno,{page:0},replyContent,replyPaging);
-	
-	$(".reply-edit .btn-success").on("click",function(e){
-		//답글 작성 버튼
-		var saveData = {
-			replier:"user00",
-			reply:replyEditoro.getData(),
-			csrf:csrf,
-			parent_rno:null,
-			isdelete:'N'
-		};
-		replyManager.add(saveData,boardBno,function(result){
-			alert("성공하였습니다!");
-			replyManager.getList(boardBno,{page:0},replyContent,replyPaging);
-			replyEditoro.setData("");
+	let replyEditoro;
+	if(uid != null){
+		ClassicEditor.create( document.querySelector( '#editor-reply-edit' ), {
+			toolbar: [ 'bold', 'italic', 'link' ]
 		})
-	});
-	$(".reply-edit .btn-primary").on("click",function(e){
-		//답글 작성 버튼
-		replyEditoro.setData("");
-	});
+		.then(function (editor) {
+			replyEditoro = editor;
+		})
+		.catch(function (error) {
+			console.log( error );
+		} );
+		$(".reply-edit .btn-success").on("click",function(e){
+			//답글 작성 버튼
+			var saveData = {
+				replier:uid,
+				reply:replyEditoro.getData(),
+				csrf:csrf,
+				parent_rno:null,
+				isdelete:'N'
+			};
+			replyManager.add(saveData,boardBno,function(result){
+				alert("성공하였습니다!");
+				replyManager.getList(boardBno,{page:0},replyContent,replyPaging);
+				replyEditoro.setData("");
+			})
+		});
+		$(".reply-edit .btn-primary").on("click",function(e){
+			//답글 작성 버튼
+			replyEditoro.setData("");
+		});
+	}
 }
 function createReplyModifyEdit(rno){
 	var str = "";
@@ -75,6 +77,7 @@ function createReplyEdit(userid){
 }
 function showList(result,replyContent,replyPaging){
 	//댓글창 만들기
+	var formObj = $("#f1");
 	var str = "";
 	var replies = [];
 	for(var i=0;i<result.result.content.length;i++){
@@ -103,7 +106,7 @@ function showList(result,replyContent,replyPaging){
 	str += "	</div>";
 	str += "	<div class='text-left editor-reply'>"+c.reply+"</div>";
 	str += "</div>";
-	if(c.isdelete == "N"){
+	if(uid == c.replier&&c.isdelete == "N"){
 	str += "<div class='reply-btns' data-replier='"+c.replier+"' data-idx='"+i+"' data-rno='"+c.rno+"' data-parent_rno='"+c.parent_rno+"'>";
 	str += "	<button class='btn btn-primary'>수정</button>";
 	str += "	<button class='btn btn-danger'>삭제</button>";
@@ -133,6 +136,7 @@ function showList(result,replyContent,replyPaging){
 		});	
 		$(".rereply-edit .btn-success").on("click",function(e){
 			var modifyData = {
+				replier:uid,
 				rno:rno,
 				reply:rereplyEditoro.getData(),
 				csrf:csrf
@@ -152,6 +156,7 @@ function showList(result,replyContent,replyPaging){
 			var rno = $(this).closest("div").data("rno");
 			console.log(rno);
 			var deleteData = {
+					userid:uid,
 					rno:rno,
 					csrf:csrf
 			};
@@ -167,6 +172,9 @@ function showList(result,replyContent,replyPaging){
 	//대댓글 스타일 바꾸기
 	$(".reply-content-main").on("click",function(e){
 		//대댓글을 달게 해주기
+		if(uid == null){
+			return;
+		}
 		let rereplyEditoro;
 		$(".rereply-edit").remove();
 		$(".reply-btns").css("display","none");
@@ -177,10 +185,10 @@ function showList(result,replyContent,replyPaging){
 		console.log(idx);
 		console.log(rno);
 		console.log(parent_rno);
-		$(this).after(createReplyEdit("user00"));
+		$(this).after(createReplyEdit(uid));
 		$(".rereply-edit .btn-success").on("click",function(e){
 			var saveData = {
-				replier:"user00",
+				replier:uid,
 				reply:rereplyEditoro.getData(),
 				csrf:csrf,
 				parent_rno:rno,
@@ -261,6 +269,7 @@ var replyManager = (function(){
 			contentType:"application/json",
 			success:callback,
 			error:function(error){
+				alert("추가할 수 없습니다!");
 				console.log(error);
 			}
 		});
@@ -270,11 +279,13 @@ var replyManager = (function(){
 		$.ajax({
 			type:'delete',
 			url:"/"+replyMainAddress+"/reply/delete/"+obj.rno,
+			data:obj.userid,
 			beforeSend:function(xhr){
 				xhr.setRequestHeader(obj.csrf.headerName,obj.csrf.token);
 			},
 			success:callback,
 			error:function(error){
+				alert("삭제할 수 없습니다!");
 				console.log(error);
 			}
 		});
@@ -292,6 +303,7 @@ var replyManager = (function(){
 			contentType:"application/json",
 			success:callback,
 			error:function(error){
+				alert("수정할 수 없습니다!");
 				console.log(error);
 			}
 		});

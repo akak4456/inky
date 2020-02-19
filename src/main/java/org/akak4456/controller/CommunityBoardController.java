@@ -9,6 +9,8 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.annotation.Secured;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -19,7 +21,6 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.servlet.ModelAndView;
 
 import lombok.extern.java.Log;
 
@@ -48,6 +49,7 @@ public class CommunityBoardController {
 		model.addAttribute("boardkindEN","community");
 		return "/board/oneBoard";
 	}
+	@Secured({"ROLE_BASIC","ROLE_ADMIN"})
 	@GetMapping("/modify/{bno}")
 	public String modifyBoard(@PathVariable("bno")Long bno,PageVO pageVO,Model model) {
 		model.addAttribute("board",communityBoardService.getOne(bno));
@@ -56,6 +58,7 @@ public class CommunityBoardController {
 		model.addAttribute("boardkindEN","community");
 		return "/board/modify";
 	}
+	@Secured({"ROLE_BASIC","ROLE_ADMIN"})
 	@GetMapping("/write") 
 	public String writeget(PageVO pageVO,Model model) { 
 		model.addAttribute("pageVO",pageVO);
@@ -63,6 +66,7 @@ public class CommunityBoardController {
 		model.addAttribute("boardkindEN","community");
 		return "/board/write"; 
 	}
+	@Secured({"ROLE_BASIC","ROLE_ADMIN"})
 	@PostMapping("/write")
 	@ResponseBody
 	public ResponseEntity<String> addBoard(@RequestBody CommunityBoard board){
@@ -70,6 +74,7 @@ public class CommunityBoardController {
 		communityBoardService.save(board);
 		return new ResponseEntity<>("success",HttpStatus.OK);
 	}
+	@PreAuthorize("#board.userid == authentication.principal.member.uid")
 	@PutMapping("/modify/{bno}")
 	@ResponseBody
 	public ResponseEntity<String> modifyBoard(@RequestBody CommunityBoard board){
@@ -77,9 +82,10 @@ public class CommunityBoardController {
 		communityBoardService.update(board);
 		return new ResponseEntity<>("success",HttpStatus.OK);
 	}
+	@PreAuthorize("#userid == authentication.principal.member.uid")
 	@DeleteMapping("/delete/{bno}")
 	@ResponseBody
-	public ResponseEntity<String> deleteBoard(@PathVariable("bno") Long bno){
+	public ResponseEntity<String> deleteBoard(@PathVariable("bno") Long bno,String userid){
 		log.info("deleteBoard..."+bno);
 		if(communityBoardService.deleteBoard(bno))
 			return new ResponseEntity<>("success",HttpStatus.OK);

@@ -28,6 +28,7 @@ public class Akak4456User extends User {
 	
 	public Akak4456User(Member member) {
 		super(member.getUid(),member.getUpw(),makeGrantedAuthority(member.getRoles()));
+		this.member = member;
 	}
 	
 	private static List<GrantedAuthority> makeGrantedAuthority(List<MemberRole> roles){

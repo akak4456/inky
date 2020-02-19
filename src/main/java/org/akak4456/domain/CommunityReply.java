@@ -22,6 +22,6 @@ indexes = {@Index(unique=false,columnList="board_bno")})
 @EqualsAndHashCode(of="rno")
 public class CommunityReply extends Reply {
 	@JsonIgnore
-	@ManyToOne(cascade=CascadeType.ALL)
+	@ManyToOne
 	private CommunityBoard board;
 }

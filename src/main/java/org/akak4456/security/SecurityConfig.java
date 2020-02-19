@@ -4,6 +4,7 @@ import javax.sql.DataSource;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -26,16 +27,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 	@Override
 	protected void configure(HttpSecurity http) throws Exception{
 		log.info("security config......");
-		//Board 관련 URL mapping
-		http.authorizeRequests().antMatchers("/*/list").permitAll();
-		http.authorizeRequests().antMatchers("/*/getOne").permitAll();
-		http.authorizeRequests().antMatchers("/*/write").hasAnyRole("BASIC","ADMIN");
-		http.authorizeRequests().antMatchers("/*/modify").hasRole("BASIC");
-		http.authorizeRequests().antMatchers("/*/delete").hasRole("BASIC");
-		//Reply 관련 URL mapping
-		
 		//로그인관련 설정
-		http.formLogin().loginPage("/login");
+		http.formLogin().loginPage("/login").successHandler(new LoginSuccessHandler());
 		http.exceptionHandling().accessDeniedPage("/accessDenied");
 		http.logout().logoutUrl("/logout").invalidateHttpSession(true);
 		//rememberMe 설정
@@ -53,7 +46,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 	public PasswordEncoder passwordEncoder() {
 		return new BCryptPasswordEncoder();
 	}
-	
+	@Autowired
 	public void configureGlobal(AuthenticationManagerBuilder auth) throws Exception{
 		log.info("build Auth global......");
 		auth.userDetailsService(akak4456UsersService).passwordEncoder(passwordEncoder());
