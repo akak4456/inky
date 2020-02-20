@@ -1,3 +1,4 @@
+var boardMainAddress = "";
 var boardManager = (function(){
 	var add = function(obj, callback){
 		console.log("add...");
@@ -5,7 +6,7 @@ var boardManager = (function(){
 		console.log(obj);
 		$.ajax({
 			type:'post',
-			url:'/community/write',
+			url:'/'+boardMainAddress+'/write',
 			data:JSON.stringify(obj),
 			beforeSend:function(xhr){
 				xhr.setRequestHeader(obj.csrf.headerName,obj.csrf.token);
@@ -24,7 +25,7 @@ var boardManager = (function(){
 		console.log(obj);
 		$.ajax({
 			type:'put',
-			url:'/community/modify/'+obj.bno,
+			url:'/'+boardMainAddress+'/modify/'+obj.bno,
 			data:JSON.stringify(obj),
 			beforeSend:function(xhr){
 				xhr.setRequestHeader(obj.csrf.headerName,obj.csrf.token);
@@ -60,7 +61,7 @@ var boardManager = (function(){
 		console.log("deleteBoard...");
 		$.ajax({
 			type:"delete",
-			url:"/community/delete/"+obj.bno,
+			url:"/'+boardMainAddress+'/delete/"+obj.bno,
 			data:obj.userid,
 			beforeSend:function(xhr){
 				xhr.setRequestHeader(obj.csrf.headerName,obj.csrf.token);
@@ -72,10 +73,47 @@ var boardManager = (function(){
 			}
 		});
 	}
+	var upRecommendcnt = function(obj,callback){
+		console.log(boardMainAddress);
+		console.log("upRecommend.....");
+		$.ajax({
+			type:'post',
+			url:'/'+boardMainAddress+'/recommend/up',
+			data:JSON.stringify(obj),
+			beforeSend:function(xhr){
+				xhr.setRequestHeader(obj.csrf.headerName,obj.csrf.token);
+			},
+			contentType:"application/json",
+			success:callback,
+			error:function(error){
+				alert("추천하지 못했습니다!");
+				console.log(error);
+			}
+		});
+	}
+	var downRecommendcnt = function(obj,callback){
+		console.log("downRecommend.....");
+		$.ajax({
+			type:'post',
+			url:'/'+boardMainAddress+'/recommend/down',
+			data:JSON.stringify(obj),
+			beforeSend:function(xhr){
+				xhr.setRequestHeader(obj.csrf.headerName,obj.csrf.token);
+			},
+			contentType:"application/json",
+			success:callback,
+			error:function(error){
+				alert("반대하지 못했습니다!");
+				console.log(error);
+			}
+		});
+	}
 	return {
 		add : add,
 		modify: modify,
 		deleteBoard:deleteBoard,
-		getFileForm: getFileForm
+		getFileForm: getFileForm,
+		upRecommendcnt:upRecommendcnt,
+		downRecommendcnt:downRecommendcnt
 	};
 })();

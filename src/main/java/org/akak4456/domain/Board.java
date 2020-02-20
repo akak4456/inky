@@ -29,7 +29,8 @@ public abstract class Board {
 	private String userid;
 	@Column(columnDefinition = "TEXT")
 	private String content;
-	
+	private Integer recommendcnt = 0;
+	private Integer replycnt = 0;
 	@JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
 	@CreationTimestamp
 	private LocalDateTime regdate;

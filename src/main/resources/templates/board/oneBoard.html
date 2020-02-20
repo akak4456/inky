@@ -57,7 +57,9 @@ ul {
 				<div class="editor"></div>
 			</div>
 			<button class="btn btn-primary float-right" id="retBtn">돌아가기</button>
-			<button class="btn btn-primary float-right">추천하기</button>
+			<button class="btn btn-danger float-right" id="downBtn">반대하기</button>
+			<button class="btn btn-primary float-right" id="upBtn">추천하기</button>
+			
 			<button
 				th:if="${auth} ne 'anonymousUser' and ${auth.member.uid} eq ${board.userid}"
 				class="btn btn-danger float-right" id="modifyBtn">수정/삭제</button>
@@ -94,15 +96,20 @@ ul {
 		src="https://cdn.ckeditor.com/ckeditor5/16.0.0/classic/ckeditor.js"></script>
 	<script th:inline="javascript"
 		th:src="@{'/js/classiceditorReadonly.js'}"></script>
+		<script th:inline="javascript" th:src="@{'/js/board.js'}"></script>
 	<script th:inline="javascript" th:src="@{'/js/reply.js'}"></script>
 	<script th:inline="javascript">
 var csrf = JSON.parse('[[${_csrf}]]');
 $(document).ready(function(e){
 	//게시판 관련
+	uid = [[${#authentication.principal} eq 'anonymousUser'?null:${#authentication.principal.member.uid}]];
+	boardMainAddress = [[${boardkindEN}]];
 	editoro.setData([[${board.content}]]);
 	boardBno = [[${board.bno}]];
 	var formObj = $("#f1");
-	var loc = window.location.href.substring(window.location.href.indexOf("/"));
+	var loc = window.location.href.toString().split(window.location.host)[1];
+	loc = loc.substring(0,loc.indexOf("?"))+"?"+$('#f1').find('input[name!=dest]').serialize();
+	console.log(loc);
 	$("#retBtn").on("click",function(e){
 		e.preventDefault();
 		var url = "/"+[[${boardkindEN}]]+"/list";
@@ -127,10 +134,54 @@ $(document).ready(function(e){
 		formObj.attr("action",url);
 		formObj.submit();
 	});
-	
+	$("#upBtn").on("click",function(e){
+		if(uid == null){
+			if(confirm("로그인해야지 추천할 수 있습니다. 로그인하시겠습니까?")){
+				e.preventDefault();
+				var url = "/login";
+				console.log(url);
+				formObj.find("[name='dest']").val(loc);
+				formObj.attr("action",url);
+				formObj.submit();
+			}
+			return;
+		}
+		if(confirm("정말 추천하시겠습니까?")){
+			var sendData = {
+				userid:uid,
+				bno:boardBno,
+				csrf:csrf
+			}
+			boardManager.upRecommendcnt(sendData,function(result){
+				alert("추천하였습니다!");
+			});
+		}
+	});
+	$("#downBtn").on("click",function(e){
+		if(uid == null){
+			if(confirm("로그인해야지 반대할 수 있습니다. 로그인하시겠습니까?")){
+				e.preventDefault();
+				var url = "/login";
+				console.log(url);
+				formObj.find("[name='dest']").val(loc);
+				formObj.attr("action",url);
+				formObj.submit();
+			}
+			return;
+		}
+		if(confirm("정말 반대하시겠습니까?")){
+			var sendData = {
+				userid:uid,
+				bno:boardBno,
+				csrf:csrf
+			}
+			boardManager.downRecommendcnt(sendData,function(result){
+				alert("반대하였습니다!");
+			});
+		}
+	});
 	//댓글 관련
 	replyMainAddress = [[${boardkindEN}]];
-	uid = [[${#authentication.principal} eq 'anonymousUser'?null:${#authentication.principal.member.uid}]];
 	replyInit();
 });
 </script>

@@ -50,15 +50,16 @@
 							<td class="bno" width="60%">#[[${board.bno}]]</td>
 							<td rowspan="2" width="30%">[[${board.userid}]]</td>
 							<td rowspan="2" width="20%">
-							[[${#strings.replace(board.regdate,'T',' ')}]]
-							</td>
-							
-							
-						
+								[[${#strings.replace(board.regdate,'T',' ')}]]</td>
+
+
+
 						</tr>
 						<tr>
-							<td class="title" colspan="2"><a th:href="${board.bno}">[[${board.title}]]</a>
-							</td>
+							<td class="title" colspan="2"><a th:href="${board.bno}">[[${board.title}]]</a><span
+								th:if="${board.recommendcnt != 0}"><i
+									class="far fa-thumbs-up"></i>[[${board.recommendcnt}]]</span> <span
+								th:if="${board.replycnt != 0}"><i class="far fa-comments"></i>[[${board.replycnt}]]</span></td>
 						</tr>
 					</table>
 				</li>
@@ -85,7 +86,9 @@
 	<script th:inline="javascript">
 $(document).ready(function(){
 	var formObj = $("#f1");
-	var loc = window.location.href.substring(window.location.href.indexOf("/"));
+	var loc = window.location.href.toString().split(window.location.host)[1];
+	loc = loc.substring(0,loc.indexOf("?"))+"?"+$('#f1').find('input[name!=dest]').serialize();
+	console.log(loc);
 	$(".card-body li a").on("click",function(e){
 		e.preventDefault();
 		var url = "/"+[[${boardkindEN}]]+"/getOne/"+$(this).attr('href');
@@ -121,6 +124,38 @@ $(document).ready(function(){
 		formObj.find("[name='type']").val(typeStr);
 		formObj.find("[name='keyword']").val(keywordStr);
 		formObj.find("[name='page']").val("1");
+		formObj.submit();
+	});
+	$("#orderByDate").on("click",function(e){
+		var url ="/"+[[${boardkindEN}]]+"/list";
+		console.log(url);
+		formObj.find("[name='orderBy']").val("0");
+		formObj.find("[name='dest']").val(loc);
+		formObj.attr("action",url);
+		formObj.submit();
+	});
+	$("#orderByRecommend").on("click",function(e){
+		var url ="/"+[[${boardkindEN}]]+"/list";
+		console.log(url);
+		formObj.find("[name='orderBy']").val("1");
+		formObj.find("[name='dest']").val(loc);
+		formObj.attr("action",url);
+		formObj.submit();
+	});
+	$("#orderByReply").on("click",function(e){
+		var url ="/"+[[${boardkindEN}]]+"/list";
+		console.log(url);
+		formObj.find("[name='orderBy']").val("2");
+		formObj.find("[name='dest']").val(loc);
+		formObj.attr("action",url);
+		formObj.submit();
+	});
+	$("#orderByView").on("click",function(e){
+		var url ="/"+[[${boardkindEN}]]+"/list";
+		console.log(url);
+		formObj.find("[name='orderBy']").val("3");
+		formObj.find("[name='dest']").val(loc);
+		formObj.attr("action",url);
 		formObj.submit();
 	});
 });

@@ -13,7 +13,7 @@ public class PageVO {
 	private int size;
 	private String keyword;
 	private String type;
-	
+	private int orderBy;
 	public String getKeyword() {
 		return keyword;
 	}
@@ -26,10 +26,16 @@ public class PageVO {
 	public void setType(String type) {
 		this.type = type;
 	}
-	
+	public int getOrderBy() {
+		return this.orderBy;
+	}
+	public void setOrderBy(int orderBy) {
+		this.orderBy = orderBy;
+	}
 	public PageVO() {
 		this.page = 1;
 		this.size = DEFAULT_SIZE;
+		this.orderBy = 0;
 	}
 	public PageVO(int page) {
 		this.page = page;

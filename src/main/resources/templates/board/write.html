@@ -43,9 +43,12 @@
 	<script th:inline="javascript">
 var csrf = JSON.parse('[[${_csrf}]]');
 $(document).ready(function(){
+	boardMainAddress = [[${boardkindEN}]];
 	console.log(csrf);
 	var formObj = $("#f1");
-	var loc = window.location.href.substring(window.location.href.indexOf("/"));
+	var loc = window.location.href.toString().split(window.location.host)[1];
+	loc = loc.substring(0,loc.indexOf("?"))+"?"+$('#f1').find('input[name!=dest]').serialize();
+	console.log(loc);
 	$("#submit").on("click",function(e){
 		var saveData = {
 			title:$("input[name='title']").val(),

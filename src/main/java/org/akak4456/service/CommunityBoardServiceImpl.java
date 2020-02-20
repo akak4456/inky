@@ -33,11 +33,13 @@ public class CommunityBoardServiceImpl implements BoardService<CommunityBoard>{
 		board = repo.save(board);
 		return true;
 	}
+	@Transactional
 	@Override
 	public Page<CommunityBoard> getListWithPaging(String type, String keyword,Pageable pageable) {
 		// TODO Auto-generated method stub
 		return repo.findAll(repo.makePredicate(type, keyword),pageable);
 	}
+	@Transactional
 	@Override
 	public CommunityBoard getOne(Long bno) {
 		// TODO Auto-generated method stub
@@ -47,6 +49,7 @@ public class CommunityBoardServiceImpl implements BoardService<CommunityBoard>{
 		}
 		return null;
 	}
+	@Transactional
 	@Override
 	public boolean update(CommunityBoard board) {
 		// TODO Auto-generated method stub
@@ -61,6 +64,7 @@ public class CommunityBoardServiceImpl implements BoardService<CommunityBoard>{
 		newBoard = repo.save(newBoard);
 		return true;
 	}
+	@Transactional
 	@Override
 	public boolean deleteBoard(Long bno) {
 		// TODO Auto-generated method stub
