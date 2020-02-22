@@ -11,7 +11,7 @@ import org.springframework.data.repository.CrudRepository;
 import com.querydsl.core.BooleanBuilder;
 import com.querydsl.core.types.Predicate;
 
-public interface CommunityBoardRepository extends CrudRepository<CommunityBoard, Long>,QuerydslPredicateExecutor<CommunityBoard> {
+public interface CommunityBoardRepository extends BoardRepository<CommunityBoard> {
 	public default Predicate makePredicate(String type,String keyword) {
 		BooleanBuilder builder = new BooleanBuilder();
 		

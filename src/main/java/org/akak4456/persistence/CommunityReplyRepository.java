@@ -9,7 +9,7 @@ import org.springframework.data.repository.CrudRepository;
 import com.querydsl.core.BooleanBuilder;
 import com.querydsl.core.types.Predicate;
 
-public interface CommunityReplyRepository extends CrudRepository<CommunityReply, Long>,QuerydslPredicateExecutor<CommunityReply>{
+public interface CommunityReplyRepository extends ReplyRepository<CommunityReply>{
 	public default Predicate makePredicate(Long bno) {
 		BooleanBuilder builder = new BooleanBuilder();
 		

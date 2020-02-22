@@ -2,24 +2,189 @@
 <head>
 <meta charset="utf-8">
 <title>Inky</title>
+<link rel="stylesheet"
+	href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css"
+	integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh"
+	crossorigin="anonymous">
+<link rel="stylesheet"
+	href="https://use.fontawesome.com/releases/v5.12.1/css/all.css"
+	integrity="sha384-v8BU367qNbs/aIZIxuivaU55N5GPF89WBerHoGA4QTcbUjYiLQtKdrfXnqAcXyTv"
+	crossorigin="anonymous">
+<script src="https://code.jquery.com/jquery-3.1.1.min.js">
+	<script src="https://code.jquery.com/jquery-3.4.1.slim.min.js"
+		integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n"
+		crossorigin="anonymous">
+</script>
+<script
+	src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js"
+	integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo"
+	crossorigin="anonymous"></script>
+<script
+	src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"
+	integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6"
+	crossorigin="anonymous"></script>
+<script src="https://kit.fontawesome.com/addd4c8dc0.js"
+	crossorigin="anonymous"></script>
+<style>
+/* Made with love by Mutiullah Samim*/
+@import url('https://fonts.googleapis.com/css?family=Numans');
+
+html, body {
+	background-image:
+		url('http://getwallpapers.com/wallpaper/full/a/5/d/544750.jpg');
+	background-size: cover;
+	background-repeat: no-repeat;
+	height: 100%;
+	font-family: 'Numans', sans-serif;
+}
+
+.container {
+	height: 100%;
+	align-content: center;
+}
+
+.card {
+	height: 420px;
+	margin-top: auto;
+	margin-bottom: auto;
+	width: 400px;
+	background-color: rgba(0, 0, 0, 0.5) !important;
+}
+
+.social_icon span {
+	font-size: 60px;
+	margin-left: 10px;
+	color: #FFC312;
+}
+
+.social_icon span:hover {
+	color: white;
+	cursor: pointer;
+}
+
+.card-header h3, .card-header h6 {
+	color: white;
+}
+
+.social_icon {
+	position: absolute;
+	right: 20px;
+	top: -45px;
+}
+
+.input-group-prepend span {
+	width: 50px;
+	background-color: #FFC312;
+	color: black;
+	border: 0 !important;
+}
+
+input:focus {
+	outline: 0 0 0 0 !important;
+	box-shadow: 0 0 0 0 !important;
+}
+
+.remember {
+	color: white;
+}
+
+.remember input {
+	width: 20px;
+	height: 20px;
+	margin-left: 15px;
+	margin-right: 5px;
+}
+
+.join_btn {
+	color: black;
+	background-color: #FFC312;
+	width: 100px;
+}
+
+.join_btn:hover {
+	color: black;
+	background-color: white;
+}
+
+.links {
+	color: white;
+}
+
+.links a {
+	margin-left: 4px;
+}
+</style>
 </head>
-<body>
-	<form method="post">
-		<p>
-			<label for="username">Username</label>
-			<input type="text" id="username" name="uid" value="user88"/>
-		</p>
-		<p>
-			<label for="password">Password</label>
-			<input type="text" id="password" name="upw" value="pw88"/>
-		</p>
-		<p>
-			<label for="uname">Username</label>
-			<input type="text" id="uname" name="uname" value="asdf"/>
-		</p>
-		<input type="hidden" th:name="${_csrf.parameterName}"
-		th:value="${_csrf.token}"/>
-		<button type="submit" class="btn">join</button>
-	</form>
-</body>
+<section>
+	<div class="container">
+		<div class="d-flex justify-content-center h-100">
+			<div class="card">
+				<div class="card-header">
+					<h3>회원가입</h3>
+				</div>
+				<div class="card-body">
+					<form method="post" id="f1">
+						<div class="input-group form-group">
+							<div class="input-group-prepend">
+								<span class="input-group-text"><i class="fas fa-user"></i></span>
+							</div>
+							<input type="text" id="username" name="uid" class="form-control"
+								placeholder="아이디">
+
+						</div>
+						<div class="input-group form-group">
+							<div class="input-group-prepend">
+								<span class="input-group-text"><i class="fas fa-key"></i></span>
+							</div>
+							<input type="password" class="form-control" id="password"
+								name="upw" placeholder="비밀번호">
+						</div>
+						<div class="input-group form-group">
+							<div class="input-group-prepend">
+								<span class="input-group-text"><i class="fas fa-key"></i></span>
+							</div>
+							<input type="password" class="form-control" id="password"
+								name="upwchk" placeholder="비밀번호확인">
+						</div>
+						<div class="input-group form-group">
+							<div class="input-group-prepend">
+								<span class="input-group-text"><i class="fas fa-user"></i></span>
+							</div>
+							<input type="text" id="uname"  name="uname"
+								class="form-control" placeholder="사용자이름">
+						</div>
+						<input type="hidden" th:name="${_csrf.parameterName}"
+							th:value="${_csrf.token}" />
+						<div class="form-group">
+							<input type="submit" value="회원가입"
+								class="btn float-right join_btn">
+						</div>
+					</form>
+				</div>
+				<div class="card-footer">
+					<div class="d-flex justify-content-center">
+						<a href="#">돌아가기</a>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</section>
+<script>
+$(document).ready(function(){
+	var formObj = $("#f1");
+	$(".join_btn").on("click",function(e){
+		e.preventDefault();
+		//form이 맞는지 클라이언트에서 확인
+		var password = formObj.find("[name='upw']").val();
+		var passwordCheck = formObj.find("[name='upwchk']").val();
+		if(password != passwordCheck){
+			alert("비밀번호와 비밀번호확인이 일치하지 않습니다.");
+			return;
+		}
+		
+		formObj.submit();
+	});
+});
+</script>
 </html>

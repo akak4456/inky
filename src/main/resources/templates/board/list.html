@@ -16,30 +16,31 @@
 			</div>
 			<br> <br>
 			<div>
-				<div class="btn-group w-25 float-left" role="group"
-					aria-label="Basic example">
-					<button type="button" class="btn btn-secondary" id="orderByDate">최신순</button>
-					<button type="button" class="btn btn-secondary"
-						id="orderByRecommend">추천순</button>
-					<button type="button" class="btn btn-secondary" id="orderByReply">댓글순</button>
-					<button type="button" class="btn btn-secondary" id="orderByView">조회순</button>
+				<div class="row">
+					<div class="btn-group col-lg-3 h-25" role="group"
+						aria-label="Basic example">
+						<button type="button" class="btn btn-secondary" id="orderByDate">최신순</button>
+						<button type="button" class="btn btn-secondary"
+							id="orderByRecommend">추천순</button>
+						<button type="button" class="btn btn-secondary" id="orderByReply">댓글순</button>
+						<button type="button" class="btn btn-secondary" id="orderByView">조회순</button>
+					</div>
+					<div class="col-lg-9 form-group h-25">
+						<select id="searchType" class="form-control w-25 float-left">
+							<option value="-">---</option>
+							<option value="T" th:selected="${pageVO.type}=='T'">제목</option>
+							<option value="C" th:selected="${pageVO.type}=='C'">내용</option>
+							<option value="W" th:selected="${pageVO.type}=='W'">작성자</option>
+							<option value="TC" th:selected="${pageVO.type}=='TC'">제목+내용</option>
+							<option value="TW" th:selected="${pageVO.type}=='TW'">제목+작성자</option>
+							<option value="CW" th:selected="${pageVO.type}=='CW'">내용+작성자</option>
+							<option value="TCW" th:selected="${pageVO.type}=='TCW'">제목+내용+작성자</option>
+						</select> <input id="searchKeyword" class="form-control w-50 float-left" type="text"
+							name="writer" placeholder="검색어" th:value="${pageVO.keyword}">
+						<button class="btn btn-primary w-25 float-left" id="searchBtn">검색하기</button>
+					</div>
 				</div>
-				<div class="form-group w-75 float-right">
-					<button class="btn btn-primary float-right" id="searchBtn">검색하기</button>
-					<input id="searchKeyword" class="w-50 form-control float-right"
-						type="text" name="writer" placeholder="검색어"
-						th:value="${pageVO.keyword}"> <select id="searchType"
-						class="w-25 form-control float-right">
-						<option value="-">---</option>
-						<option value="T" th:selected="${pageVO.type}=='T'">제목</option>
-						<option value="C" th:selected="${pageVO.type}=='C'">내용</option>
-						<option value="W" th:selected="${pageVO.type}=='W'">작성자</option>
-						<option value="TC" th:selected="${pageVO.type}=='TC'">제목+내용</option>
-						<option value="TW" th:selected="${pageVO.type}=='TW'">제목+작성자</option>
-						<option value="CW" th:selected="${pageVO.type}=='CW'">내용+작성자</option>
-						<option value="TCW" th:selected="${pageVO.type}=='TCW'">제목+내용+작성자</option>
-					</select>
-				</div>
+
 			</div>
 		</div>
 		<div class="card-body">
@@ -56,8 +57,8 @@
 
 						</tr>
 						<tr>
-							<td class="title" colspan="2"><a th:href="${board.bno}">[[${board.title}]]</a><span
-								th:if="${board.recommendcnt != 0}"><i
+							<td class="title" colspan="2"><a th:href="${board.bno}">[[${board.title}]]</a>
+								<span th:if="${board.recommendcnt != 0}"><i
 									class="far fa-thumbs-up"></i>[[${board.recommendcnt}]]</span> <span
 								th:if="${board.replycnt != 0}"><i class="far fa-comments"></i>[[${board.replycnt}]]</span></td>
 						</tr>
