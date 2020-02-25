@@ -1,4 +1,5 @@
-<html xmlns:th="http://www.thymeleaf.org">
+<html xmlns:th="http://www.thymeleaf.org"
+	xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 <head>
 <meta charset="utf-8">
 <title>Inky</title>
@@ -44,7 +45,7 @@ html, body {
 }
 
 .card {
-	height: 420px;
+	height: 600px;
 	margin-top: auto;
 	margin-bottom: auto;
 	width: 400px;
@@ -113,6 +114,36 @@ input:focus {
 .links a {
 	margin-left: 4px;
 }
+
+.inputfile {
+	width: 0.1px;
+	height: 0.1px;
+	opacity: 0;
+	overflow: hidden;
+	position: absolute;
+	z-index: -1;
+}
+
+.inputfile+label {
+	font-size: 1.25em;
+	font-weight: 700;
+	color: white;
+	background-color: black;
+	/*     display: inline-block; */
+}
+
+.inputfile:focus+label, .inputfile+label:hover {
+	background-color: red;
+}
+
+.inputfile+label {
+	cursor: pointer; /* "hand" cursor */
+}
+
+.inputfile:focus+label {
+	outline: 1px dotted #000;
+	outline: -webkit-focus-ring-color auto 5px;
+}
 </style>
 </head>
 <section>
@@ -125,38 +156,42 @@ input:focus {
 				<div class="card-body">
 					<form method="post" id="f1">
 						<div class="input-group form-group">
-							<div class="input-group-prepend">
-								<span class="input-group-text"><i class="fas fa-user"></i></span>
-							</div>
 							<input type="text" id="username" name="uid" class="form-control"
 								placeholder="아이디">
-
+							<button class="btn float-right join_btn" id="chkid">중복확인</button>
 						</div>
 						<div class="input-group form-group">
-							<div class="input-group-prepend">
-								<span class="input-group-text"><i class="fas fa-key"></i></span>
-							</div>
 							<input type="password" class="form-control" id="password"
 								name="upw" placeholder="비밀번호">
 						</div>
 						<div class="input-group form-group">
-							<div class="input-group-prepend">
-								<span class="input-group-text"><i class="fas fa-key"></i></span>
-							</div>
 							<input type="password" class="form-control" id="password"
 								name="upwchk" placeholder="비밀번호확인">
 						</div>
-						<div class="input-group form-group">
+						<div class="input-group form-group" id="emailform">
+							<input type="text" id="uemail" name="uemail" class="form-control"
+								placeholder="이메일">
+							<button class="btn float-right join_btn" id="chkemail">인증하기</button>
+						</div>
+						<div class="input-group mb-3">
 							<div class="input-group-prepend">
-								<span class="input-group-text"><i class="fas fa-user"></i></span>
+								<i class="input-group-text" id="inputGroupFileAddon01">프로필</i>
 							</div>
-							<input type="text" id="uname"  name="uname"
-								class="form-control" placeholder="사용자이름">
+							<div class="custom-file">
+								<input type="file" class="custom-file-input"
+									id="inputGroupFile01" aria-describedby="inputGroupFileAddon01">
+								<label class="custom-file-label" for="inputGroupFile01">Choose
+									file</label>
+							</div>
+						</div>
+						<div class="input-group form-group">
+							<input type="text" id="uname" name="uname" class="form-control"
+								placeholder="사용자이름">
 						</div>
 						<input type="hidden" th:name="${_csrf.parameterName}"
 							th:value="${_csrf.token}" />
 						<div class="form-group">
-							<input type="submit" value="회원가입"
+							<input type="submit" value="회원가입" id="join"
 								class="btn float-right join_btn">
 						</div>
 					</form>
@@ -170,21 +205,112 @@ input:focus {
 		</div>
 	</div>
 </section>
-<script>
-$(document).ready(function(){
-	var formObj = $("#f1");
-	$(".join_btn").on("click",function(e){
-		e.preventDefault();
-		//form이 맞는지 클라이언트에서 확인
-		var password = formObj.find("[name='upw']").val();
-		var passwordCheck = formObj.find("[name='upwchk']").val();
-		if(password != passwordCheck){
-			alert("비밀번호와 비밀번호확인이 일치하지 않습니다.");
-			return;
-		}
+<script th:inline="javascript">
+	$(document).ready(function() {
+		var csrf = JSON.parse('[[${_csrf}]]');
+		var formObj = $("#f1");
+		$("#chkid").on("click",function(e){
+			e.preventDefault();
+			var uid = formObj.find("[name='uid']").val();
+			$.ajax({
+				type : 'post',
+				url : '/member/checkid',
+				data : uid,
+				contentType: "text/plain",
+				beforeSend : function(xhr) {
+					xhr.setRequestHeader(csrf.headerName, csrf.token);
+				},
+				success : function(result) {
+					alert(result);
+				},
+				error : function(result) {
+					alert(result.responseText);
+				}
+			});
+		});
+		$("#chkemail").on("click",function(e){
+			var uemail = formObj.find("[name='uemail']").val();
+			$.ajax({
+				type : 'post',
+				url : '/member/sendEmail',
+				data : uemail,
+				contentType: "text/plain",
+				beforeSend : function(xhr) {
+					xhr.setRequestHeader(csrf.headerName, csrf.token);
+				},
+				success : function(result) {
+					alert(result);
+				},
+				error : function(result) {
+					alert(result.responseText);
+				}
+			});
+			var str = "";
+			str += "<div class='input-group form-group' id='chkcodeForm'>";
+			str +=	"	<input type='text' id='code' name='code' class='form-control' placeholder='인증코드'>";
+			str += "	<button class='btn float-right join_btn' id='chkcode'>인증하기</button>";
+			str += "</div>";
+			$("#emailform").after(str);
+			$("#chkcode").on("click",function(e){
+				var chkcode = $("#chkcode").val();
+				var sendData = {
+					email:uemail,
+					code:chkcode
+				};
+				$.ajax({
+					type : 'post',
+					url : '/member/checkEmail',
+					data : JSON.stringify(sendData),
+					contentType : "application/json",
+					beforeSend : function(xhr) {
+						xhr.setRequestHeader(csrf.headerName, csrf.token);
+					},
+					success : function(result) {
+						alert(result);
+						$("#chkCodeForm").remove();
+					},
+					error : function(result) {
+						alert(result.responseText);
+					}
+				});
+			});
+		});
+		$("#join").on("click", function(e) {
+			e.preventDefault();
+			var uid = formObj.find("[name='uid']").val();
+			var upw = formObj.find("[name='upw']").val();
+			var upwchk = formObj.find("[name='upwchk']").val();
+			var uemail = formObj.find("[name='uemail']").val();
+			var uname = formObj.find("[name='uname']").val();
+			//form이 맞는지 클라이언트에서 확인
+			if(upw != upwchk){
+				alert("비밀번호와 비밀번호 확인이 맞지 않습니다.");
+				return;
+			}
+			var sendData = {
+				uid : uid,
+				upw : upw,
+				uemail : uemail,
+				uname : uname
+			};
+			console.log(sendData);
+			$.ajax({
+				type : 'post',
+				url : '/member/join',
+				data : JSON.stringify(sendData),
+				contentType : "application/json",
+				beforeSend : function(xhr) {
+					xhr.setRequestHeader(csrf.headerName, csrf.token);
+				},
+				success : function(result) {
+					alert(result);
+				},
+				error : function(result) {
+					alert(result.responseText);
+				}
+			});
+		});
 		
-		formObj.submit();
 	});
-});
 </script>
 </html>
