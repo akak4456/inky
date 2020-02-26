@@ -1,12 +1,16 @@
 package org.akak4456.domain;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
 import javax.persistence.MappedSuperclass;
+import javax.persistence.OneToMany;
 
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
@@ -19,7 +23,7 @@ import lombok.Setter;
 @Getter
 @Setter
 @MappedSuperclass
-public abstract class Board {
+public abstract class Board <R extends Reply> {
 	@Id
 	@GeneratedValue(strategy=GenerationType.IDENTITY)
 	private Long bno;
@@ -38,4 +42,11 @@ public abstract class Board {
 	@JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
 	@UpdateTimestamp
 	private LocalDateTime updatedate;
+	
+	@OneToMany(cascade=CascadeType.ALL,orphanRemoval=true)
+	@JoinColumn(name="bno")
+	private List<UploadFile> uploads;
+	
+	@OneToMany(mappedBy="board", cascade=CascadeType.ALL)
+	private List<R> replies;
 }

@@ -229,7 +229,9 @@ input:focus {
 			});
 		});
 		$("#chkemail").on("click",function(e){
+			e.preventDefault();
 			var uemail = formObj.find("[name='uemail']").val();
+			console.log(uemail);
 			$.ajax({
 				type : 'post',
 				url : '/member/sendEmail',
@@ -242,7 +244,7 @@ input:focus {
 					alert(result);
 				},
 				error : function(result) {
-					alert(result.responseText);
+					alert("이메일을 보내지 못했습니다. 이메일 주소가 맞지 않거나 이미 존재하는 이메일일 수 있습니다.");
 				}
 			});
 			var str = "";
@@ -250,9 +252,11 @@ input:focus {
 			str +=	"	<input type='text' id='code' name='code' class='form-control' placeholder='인증코드'>";
 			str += "	<button class='btn float-right join_btn' id='chkcode'>인증하기</button>";
 			str += "</div>";
+			$("#chkcodeForm").remove();
 			$("#emailform").after(str);
 			$("#chkcode").on("click",function(e){
-				var chkcode = $("#chkcode").val();
+				e.preventDefault();
+				var chkcode = $("#code").val();
 				var sendData = {
 					email:uemail,
 					code:chkcode
@@ -267,7 +271,7 @@ input:focus {
 					},
 					success : function(result) {
 						alert(result);
-						$("#chkCodeForm").remove();
+						$("#chkcodeForm").remove();
 					},
 					error : function(result) {
 						alert(result.responseText);
@@ -304,6 +308,7 @@ input:focus {
 				},
 				success : function(result) {
 					alert(result);
+					location.href="/login";
 				},
 				error : function(result) {
 					alert(result.responseText);

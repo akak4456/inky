@@ -57,6 +57,8 @@ $(document).ready(function(){
 			userid:[[${#authentication.principal.member.uid}]],
 			csrf:csrf
 		};
+		console.log("saves...");
+		console.log(saveData);
 		boardManager.add(saveData,function(result){
 			alert("새글이 등록되었습니다!");
 			var url = "/"+[[${boardkindEN}]]+"/list";

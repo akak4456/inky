@@ -15,15 +15,10 @@ import lombok.Setter;
 import lombok.ToString;
 @Getter
 @Setter
-@ToString(exclude= {"replies","uploads"})
+@ToString(exclude= "replies")
 @Entity
 @Table(name="tbl_community_board")
 @EqualsAndHashCode(of="bno")
-public class CommunityBoard extends Board {
-	@OneToMany(mappedBy="board", cascade=CascadeType.ALL)
-	private List<CommunityReply> replies;
+public class CommunityBoard extends Board<CommunityReply> {
 	
-	@OneToMany(cascade=CascadeType.ALL,orphanRemoval=true)
-	@JoinColumn(name="bno")
-	private List<CommunityUploadFile> uploads;
 }

@@ -6,6 +6,7 @@ import javax.persistence.Column;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.ManyToOne;
 import javax.persistence.MappedSuperclass;
 import javax.persistence.PostPersist;
 import javax.persistence.PostUpdate;
@@ -14,6 +15,7 @@ import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -21,7 +23,7 @@ import lombok.Setter;
 @Getter
 @Setter
 @MappedSuperclass
-public abstract class Reply {
+public abstract class Reply <B extends Board> {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long rno;
@@ -57,4 +59,8 @@ public abstract class Reply {
 		}
 		this.path= str1+str2;
 	}
+	
+	@JsonIgnore
+	@ManyToOne
+	private B board;
 }

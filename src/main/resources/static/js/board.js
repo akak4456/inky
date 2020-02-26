@@ -56,12 +56,13 @@ var boardManager = (function(){
 			var fForm = {"uploadPath":uploadPath,"uploadFileName":uploadFileName};
 			fileForm.push(fForm);
 		}
+		return fileForm;
 	}
 	var deleteBoard = function(obj,callback){
 		console.log("deleteBoard...");
 		$.ajax({
 			type:"delete",
-			url:"/'+boardMainAddress+'/delete/"+obj.bno,
+			url:'/'+boardMainAddress+'/delete/'+obj.bno,
 			data:obj.userid,
 			beforeSend:function(xhr){
 				xhr.setRequestHeader(obj.csrf.headerName,obj.csrf.token);

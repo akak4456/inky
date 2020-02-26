@@ -92,6 +92,7 @@ public class CommunityBoardController {
 	@ResponseBody
 	public ResponseEntity<String> addBoard(@RequestBody CommunityBoard board){
 		log.info("addBoard..."+board);
+		log.info("addBoardUploads..."+board.getUploads());
 		communityBoardService.save(board);
 		return new ResponseEntity<>("success",HttpStatus.OK);
 	}

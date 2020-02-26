@@ -10,8 +10,9 @@ import lombok.Setter;
 @Getter
 @Setter
 public class MemberForm {
-	public static final String idregexp = "^[A-Za-z0-9+]{8,50}$"; 
+	public static final String idregexp = "^[A-Za-z0-9+]{5,50}$"; 
 	public static final String pwregexp = "^(?=.*[0-9]{1,50})(?=.*[~`!@#$%\\^&*()-+=]{1,50})(?=.*[a-zA-Z]{1,50}).{8,50}$";
+	public static final String emailregexp = "^[a-zA-Z0-9_!#$%&’*+/=?`{|}~^.-]+@[a-zA-Z0-9.-]+$";
 	@NotNull(message="아이디는 반드시 있어야 합니다")
 	@Pattern(regexp=idregexp,
 	message="아이디는 영어대소문자 숫자만 가능하며, 총 8글자 이상 50글자 이하 써야합니다")
@@ -24,7 +25,7 @@ public class MemberForm {
 	
 	@NotNull(message="이메일은 반드시 있어야 합니다")
 	@NotEmpty(message="이메일은 반드시 있어야 합니다")
-	@Email(message="이메일 형식을 맞춰주세요")
+	@Pattern(regexp=emailregexp,message="이메일 형식을 맞춰주세요")
 	private String uemail;
 	
 	@NotNull(message="사용자이름은 반드시 있어야 합니다")

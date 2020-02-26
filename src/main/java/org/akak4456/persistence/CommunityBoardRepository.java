@@ -12,6 +12,7 @@ import com.querydsl.core.BooleanBuilder;
 import com.querydsl.core.types.Predicate;
 
 public interface CommunityBoardRepository extends BoardRepository<CommunityBoard> {
+	@Override
 	public default Predicate makePredicate(String type,String keyword) {
 		BooleanBuilder builder = new BooleanBuilder();
 		
