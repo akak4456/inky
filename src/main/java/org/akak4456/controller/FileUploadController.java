@@ -1,17 +1,17 @@
 package org.akak4456.controller;
 
+import java.awt.image.BufferedImage;
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.text.SimpleDateFormat;
-import java.util.Date;
 import java.util.List;
-import java.util.UUID;
+
+import javax.imageio.ImageIO;
 
 import org.akak4456.service.FileService;
 import org.akak4456.vo.FileUpload;
+import org.imgscalr.Scalr;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -54,4 +54,11 @@ public class FileUploadController {
 		}
 		return result;
 	}
+	@PostMapping("/profileUpload")
+	public ResponseEntity<String> uploadProfile(@RequestParam("uploadfile") MultipartFile uploadfile) throws Exception{
+		log.info("profile..."+uploadfile.getOriginalFilename());
+		String retName = fileService.profileUpload(uploadfile);
+		return new ResponseEntity<>(retName,HttpStatus.OK);
+	}
+	
 }

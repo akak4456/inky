@@ -1,9 +1,8 @@
 package org.akak4456.controller;
 
 import java.util.Date;
-import java.util.HashMap;
-import java.util.Map;
 
+import javax.servlet.http.HttpSession;
 import javax.transaction.Transactional;
 import javax.validation.Valid;
 
@@ -32,16 +31,6 @@ import lombok.extern.java.Log;
 @Controller
 @RequestMapping("/member/")
 public class MemberController {
-	private final int MAX_SIZE = 1000;
-	
-	private static Map<String, CodeInfo> storeCode;
-
-	private static Map<String,Date> emailChecked; 
-
-	static {
-		storeCode = new HashMap<String, CodeInfo>();
-		emailChecked = new HashMap<String,Date>();
-	}
 	@Autowired
 	private MemberService memberService;
 	@Autowired
@@ -54,7 +43,7 @@ public class MemberController {
 	@Transactional
 	@PostMapping("/join")
 	@ResponseBody
-	public ResponseEntity<String> joinPost(@Valid @RequestBody MemberForm memberForm, BindingResult bindingResult) {
+	public ResponseEntity<String> joinPost(@Valid @RequestBody MemberForm memberForm, BindingResult bindingResult,HttpSession session) {
 		log.info("MEMBER: " + memberForm);
 		if (bindingResult.hasErrors()) {
 			// join form 이 맞지 않을 때
@@ -72,17 +61,13 @@ public class MemberController {
 		if(!memberService.ExistEmail(memberForm.getUemail()).equals(Emailok.OK)) {
 			return new ResponseEntity<>("이 이메일로 만들 수 없습니다!", HttpStatus.BAD_REQUEST);
 		}
-		if(!emailChecked.containsKey(memberForm.getUemail())) {
+		String checkedEmail = session.getAttribute("checkedEmail")==null?null:(String)(session.getAttribute("checkedEmail"));
+		if(checkedEmail == null) {
 			return new ResponseEntity<>("이 이메일로 만들 수 없습니다! 이메일 인증을 해주세요", HttpStatus.BAD_REQUEST);
 		}
-		//현재 시간과 인증한 시간 차 구하기
-		Date reqDate = emailChecked.get(memberForm.getUemail());
-		//분단위
-		if(diffMinute(reqDate) >= 10) {
-			emailChecked.remove(memberForm.getUemail());
-			return new ResponseEntity<>("인증코드의 유효기간이 지났습니다. 다시 인증해주세요.", HttpStatus.BAD_REQUEST);
-		}
-		emailChecked.remove(memberForm.getUemail());
+		session.removeAttribute("checkedEmail");
+		
+		
 		memberService.addMember(memberForm);
 		return new ResponseEntity<>("회원가입에 성공했습니다!", HttpStatus.OK);
 	}
@@ -104,7 +89,11 @@ public class MemberController {
 	@Transactional
 	@PostMapping("/sendEmail")
 	@ResponseBody
-	public ResponseEntity<String> sendEmail(@RequestBody String uemail) {
+	public ResponseEntity<String> sendEmail(@RequestBody String uemail,HttpSession session) {
+		/*
+		 * 이메일 주소가 잘못되면 어찌할 것인가
+		 * 그거에 대해서 생각하기!!!!!
+		 */
 		log.info("sendEmail..."+uemail);
 		if(!memberService.ExistEmail(uemail).equals(Emailok.OK)) {
 			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
@@ -119,7 +108,8 @@ public class MemberController {
 
 		javaMailSender.send(msg);
 		
-		storeCodeAdded(uemail,code);
+		
+		session.setAttribute("code", code);
 		
 		log.info("sendEmailDone...");
 		return new ResponseEntity<>("이메일을 보냈습니다. 인증코드를 확인해주세요!", HttpStatus.OK);
@@ -128,14 +118,15 @@ public class MemberController {
 	@Transactional
 	@PostMapping("/checkEmail")
 	@ResponseBody
-	public ResponseEntity<String> checkEmail(@RequestBody EmailCodeCheckVO emailCodeCheckVO) {
+	public ResponseEntity<String> checkEmail(@RequestBody EmailCodeCheckVO emailCodeCheckVO,HttpSession session) {
 		log.info("checkemail..."+emailCodeCheckVO.getEmail()+" "+emailCodeCheckVO.getCode());
-		if (storeCode.get(emailCodeCheckVO.getEmail()) == null
-				|| !storeCode.get(emailCodeCheckVO.getEmail()).getCode().equals(emailCodeCheckVO.getCode())) {
+		String storedCode = session.getAttribute("code") == null?null:(String)session.getAttribute("code");
+		log.info("storedCode..."+storedCode);
+		if (storedCode == null||!storedCode.equals(emailCodeCheckVO.getCode())) {
 			return new ResponseEntity<>("인증코드가 유효하지 않습니다!", HttpStatus.BAD_REQUEST);
 		}
-		storeCode.remove(emailCodeCheckVO.getEmail());
-		emailCheckedAdded(emailCodeCheckVO.getEmail());
+		session.removeAttribute("code");
+		session.setAttribute("checkedEmail", emailCodeCheckVO.getEmail());
 		return new ResponseEntity<>("인증코드가 유효합니다!", HttpStatus.OK);
 	}
 
@@ -146,55 +137,5 @@ public class MemberController {
 			ret += t;
 		}
 		return ret;
-	}
-	
-	private long diffMinute(Date reqDate) {
-		long reqDateTime = reqDate.getTime();
-		Date curDate = new Date();
-		long curDateTime = curDate.getTime();
-		long minute = (curDateTime - reqDateTime) / 60000;
-		return minute;
-	}
-	
-	private void storeCodeAdded(String uemail,String code) {
-		if(storeCode.size() >= MAX_SIZE) {
-			//필요없는 storeCode삭제
-			for(Map.Entry<String, CodeInfo> entry:storeCode.entrySet()) {
-				Date reqDate = entry.getValue().getRegdate();
-				if(diffMinute(reqDate) >= 10) {
-					storeCode.remove(entry.getKey());
-				}
-			}
-		}
-		CodeInfo codeInfo = new CodeInfo(code,new Date());
-		storeCode.put(uemail, codeInfo);
-	}
-	
-	private void emailCheckedAdded(String uemail) {
-		if(emailChecked.size() >= MAX_SIZE) {
-			for(Map.Entry<String, Date> entry:emailChecked.entrySet()) {
-				Date reqDate = entry.getValue();
-				if(diffMinute(reqDate) >= 10) {
-					storeCode.remove(entry.getKey());
-				}
-			}
-		}
-		emailChecked.put(uemail,new Date());
-	}
-}
-class CodeInfo{
-	private String code;
-	private Date regdate;
-	
-	CodeInfo(String code,Date regdate){
-		this.code = code;
-		this.regdate = regdate;
-	}
-	
-	public String getCode() {
-		return code;
-	}
-	public Date getRegdate() {
-		return regdate;
 	}
 }

@@ -7,7 +7,8 @@ import java.util.List;
 import org.springframework.web.multipart.MultipartFile;
 
 public interface FileService {
-	String uploadFile(List<MultipartFile> uploadfile) throws IOException;
-	File getFile(String path,String fileName);
-	boolean deleteFile(String path,String fileName);
+	public String uploadFile(List<MultipartFile> uploadfile) throws IOException;
+	public File getFile(String path,String fileName);
+	public boolean deleteFile(String path,String fileName);
+	public String profileUpload(MultipartFile profile);
 }

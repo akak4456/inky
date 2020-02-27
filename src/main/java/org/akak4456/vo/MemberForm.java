@@ -1,9 +1,12 @@
 package org.akak4456.vo;
 
-import javax.validation.constraints.Email;
+import java.util.List;
+
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
+
+import org.akak4456.domain.MemberProfile;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -31,4 +34,6 @@ public class MemberForm {
 	@NotNull(message="사용자이름은 반드시 있어야 합니다")
 	@NotEmpty(message="사용자이름은 반드시 있어야 합니다")
 	private String uname;
+	
+	private List<MemberProfile> uploads;
 }

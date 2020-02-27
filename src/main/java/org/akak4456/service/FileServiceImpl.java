@@ -1,6 +1,9 @@
 package org.akak4456.service;
 
+import java.awt.image.BufferedImage;
+import java.io.ByteArrayOutputStream;
 import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -10,45 +13,45 @@ import java.util.Date;
 import java.util.List;
 import java.util.UUID;
 
+import javax.imageio.ImageIO;
+
+import org.imgscalr.Scalr;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import lombok.extern.java.Log;
+
 @Service
 @Log
 public class FileServiceImpl implements FileService {
-	private static final String pathPrefix = "C:/upload"; 
+	private static final String pathPrefix = "C:/upload";
+	
+	private static final int thumbnailWidth = 100;
+
 	@Override
 	public String uploadFile(List<MultipartFile> uploadfile) throws IOException {
 		// TODO Auto-generated method stub
-		log.info("originalfileName: "+uploadfile.get(0).getOriginalFilename());
-		//folder create
-		SimpleDateFormat format1 = new SimpleDateFormat ( "yyyy/MM/dd");
-		Date time = new Date();
-		String time1 = format1.format(time);
-		String folderName = pathPrefix+"/"+time1;
-		Path path = Paths.get(folderName);
-		
-		if(!Files.exists(path)) {
-			Files.createDirectories(path);
-		}
-		//file create
+		log.info("originalfileName: " + uploadfile.get(0).getOriginalFilename());
+		// folder create
+		String time1 = createFolder();
+		String folderName = pathPrefix + "/" + time1;
+		// file create
 		String fileName = null;
-		for(MultipartFile multipart:uploadfile) {
+		for (MultipartFile multipart : uploadfile) {
 			UUID uuid = UUID.randomUUID();
-			fileName = uuid.toString()+"_"+multipart.getOriginalFilename();
-			String totalFileName = folderName+"/"+fileName;
+			fileName = uuid.toString() + "_" + multipart.getOriginalFilename();
+			String totalFileName = folderName + "/" + fileName;
 			File tofile = new File(totalFileName);
 			multipart.transferTo(tofile);
 		}
-		return "/fileget/"+time1+"/"+fileName;
+		return "/fileget/" + time1 + "/" + fileName;
 	}
 
 	@Override
-	public File getFile(String path,String fileName) {
+	public File getFile(String path, String fileName) {
 		// TODO Auto-generated method stub
-		String totalFileName = pathPrefix+path+"/"+fileName;
-		log.info("totalFileName: "+totalFileName);
+		String totalFileName = pathPrefix + path + "/" + fileName;
+		log.info("totalFileName: " + totalFileName);
 		File file = new File(totalFileName);
 		return file;
 	}
@@ -56,10 +59,60 @@ public class FileServiceImpl implements FileService {
 	@Override
 	public boolean deleteFile(String path, String fileName) {
 		// TODO Auto-generated method stub
-		File file = new File(pathPrefix+path+"/"+fileName);
-		if(!file.delete())
+		File file = new File(pathPrefix + path + "/" + fileName);
+		if (!file.delete())
 			return false;
 		return true;
 	}
 
+	@Override
+	public String profileUpload(MultipartFile profile) {
+		// TODO Auto-generated method stub
+		FileOutputStream fos = null;
+		ByteArrayOutputStream baos = null;
+		String time1 = null;
+		String fileName = null;
+		try {
+			time1 = createFolder();
+			UUID uuid = UUID.randomUUID();
+			fileName = uuid.toString() + "_" + profile.getOriginalFilename();
+			fos = new FileOutputStream(new File(pathPrefix + "/" + time1 + "/" + fileName));
+
+			baos = createThumbnail(profile, thumbnailWidth);
+
+			baos.writeTo(fos);
+		} catch (IOException e) {
+			e.printStackTrace();
+		} finally {
+			try {
+				fos.close();
+				baos.close();
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+		}
+		return "/fileget/"+time1 + "/"+fileName;
+	}
+
+	private String createFolder() throws IOException {
+		SimpleDateFormat format1 = new SimpleDateFormat("yyyy/MM/dd");
+		Date time = new Date();
+		String time1 = format1.format(time);
+		String folderName = pathPrefix + "/" + time1;
+		Path path = Paths.get(folderName);
+
+		if (!Files.exists(path)) {
+			Files.createDirectories(path);
+		}
+		return time1;
+	}
+
+	private ByteArrayOutputStream createThumbnail(MultipartFile orginalFile, Integer width) throws IOException {
+		ByteArrayOutputStream thumbOutput = new ByteArrayOutputStream();
+		BufferedImage thumbImg = null;
+		BufferedImage img = ImageIO.read(orginalFile.getInputStream());
+		thumbImg = Scalr.resize(img, Scalr.Method.AUTOMATIC, Scalr.Mode.AUTOMATIC, width, Scalr.OP_ANTIALIAS);
+		ImageIO.write(thumbImg, orginalFile.getContentType().split("/")[1], thumbOutput);
+		return thumbOutput;
+	}
 }

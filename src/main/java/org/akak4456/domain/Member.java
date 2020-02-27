@@ -45,4 +45,7 @@ public class Member {
 	@OneToMany(cascade=CascadeType.ALL,fetch=FetchType.EAGER)
 	@JoinColumn(name="mem")
 	private List<MemberRole> roles;
+	
+	@OneToMany(cascade=CascadeType.ALL,orphanRemoval=true)
+	private List<MemberProfile> uploads;
 }

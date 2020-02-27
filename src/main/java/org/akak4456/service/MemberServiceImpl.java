@@ -31,6 +31,7 @@ public class MemberServiceImpl implements MemberService {
 		member.setUpw(encryptPw);
 		member.setUname(memberForm.getUname());
 		member.setUemail(memberForm.getUemail());
+		member.setUploads(memberForm.getUploads());
 		member.setRoles(roles);
 		memberRepo.save(member);
 		return true;

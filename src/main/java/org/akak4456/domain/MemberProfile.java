@@ -6,7 +6,6 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.MappedSuperclass;
 import javax.persistence.Table;
 
 import org.hibernate.annotations.CreationTimestamp;
@@ -23,9 +22,9 @@ import lombok.ToString;
 @Setter
 @ToString
 @Entity
-@Table(name="tbl_uploadfile")
+@Table(name="tbl_member_profile")
 @EqualsAndHashCode(of="fno")
-public class UploadFile {
+public class MemberProfile {
 	@Id
 	@GeneratedValue(strategy=GenerationType.IDENTITY)
 	private Long fno;
@@ -33,14 +32,13 @@ public class UploadFile {
 	private String uploadPath;
 	
 	private String uploadFileName;
-	
 	@JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
 	@CreationTimestamp
 	private LocalDateTime
 	regdate;
 	
+	
 	@JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
 	@UpdateTimestamp
 	private LocalDateTime updatedate;
-	
 }

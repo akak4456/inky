@@ -45,7 +45,7 @@ html, body {
 }
 
 .card {
-	height: 600px;
+	height: 700px;
 	margin-top: auto;
 	margin-bottom: auto;
 	width: 400px;
@@ -173,16 +173,18 @@ input:focus {
 								placeholder="이메일">
 							<button class="btn float-right join_btn" id="chkemail">인증하기</button>
 						</div>
-						<div class="input-group mb-3">
+						<div class="input-group mb-3 profile-div">
 							<div class="input-group-prepend">
 								<i class="input-group-text" id="inputGroupFileAddon01">프로필</i>
 							</div>
 							<div class="custom-file">
 								<input type="file" class="custom-file-input"
-									id="inputGroupFile01" aria-describedby="inputGroupFileAddon01">
+									id="inputGroupFile01" aria-describedby="inputGroupFileAddon01" name="uploadfile">
 								<label class="custom-file-label" for="inputGroupFile01">Choose
 									file</label>
 							</div>
+						</div>
+						<div class='profile-img form-group text-center'>
 						</div>
 						<div class="input-group form-group">
 							<input type="text" id="uname" name="uname" class="form-control"
@@ -209,6 +211,32 @@ input:focus {
 	$(document).ready(function() {
 		var csrf = JSON.parse('[[${_csrf}]]');
 		var formObj = $("#f1");
+		var profileFile = null;
+		
+		$("#inputGroupFile01").on("change",function(e){
+			console.log("fileUpload");
+			$.ajax({
+			    url: "/profileUpload",
+			    type: "POST",
+			    data: new FormData($("#f1")[0]),
+			    enctype: 'multipart/form-data',
+			    processData: false,
+			    contentType: false,
+			    cache: false,
+			    success: function (data) {
+			      // Handle upload success
+			      // ...
+			    	console.log(data);
+			      profileFile = data;
+			      $(".profile-img").html("<img src='"+data+"'/>");
+			    },
+			    error: function (error) {
+			      // Handle upload error
+			      // ...
+			    	console.log(error);
+			    }
+			  });
+		});
 		$("#chkid").on("click",function(e){
 			e.preventDefault();
 			var uid = formObj.find("[name='uid']").val();
@@ -245,6 +273,7 @@ input:focus {
 				},
 				error : function(result) {
 					alert("이메일을 보내지 못했습니다. 이메일 주소가 맞지 않거나 이미 존재하는 이메일일 수 있습니다.");
+					$("#chkcodeForm").remove();
 				}
 			});
 			var str = "";
@@ -281,6 +310,20 @@ input:focus {
 		});
 		$("#join").on("click", function(e) {
 			e.preventDefault();
+			var uploadPath;
+			var uploadfileName;
+			var fForm = [];
+			if(profileFile != null){
+				var firstIdx = profileFile.indexOf('/',1);
+				var lastIdx = profileFile.lastIndexOf('/');
+				//console.log(firstIdx+" "+lastIdx);
+				uploadPath = profileFile.substring(firstIdx+1,lastIdx);
+				uploadfileName = profileFile.substring(lastIdx+1);
+				fForm.push({
+					uploadPath:uploadPath,
+					uploadFileName:uploadfileName	
+				});
+			}
 			var uid = formObj.find("[name='uid']").val();
 			var upw = formObj.find("[name='upw']").val();
 			var upwchk = formObj.find("[name='upwchk']").val();
@@ -295,7 +338,8 @@ input:focus {
 				uid : uid,
 				upw : upw,
 				uemail : uemail,
-				uname : uname
+				uname : uname,
+				uploads :fForm
 			};
 			console.log(sendData);
 			$.ajax({
