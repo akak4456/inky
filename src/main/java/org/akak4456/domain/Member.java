@@ -47,5 +47,6 @@ public class Member {
 	private List<MemberRole> roles;
 	
 	@OneToMany(cascade=CascadeType.ALL,orphanRemoval=true)
+	@JoinColumn(name="uid")
 	private List<MemberProfile> uploads;
 }

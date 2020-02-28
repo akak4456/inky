@@ -58,4 +58,53 @@ public class MemberServiceImpl implements MemberService {
 		}
 		return Emailok.OK;
 	}
+
+	@Override
+	public boolean ExistMemberForIdAndEmail(String uid, String uemail) {
+		// TODO Auto-generated method stub
+		if(!memberRepo.findById(uid).isPresent())
+			//아이디가 존재하지 않으면
+			return false;
+		Member mem = memberRepo.findById(uid).get();
+		if(!mem.getUemail().equals(uemail))
+			//기존 회원정보의 이메일과 같지 않으면
+			return false;
+		return true;
+	}
+
+	@Override
+	public void updateMember(MemberForm member) {
+		// TODO Auto-generated method stub
+		if(!memberRepo.findById(member.getUid()).isPresent())
+			return;
+		Member mem = memberRepo.findById(member.getUid()).get();
+		if(member.getUname() != null) {
+			mem.setUname(member.getUname());
+		}
+		if(member.getUpw() != null) {
+			String encryptPw = pwEncoder.encode(member.getUpw());
+			mem.setUpw(encryptPw);
+		}
+		if(member.getUploads() != null) {
+			mem.setUploads(member.getUploads());
+		}
+		memberRepo.save(mem);
+	}
+
+	@Override
+	public void updatePW(String uid, String upw) {
+		// TODO Auto-generated method stub
+		if(!memberRepo.findById(uid).isPresent())
+			return;
+		Member mem = memberRepo.findById(uid).get();
+		String encryptPw = pwEncoder.encode(upw);
+		mem.setUpw(encryptPw);
+		memberRepo.save(mem);
+	}
+
+	@Override
+	public void deleteMember(String uid) {
+		// TODO Auto-generated method stub
+		memberRepo.deleteById(uid);
+	}
 }

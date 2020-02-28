@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org"
-	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout">
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 <head>
 <meta charset="utf-8">
 <meta name="viewport"
@@ -32,11 +33,12 @@ hr {
 
 		<div class="collapse navbar-collapse" id="navbarSupportedContent">
 			<ul class="navbar-nav mr-auto">
-				<li class="nav-item active"><a class="nav-link" href="#"><i
-						class="glyphicon glyphicon-pencil"></i> </i><span>로그인</span> <span
-						class="sr-only">(current)</span> </a></li>
-				<li class="nav-item"><a class="nav-link" href="#"><i
+				<li class="nav-item" th:if="${#authentication.principal} eq 'anonymousUser'"><a class="nav-link" href="#"><i
+						class="glyphicon glyphicon-pencil"></i> </i><span>로그인</span> </a></li>
+				<li class="nav-item" th:if="${#authentication.principal} eq 'anonymousUser'"><a class="nav-link" href="#"><i
 						class="glyphicon glyphicon-user"></i> <span>회원가입</span></a></li>
+				<li class="nav-item" th:if="${#authentication.principal} ne 'anonymousUser'"><a class="nav-link getmy" href="#"><i
+						class="glyphicon glyphicon-user"></i> <span>마이페이지</span></a></li>
 				<li class="nav-item dropdown"><a
 					class="nav-link dropdown-toggle" href="#" id="navbarDropdown"
 					role="button" data-toggle="dropdown" aria-haspopup="true"
@@ -72,15 +74,33 @@ hr {
 		crossorigin="anonymous"></script>
 	<script src="https://kit.fontawesome.com/addd4c8dc0.js"
 		crossorigin="anonymous"></script>
-	<form id='f1' action="/community/" method="get"
-		th:if="${pageVO != null}">
+	<form id='f1' action="/community/" method="get" >
 		<input type='hidden' name='dest'> <input type='hidden'
-			name='page' th:value=${pageVO.page}> <input type='hidden'
-			name='size' th:value=${pageVO.size}> <input type='hidden'
-			name='type' th:value=${pageVO.type}> <input type='hidden'
-			name='keyword' th:value=${pageVO.keyword}> <input
-			type='hidden' name='orderBy' th:value=${pageVO.orderBy}>
+			name='dest'> <input type='hidden' name='page'
+			th:value=${pageVO.page} th:if="${pageVO != null}"> <input
+			type='hidden' name='size' th:value=${pageVO.size}
+			th:if="${pageVO != null}"> <input type='hidden' name='type'
+			th:value=${pageVO.type} th:if="${pageVO != null}"> <input
+			type='hidden' name='keyword' th:value=${pageVO.keyword}
+			th:if="${pageVO != null}"> <input type='hidden'
+			name='orderBy' th:value=${pageVO.orderBy} th:if="${pageVO != null}">
 	</form>
+	<script th:inline="javascript">
+	$(document).ready(function(){
+		var formObj = $("#f1");
+		var loc = window.location.href.toString().split(window.location.host)[1];
+		loc = loc.substring(0,loc.indexOf("?"))+"?"+$('#f1').find('input[name!=dest]').serialize();
+		console.log(loc);
+		$(".getmy").on("click",function(e){
+			e.preventDefault();
+			var url = "/member/getmy";
+			console.log(url);
+			formObj.find("[name='dest']").val(loc);
+			formObj.attr("action",url);
+			formObj.submit();
+		});
+	});
+	</script>
 	<th:block layout:fragment="script"></th:block>
 </body>
 </html>

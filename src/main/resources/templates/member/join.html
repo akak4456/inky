@@ -11,142 +11,14 @@
 	href="https://use.fontawesome.com/releases/v5.12.1/css/all.css"
 	integrity="sha384-v8BU367qNbs/aIZIxuivaU55N5GPF89WBerHoGA4QTcbUjYiLQtKdrfXnqAcXyTv"
 	crossorigin="anonymous">
-<script src="https://code.jquery.com/jquery-3.1.1.min.js">
-	<script src="https://code.jquery.com/jquery-3.4.1.slim.min.js"
-		integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n"
-		crossorigin="anonymous">
-</script>
-<script
-	src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js"
-	integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo"
-	crossorigin="anonymous"></script>
-<script
-	src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"
-	integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6"
-	crossorigin="anonymous"></script>
-<script src="https://kit.fontawesome.com/addd4c8dc0.js"
-	crossorigin="anonymous"></script>
+<link rel="stylesheet" href="/css/style.css">
 <style>
-/* Made with love by Mutiullah Samim*/
-@import url('https://fonts.googleapis.com/css?family=Numans');
-
-html, body {
-	background-image:
-		url('http://getwallpapers.com/wallpaper/full/a/5/d/544750.jpg');
-	background-size: cover;
-	background-repeat: no-repeat;
-	height: 100%;
-	font-family: 'Numans', sans-serif;
-}
-
-.container {
-	height: 100%;
-	align-content: center;
-}
-
-.card {
-	height: 700px;
-	margin-top: auto;
-	margin-bottom: auto;
-	width: 400px;
-	background-color: rgba(0, 0, 0, 0.5) !important;
-}
-
-.social_icon span {
-	font-size: 60px;
-	margin-left: 10px;
-	color: #FFC312;
-}
-
-.social_icon span:hover {
-	color: white;
-	cursor: pointer;
-}
-
-.card-header h3, .card-header h6 {
-	color: white;
-}
-
-.social_icon {
-	position: absolute;
-	right: 20px;
-	top: -45px;
-}
-
-.input-group-prepend span {
-	width: 50px;
-	background-color: #FFC312;
-	color: black;
-	border: 0 !important;
-}
-
-input:focus {
-	outline: 0 0 0 0 !important;
-	box-shadow: 0 0 0 0 !important;
-}
-
-.remember {
-	color: white;
-}
-
-.remember input {
-	width: 20px;
-	height: 20px;
-	margin-left: 15px;
-	margin-right: 5px;
-}
-
-.join_btn {
-	color: black;
-	background-color: #FFC312;
-	width: 100px;
-}
-
-.join_btn:hover {
-	color: black;
-	background-color: white;
-}
-
-.links {
-	color: white;
-}
-
-.links a {
-	margin-left: 4px;
-}
-
-.inputfile {
-	width: 0.1px;
-	height: 0.1px;
-	opacity: 0;
-	overflow: hidden;
-	position: absolute;
-	z-index: -1;
-}
-
-.inputfile+label {
-	font-size: 1.25em;
-	font-weight: 700;
-	color: white;
-	background-color: black;
-	/*     display: inline-block; */
-}
-
-.inputfile:focus+label, .inputfile+label:hover {
-	background-color: red;
-}
-
-.inputfile+label {
-	cursor: pointer; /* "hand" cursor */
-}
-
-.inputfile:focus+label {
-	outline: 1px dotted #000;
-	outline: -webkit-focus-ring-color auto 5px;
+.card{
+height:700px;
 }
 </style>
 </head>
-<section>
+<body>
 	<div class="container">
 		<div class="d-flex justify-content-center h-100">
 			<div class="card">
@@ -154,11 +26,11 @@ input:focus {
 					<h3>회원가입</h3>
 				</div>
 				<div class="card-body">
-					<form method="post" id="f1">
+					<form method="post" id="joinForm">
 						<div class="input-group form-group">
 							<input type="text" id="username" name="uid" class="form-control"
 								placeholder="아이디">
-							<button class="btn float-right join_btn" id="chkid">중복확인</button>
+							<button class="btn float-right member_btn" id="chkid">중복확인</button>
 						</div>
 						<div class="input-group form-group">
 							<input type="password" class="form-control" id="password"
@@ -171,7 +43,7 @@ input:focus {
 						<div class="input-group form-group" id="emailform">
 							<input type="text" id="uemail" name="uemail" class="form-control"
 								placeholder="이메일">
-							<button class="btn float-right join_btn" id="chkemail">인증하기</button>
+							<button class="btn float-right member_btn" id="chkemail">인증하기</button>
 						</div>
 						<div class="input-group mb-3 profile-div">
 							<div class="input-group-prepend">
@@ -179,13 +51,12 @@ input:focus {
 							</div>
 							<div class="custom-file">
 								<input type="file" class="custom-file-input"
-									id="inputGroupFile01" aria-describedby="inputGroupFileAddon01" name="uploadfile">
-								<label class="custom-file-label" for="inputGroupFile01">Choose
-									file</label>
+									id="inputGroupFile01" aria-describedby="inputGroupFileAddon01"
+									name="uploadfile"> <label class="custom-file-label"
+									for="inputGroupFile01">Choose file</label>
 							</div>
 						</div>
-						<div class='profile-img form-group text-center'>
-						</div>
+						<div class='profile-img form-group text-center'></div>
 						<div class="input-group form-group">
 							<input type="text" id="uname" name="uname" class="form-control"
 								placeholder="사용자이름">
@@ -194,7 +65,7 @@ input:focus {
 							th:value="${_csrf.token}" />
 						<div class="form-group">
 							<input type="submit" value="회원가입" id="join"
-								class="btn float-right join_btn">
+								class="btn float-right member_btn">
 						</div>
 					</form>
 				</div>
@@ -206,160 +77,183 @@ input:focus {
 			</div>
 		</div>
 	</div>
-</section>
-<script th:inline="javascript">
-	$(document).ready(function() {
-		var csrf = JSON.parse('[[${_csrf}]]');
-		var formObj = $("#f1");
-		var profileFile = null;
-		
-		$("#inputGroupFile01").on("change",function(e){
-			console.log("fileUpload");
-			$.ajax({
-			    url: "/profileUpload",
-			    type: "POST",
-			    data: new FormData($("#f1")[0]),
-			    enctype: 'multipart/form-data',
-			    processData: false,
-			    contentType: false,
-			    cache: false,
-			    success: function (data) {
-			      // Handle upload success
-			      // ...
-			    	console.log(data);
-			      profileFile = data;
-			      $(".profile-img").html("<img src='"+data+"'/>");
-			    },
-			    error: function (error) {
-			      // Handle upload error
-			      // ...
-			    	console.log(error);
-			    }
-			  });
-		});
-		$("#chkid").on("click",function(e){
-			e.preventDefault();
-			var uid = formObj.find("[name='uid']").val();
-			$.ajax({
-				type : 'post',
-				url : '/member/checkid',
-				data : uid,
-				contentType: "text/plain",
-				beforeSend : function(xhr) {
-					xhr.setRequestHeader(csrf.headerName, csrf.token);
-				},
-				success : function(result) {
-					alert(result);
-				},
-				error : function(result) {
-					alert(result.responseText);
-				}
+	<div class="modal"><!-- Place at bottom of page --></div>
+	<script src="https://code.jquery.com/jquery-3.1.1.min.js">
+		<script src="https://code.jquery.com/jquery-3.4.1.slim.min.js"
+		integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n"
+		crossorigin="anonymous">
+	</script>
+	<script
+		src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js"
+		integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo"
+		crossorigin="anonymous"></script>
+	<script
+		src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"
+		integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6"
+		crossorigin="anonymous"></script>
+	<script src="https://kit.fontawesome.com/addd4c8dc0.js"
+		crossorigin="anonymous"></script>
+		<script th:inline="javascript">
+			$body = $("body");
+
+			$(document).on({
+   				ajaxStart: function() { $body.addClass("loading");    },
+     			ajaxStop: function() { $body.removeClass("loading"); }    
 			});
-		});
-		$("#chkemail").on("click",function(e){
-			e.preventDefault();
-			var uemail = formObj.find("[name='uemail']").val();
-			console.log(uemail);
-			$.ajax({
-				type : 'post',
-				url : '/member/sendEmail',
-				data : uemail,
-				contentType: "text/plain",
-				beforeSend : function(xhr) {
-					xhr.setRequestHeader(csrf.headerName, csrf.token);
-				},
-				success : function(result) {
-					alert(result);
-				},
-				error : function(result) {
-					alert("이메일을 보내지 못했습니다. 이메일 주소가 맞지 않거나 이미 존재하는 이메일일 수 있습니다.");
-					$("#chkcodeForm").remove();
-				}
+		</script>
+	<script th:inline="javascript">
+		$(document).ready(function() {
+			var csrf = JSON.parse('[[${_csrf}]]');
+			var formObj = $("#joinForm");
+			var profileFile = null;
+			$("#inputGroupFile01").on("change",function(e) {
+				console.log("fileUpload");
+				$.ajax({
+					url : "/profileUpload",
+					type : "POST",
+					data : new FormData($("#joinForm")[0]),
+					enctype : 'multipart/form-data',
+					processData : false,
+					contentType : false,
+					cache : false,
+					success : function(data) {
+							console.log(data);
+							profileFile = data;
+							$(".profile-img").html("<img src='"+data+"'/><button class='btn btn-primary cancel-btn'><i class='fas fa-times'></i></button>");
+							$(".cancel-btn").on("click",function(e) {
+								profileFile = null;
+								$(".profile-img img").remove();
+								$(this).remove();
+							});
+					},
+					error : function(error) {
+						console.log(error);
+					}
+				});
 			});
-			var str = "";
-			str += "<div class='input-group form-group' id='chkcodeForm'>";
-			str +=	"	<input type='text' id='code' name='code' class='form-control' placeholder='인증코드'>";
-			str += "	<button class='btn float-right join_btn' id='chkcode'>인증하기</button>";
-			str += "</div>";
-			$("#chkcodeForm").remove();
-			$("#emailform").after(str);
-			$("#chkcode").on("click",function(e){
+			$("#chkid").on("click",function(e) {
 				e.preventDefault();
-				var chkcode = $("#code").val();
-				var sendData = {
-					email:uemail,
-					code:chkcode
-				};
+				var uid = formObj.find("[name='uid']").val();
 				$.ajax({
 					type : 'post',
-					url : '/member/checkEmail',
-					data : JSON.stringify(sendData),
-					contentType : "application/json",
+					url : '/member/checkid',
+					data : uid,
+					contentType : "text/plain",
 					beforeSend : function(xhr) {
-						xhr.setRequestHeader(csrf.headerName, csrf.token);
+						xhr.setRequestHeader(csrf.headerName,csrf.token);
 					},
 					success : function(result) {
 						alert(result);
-						$("#chkcodeForm").remove();
 					},
 					error : function(result) {
 						alert(result.responseText);
 					}
 				});
 			});
-		});
-		$("#join").on("click", function(e) {
-			e.preventDefault();
-			var uploadPath;
-			var uploadfileName;
-			var fForm = [];
-			if(profileFile != null){
-				var firstIdx = profileFile.indexOf('/',1);
-				var lastIdx = profileFile.lastIndexOf('/');
-				//console.log(firstIdx+" "+lastIdx);
-				uploadPath = profileFile.substring(firstIdx+1,lastIdx);
-				uploadfileName = profileFile.substring(lastIdx+1);
-				fForm.push({
-					uploadPath:uploadPath,
-					uploadFileName:uploadfileName	
+			$("#chkemail").on("click",function(e) {
+				e.preventDefault();
+				var uemail = formObj.find("[name='uemail']").val();
+				console.log(uemail);
+				$.ajax({
+					type : 'post',
+					url : '/member/sendEmail',
+					data : uemail,
+					contentType : "text/plain",
+					beforeSend : function(xhr) {
+						xhr.setRequestHeader(csrf.headerName,csrf.token);
+					},
+					success : function(result) {
+						alert(result);
+					},
+					error : function(result) {
+						alert("이메일을 보내지 못했습니다. 이메일 주소가 맞지 않거나 이미 존재하는 이메일일 수 있습니다.");
+						$("#chkcodeForm").remove();
+					}
 				});
-			}
-			var uid = formObj.find("[name='uid']").val();
-			var upw = formObj.find("[name='upw']").val();
-			var upwchk = formObj.find("[name='upwchk']").val();
-			var uemail = formObj.find("[name='uemail']").val();
-			var uname = formObj.find("[name='uname']").val();
-			//form이 맞는지 클라이언트에서 확인
-			if(upw != upwchk){
-				alert("비밀번호와 비밀번호 확인이 맞지 않습니다.");
-				return;
-			}
-			var sendData = {
-				uid : uid,
-				upw : upw,
-				uemail : uemail,
-				uname : uname,
-				uploads :fForm
-			};
-			console.log(sendData);
-			$.ajax({
-				type : 'post',
-				url : '/member/join',
-				data : JSON.stringify(sendData),
-				contentType : "application/json",
-				beforeSend : function(xhr) {
-					xhr.setRequestHeader(csrf.headerName, csrf.token);
-				},
-				success : function(result) {
-					alert(result);
-					location.href="/login";
-				},
-				error : function(result) {
-					alert(result.responseText);
-				}
+				var str = "";
+				str += "<div class='input-group form-group' id='chkcodeForm'>";
+				str += "	<input type='text' id='code' name='code' class='form-control' placeholder='인증코드'>";
+				str += "	<button class='btn float-right member_btn' id='chkcode'>인증하기</button>";
+				str += "</div>";
+				$("#chkcodeForm").remove();
+				$("#emailform").after(str);
+				$("#chkcode").on("click",function(e) {
+					e.preventDefault();
+					var chkcode = $("#code").val();
+					var sendData = {
+						email : uemail,
+						code : chkcode
+					};
+					$.ajax({
+						type : 'post',
+						url : '/member/checkEmail',
+						data : JSON.stringify(sendData),
+						contentType : "application/json",
+						beforeSend : function(xhr) {
+							xhr.setRequestHeader(csrf.headerName,csrf.token);
+						},
+						success : function(result) {
+							alert(result);
+							$("#chkcodeForm").remove();
+						},
+						error : function(result) {
+							alert(result.responseText);
+						}
+					});
+				});
 			});
+			$("#join").on("click",function(e) {
+				e.preventDefault();
+				var uploadPath;
+				var uploadfileName;
+				var fForm = [];
+				if (profileFile != null) {
+					var firstIdx = profileFile.indexOf('/',1);
+					var lastIdx = profileFile.lastIndexOf('/');
+					uploadPath = profileFile.substring(firstIdx + 1, lastIdx);
+					uploadfileName = profileFile.substring(lastIdx + 1);
+					fForm.push({
+						uploadPath : uploadPath,
+						uploadFileName : uploadfileName
+					});
+				}
+				var uid = formObj.find("[name='uid']").val();
+				var upw = formObj.find("[name='upw']").val();
+				var upwchk = formObj.find("[name='upwchk']").val();
+				var uemail = formObj.find("[name='uemail']").val();
+				var uname = formObj.find("[name='uname']").val();
+				if (upw != upwchk) {
+					alert("비밀번호와 비밀번호 확인이 맞지 않습니다.");
+					return;
+				}
+				var sendData = {
+					uid : uid,
+					upw : upw,
+					uemail : uemail,
+					uname : uname,
+					uploads : fForm
+				};
+				console.log(sendData);
+				$.ajax({
+					type : 'post',
+					url : '/member/join',
+					data : JSON.stringify(sendData),
+					contentType : "application/json",
+					beforeSend : function(xhr) {
+						xhr.setRequestHeader(csrf.headerName,csrf.token);
+					},
+					success : function(result) {
+						alert(result);
+						location.href="/login";
+					},
+					error : function(result) {
+					alert(result.responseText);
+					}
+				});
+			});
+
 		});
-		
-	});
 </script>
+</body>
+
 </html>

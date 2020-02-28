@@ -1,6 +1,6 @@
 package org.akak4456.controller;
 
-import java.util.Date;
+import java.util.Random;
 
 import javax.servlet.http.HttpSession;
 import javax.transaction.Transactional;
@@ -10,16 +10,20 @@ import org.akak4456.service.MemberService;
 import org.akak4456.service.MemberService.Emailok;
 import org.akak4456.service.MemberService.Idok;
 import org.akak4456.vo.EmailCodeCheckVO;
+import org.akak4456.vo.FindpwVO;
 import org.akak4456.vo.MemberForm;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -38,6 +42,14 @@ public class MemberController {
 	@GetMapping("/join")
 	public void join() {
 
+	}
+	@GetMapping("/findpw")
+	public void findpw() {
+		
+	}
+	@GetMapping("/getmy")
+	public void getmy() {
+		
 	}
 
 	@Transactional
@@ -128,6 +140,76 @@ public class MemberController {
 		session.removeAttribute("code");
 		session.setAttribute("checkedEmail", emailCodeCheckVO.getEmail());
 		return new ResponseEntity<>("인증코드가 유효합니다!", HttpStatus.OK);
+	}
+	
+	@Transactional
+	@PostMapping("/findpw")
+	@ResponseBody
+	public ResponseEntity<String> findpw(@RequestBody FindpwVO findpwVO){
+		log.info("findpw..."+findpwVO.getUid() +" "+findpwVO.getUemail());
+		if(!findpwVO.getUid().matches(MemberForm.idregexp)) {
+			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+		}
+		if(!findpwVO.getUemail().matches(MemberForm.emailregexp)) {
+			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+		}
+		
+		if(!memberService.ExistMemberForIdAndEmail(findpwVO.getUid(), findpwVO.getUemail()))
+			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+		
+		String newPW = generateNewPW();
+		memberService.updatePW(findpwVO.getUid(), newPW);
+		
+		SimpleMailMessage msg = new SimpleMailMessage();
+		msg.setTo(findpwVO.getUemail());
+
+		msg.setSubject("새로운 비밀번호입니다.");
+		msg.setText("새로운 비밀번호는 "+newPW+"입니다. 이 비밀번호로 로그인 하신뒤에 회원정보변경을 부탁드립니다.");
+
+		javaMailSender.send(msg);
+		
+		return new ResponseEntity<>("success",HttpStatus.OK);
+	}
+	
+	@PreAuthorize("#userid == authentication.principal.member.uid")
+	@DeleteMapping("/delete/{userid}")
+	@ResponseBody
+	public ResponseEntity<String> deleteUser(@PathVariable("userid")String userid){
+		memberService.deleteMember(userid);
+		return new ResponseEntity<>("success",HttpStatus.OK);
+	}
+	
+	private String generateNewPW() {
+		//개선된 비밀번호 만들기 방식을 만들것
+		String newPW = "";
+		Random r = new Random();
+		while(!(newPW.length()>=10&&newPW.matches(MemberForm.pwregexp))) {
+			char c = 'a';
+			switch(r.nextInt(3)) {
+			case 0:
+				//문자열을 더해라
+				c = (char)(r.nextInt(26) + 'a');
+				break;
+			case 1:
+				//숫자를 더해라
+				c = (char)(r.nextInt(10)+'0');
+				break;
+			case 2:
+				//특수문자를 더해라
+				int newChar = r.nextInt(3);
+				if(newChar == 0) {
+					c = '!';
+				}else if(newChar == 1) {
+					c = '?';
+				}else {
+					c = '#';
+				}
+			}
+			newPW += c;
+			if(newPW.length() >= 40)
+				newPW = "";
+		}
+		return newPW;
 	}
 
 	private String generateCode() {

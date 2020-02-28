@@ -10,108 +10,10 @@
 	href="https://use.fontawesome.com/releases/v5.12.1/css/all.css"
 	integrity="sha384-v8BU367qNbs/aIZIxuivaU55N5GPF89WBerHoGA4QTcbUjYiLQtKdrfXnqAcXyTv"
 	crossorigin="anonymous">
-<script src="https://code.jquery.com/jquery-3.1.1.min.js">
-	<script src="https://code.jquery.com/jquery-3.4.1.slim.min.js"
-		integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n"
-		crossorigin="anonymous">
-</script>
-<script
-	src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js"
-	integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo"
-	crossorigin="anonymous"></script>
-<script
-	src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"
-	integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6"
-	crossorigin="anonymous"></script>
-<script src="https://kit.fontawesome.com/addd4c8dc0.js"
-	crossorigin="anonymous"></script>
+<link rel="stylesheet" href="/css/style.css">
 <style>
-/* Made with love by Mutiullah Samim*/
-@import url('https://fonts.googleapis.com/css?family=Numans');
-
-html, body {
-	background-image:
-		url('http://getwallpapers.com/wallpaper/full/a/5/d/544750.jpg');
-	background-size: cover;
-	background-repeat: no-repeat;
-	height: 100%;
-	font-family: 'Numans', sans-serif;
-}
-
-.container {
-	height: 100%;
-	align-content: center;
-}
-
-.card {
-	height: 420px;
-	margin-top: auto;
-	margin-bottom: auto;
-	width: 400px;
-	background-color: rgba(0, 0, 0, 0.5) !important;
-}
-
-.social_icon span {
-	font-size: 60px;
-	margin-left: 10px;
-	color: #FFC312;
-}
-
-.social_icon span:hover {
-	color: white;
-	cursor: pointer;
-}
-
-.card-header h3, .card-header h6 {
-	color: white;
-}
-
-.social_icon {
-	position: absolute;
-	right: 20px;
-	top: -45px;
-}
-
-.input-group-prepend span {
-	width: 50px;
-	background-color: #FFC312;
-	color: black;
-	border: 0 !important;
-}
-
-input:focus {
-	outline: 0 0 0 0 !important;
-	box-shadow: 0 0 0 0 !important;
-}
-
-.remember {
-	color: white;
-}
-
-.remember input {
-	width: 20px;
-	height: 20px;
-	margin-left: 15px;
-	margin-right: 5px;
-}
-
-.login_btn {
-	color: black;
-	background-color: #FFC312;
-	width: 100px;
-}
-
-.login_btn:hover {
-	color: black;
-	background-color: white;
-}
-
-.links {
-	color: white;
-}
-
-.links a {
-	margin-left: 4px;
+h6{
+color:white;
 }
 </style>
 </head>
@@ -155,7 +57,7 @@ input:focus {
 							th:value="${_csrf.token}" />
 						<div class="form-group">
 							<input type="submit" value="로그인"
-								class="btn float-right login_btn">
+								class="btn float-right member_btn">
 						</div>
 					</form>
 				</div>
@@ -171,4 +73,19 @@ input:focus {
 		</div>
 	</div>
 </section>
+<script src="https://code.jquery.com/jquery-3.1.1.min.js">
+		<script src="https://code.jquery.com/jquery-3.4.1.slim.min.js"
+		integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n"
+		crossorigin="anonymous">
+	</script>
+	<script
+		src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js"
+		integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo"
+		crossorigin="anonymous"></script>
+	<script
+		src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"
+		integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6"
+		crossorigin="anonymous"></script>
+	<script src="https://kit.fontawesome.com/addd4c8dc0.js"
+		crossorigin="anonymous"></script>
 </html>

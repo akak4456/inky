@@ -12,4 +12,12 @@ public interface MemberService {
 	public Idok ExistId(String uid);
 	
 	public Emailok ExistEmail(String uemail);
+	
+	public boolean ExistMemberForIdAndEmail(String uid,String uemail);
+	
+	public void updatePW(String uid,String upw);
+	
+	public void updateMember(MemberForm member);
+	
+	public void deleteMember(String uid);
 }
