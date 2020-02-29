@@ -12,6 +12,7 @@ import org.akak4456.service.MemberService.Idok;
 import org.akak4456.vo.EmailCodeCheckVO;
 import org.akak4456.vo.FindpwVO;
 import org.akak4456.vo.MemberForm;
+import org.akak4456.vo.MemberModifyFormVO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -49,6 +50,10 @@ public class MemberController {
 	}
 	@GetMapping("/getmy")
 	public void getmy() {
+		
+	}
+	@GetMapping("/modify")
+	public void modify() {
 		
 	}
 
@@ -179,6 +184,17 @@ public class MemberController {
 		return new ResponseEntity<>("success",HttpStatus.OK);
 	}
 	
+	@PreAuthorize("#mem.uid == authentication.principal.member.uid")
+	@PostMapping("/modify")
+	@ResponseBody
+	public ResponseEntity<String> modifyUser(@RequestBody MemberModifyFormVO mem,HttpSession session){
+		log.info("member modify...");
+		if(!memberService.updateMember(mem))
+			return new ResponseEntity<>("회원정보를 수정하지 못했습니다.",HttpStatus.BAD_REQUEST);
+		session.invalidate();
+		return new ResponseEntity<>("회원정보 수정에 성공하였습니다. 다시 로그인 해주세요!",HttpStatus.OK);
+	}
+	
 	private String generateNewPW() {
 		//개선된 비밀번호 만들기 방식을 만들것
 		String newPW = "";
@@ -211,6 +227,7 @@ public class MemberController {
 		}
 		return newPW;
 	}
+	
 
 	private String generateCode() {
 		String ret = "";

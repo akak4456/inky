@@ -1,6 +1,7 @@
 package org.akak4456.service;
 
 import org.akak4456.vo.MemberForm;
+import org.akak4456.vo.MemberModifyFormVO;
 
 public interface MemberService {
 	enum Idok {EXIST,OK,NOTAVAILABLE};
@@ -17,7 +18,7 @@ public interface MemberService {
 	
 	public void updatePW(String uid,String upw);
 	
-	public void updateMember(MemberForm member);
+	public boolean updateMember(MemberModifyFormVO member);
 	
 	public void deleteMember(String uid);
 }

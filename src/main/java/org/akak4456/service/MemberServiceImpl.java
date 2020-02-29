@@ -7,6 +7,7 @@ import org.akak4456.domain.Member;
 import org.akak4456.domain.MemberRole;
 import org.akak4456.persistence.MemberRepository;
 import org.akak4456.vo.MemberForm;
+import org.akak4456.vo.MemberModifyFormVO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -73,22 +74,27 @@ public class MemberServiceImpl implements MemberService {
 	}
 
 	@Override
-	public void updateMember(MemberForm member) {
+	public boolean updateMember(MemberModifyFormVO member) {
 		// TODO Auto-generated method stub
 		if(!memberRepo.findById(member.getUid()).isPresent())
-			return;
+			return false;
 		Member mem = memberRepo.findById(member.getUid()).get();
-		if(member.getUname() != null) {
+		if(member.getUname() != null && member.getUname().length() > 0) {
 			mem.setUname(member.getUname());
 		}
-		if(member.getUpw() != null) {
+		if(member.getUpw() != null && member.getUpw().length() > 0) {
+			if(!member.getUpw().matches(MemberForm.pwregexp))
+				return false;
 			String encryptPw = pwEncoder.encode(member.getUpw());
 			mem.setUpw(encryptPw);
 		}
-		if(member.getUploads() != null) {
-			mem.setUploads(member.getUploads());
+		mem.getUploads().clear();
+		if(member.getUploads() != null && member.getUploads().size() > 0) {
+			mem.getUploads().addAll(member.getUploads());
 		}
 		memberRepo.save(mem);
+		
+		return true;
 	}
 
 	@Override
