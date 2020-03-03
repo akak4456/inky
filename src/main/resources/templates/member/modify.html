@@ -1,24 +1,16 @@
 <html xmlns:th="http://www.thymeleaf.org"
-	xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	xmlns:sec="http://www.thymeleaf.org/extras/spring-security"
+	layout:decorate="~{/layout/member_main_layout}">
 <head>
 <meta charset="utf-8">
-<title>Inky</title>
-<link rel="stylesheet"
-	href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css"
-	integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh"
-	crossorigin="anonymous">
-<link rel="stylesheet"
-	href="https://use.fontawesome.com/releases/v5.12.1/css/all.css"
-	integrity="sha384-v8BU367qNbs/aIZIxuivaU55N5GPF89WBerHoGA4QTcbUjYiLQtKdrfXnqAcXyTv"
-	crossorigin="anonymous">
-<link rel="stylesheet" href="/css/style.css">
 <style>
-.card{
-height:700px;
+.card {
+	height: 700px;
 }
 </style>
 </head>
-<body>
+<section layout:fragment="content">
 	<div class="container">
 		<div class="d-flex justify-content-center h-100">
 			<div class="card">
@@ -26,7 +18,8 @@ height:700px;
 					<h3>정보수정</h3>
 				</div>
 				<div class="card-body">
-					<form method="post" id="modifyForm" th:with="member=${#authentication.principal.member}">
+					<form method="post" id="modifyForm"
+						th:with="member=${#authentication.principal.member}">
 						<div class="input-group form-group">
 							<input type="text" id="username" name="uid" class="form-control"
 								th:value="${member.uid}" readonly="readonly">
@@ -41,7 +34,7 @@ height:700px;
 						</div>
 						<div class="input-group form-group" id="emailform">
 							<input type="text" id="uemail" name="uemail" class="form-control"
-								th:value="${member.uemail}"  readonly="readonly">
+								th:value="${member.uemail}" readonly="readonly">
 						</div>
 						<div class="input-group mb-3 profile-div">
 							<div class="input-group-prepend">
@@ -75,83 +68,28 @@ height:700px;
 			</div>
 		</div>
 	</div>
-	<div class="modal"><!-- Place at bottom of page --></div>
-	<script src="https://code.jquery.com/jquery-3.1.1.min.js">
-		<script src="https://code.jquery.com/jquery-3.4.1.slim.min.js"
-		integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n"
-		crossorigin="anonymous">
-	</script>
-	<script
-		src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js"
-		integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo"
-		crossorigin="anonymous"></script>
-	<script
-		src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"
-		integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6"
-		crossorigin="anonymous"></script>
-	<script src="https://kit.fontawesome.com/addd4c8dc0.js"
-		crossorigin="anonymous"></script>
-		<script th:inline="javascript">
-			$body = $("body");
-
-			$(document).on({
-   				ajaxStart: function() { $body.addClass("loading");    },
-     			ajaxStop: function() { $body.removeClass("loading"); }    
-			});
-		</script>
+</section>
+<th:block layout:fragment="script">
+	<script th:inline="javascript" th:src="@{'/js/member.js'}"></script>
 	<script th:inline="javascript">
 		$(document).ready(function() {
-			
-			var csrf = JSON.parse('[[${_csrf}]]');
 			var formObj = $("#modifyForm");
-			var profileFile = null;
 			//초기 맴버 프로필 설정
 			var uploads = [[${#authentication.principal.member.uploads}]];
 			console.log(uploads);
-			if(uploads != null&&uploads.length > 0){
-				profileFile = "/fileget/"+uploads[0].uploadPath+"/"+uploads[0].uploadFileName;
-				$(".profile-img").html("<img src='"+profileFile+"'/><button class='btn btn-primary cancel-btn'><i class='fas fa-times'></i></button>");
-				$(".cancel-btn").on("click",function(e) {
-					profileFile = null;
-					$(".profile-img img").remove();
-					$(this).remove();
-				});
-			}
+			memberManager.setInitProfile(uploads);
 			$("#inputGroupFile01").on("change",function(e) {
 				console.log("fileUpload");
-				$.ajax({
-					url : "/profileUpload",
-					type : "POST",
-					data : new FormData($("#modifyForm")[0]),
-					enctype : 'multipart/form-data',
-					processData : false,
-					contentType : false,
-					cache : false,
-					success : function(data) {
-							console.log(data);
-							profileFile = data;
-							$(".profile-img").html("<img src='"+data+"'/><button class='btn btn-primary cancel-btn'><i class='fas fa-times'></i></button>");
-					},
-					error : function(error) {
-						console.log(error);
-					}
-				});
+				var sendData = {
+					formObj:formObj
+				};
+				memberManager.fileUpload(sendData);
 			});
 			$("#modify").on("click",function(e) {
 				e.preventDefault();
 				var uploadPath;
 				var uploadfileName;
-				var fForm = [];
-				if (profileFile != null) {
-					var firstIdx = profileFile.indexOf('/',1);
-					var lastIdx = profileFile.lastIndexOf('/');
-					uploadPath = profileFile.substring(firstIdx + 1, lastIdx);
-					uploadfileName = profileFile.substring(lastIdx + 1);
-					fForm.push({
-						uploadPath : uploadPath,
-						uploadFileName : uploadfileName
-					});
-				}
+				var fForm = memberManager.getFileForm();
 				var uid = formObj.find("[name='uid']").val();
 				var upw = formObj.find("[name='upw']").val();
 				var upwchk = formObj.find("[name='upwchk']").val();
@@ -167,26 +105,11 @@ height:700px;
 					uploads : fForm
 				};
 				console.log(sendData);
-				$.ajax({
-					type : 'post',
-					url : '/member/modify',
-					data : JSON.stringify(sendData),
-					contentType : "application/json",
-					beforeSend : function(xhr) {
-						xhr.setRequestHeader(csrf.headerName,csrf.token);
-					},
-					success : function(result) {
-						alert(result);
-						location.href="/login";
-					},
-					error : function(result) {
-					alert(result);
-					}
-				});
+				memberManager.modify(sendData);
 			});
 
 		});
 </script>
-</body>
+</th:block>
 
 </html>

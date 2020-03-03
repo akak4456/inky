@@ -1,7 +1,7 @@
 <html xmlns:th="http://www.thymeleaf.org"
 	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
 	xmlns:sec="http://www.thymeleaf.org/extras/spring-security"
-	layout:decorate="~{/layout/layout1}">
+	layout:decorate="~{/layout/board_main_layout}">
 <head>
 <meta charset="utf-8">
 <style>
@@ -99,17 +99,26 @@ ul {
 		<script th:inline="javascript" th:src="@{'/js/board.js'}"></script>
 	<script th:inline="javascript" th:src="@{'/js/reply.js'}"></script>
 	<script th:inline="javascript">
-var csrf = JSON.parse('[[${_csrf}]]');
 $(document).ready(function(e){
 	//게시판 관련
-	uid = [[${#authentication.principal} eq 'anonymousUser'?null:${#authentication.principal.member.uid}]];
-	boardMainAddress = [[${boardkindEN}]];
 	editoro.setData([[${board.content}]]);
-	boardBno = [[${board.bno}]];
+	var boardBno = [[${board.bno}]];
 	var formObj = $("#f1");
 	var loc = window.location.href.toString().split(window.location.host)[1];
 	loc = loc.substring(0,loc.indexOf("?"))+"?"+$('#f1').find('input[name!=dest]').serialize();
 	console.log(loc);
+	boardManager.init({
+		boardMainAddress : [[${boardkindEN}]],
+		formObj : formObj,
+		loc:loc,
+		bno:boardBno
+	});
+	var uid = [[${#authentication.principal} eq 'anonymousUser'?null:${#authentication.principal.member.uid}]];
+	replyManager.init({
+		uid:uid,
+		boardBno:[[${board.bno}]],
+		replyMainAddress:[[${boardkindEN}]]
+	});
 	$("#retBtn").on("click",function(e){
 		e.preventDefault();
 		var url = "/"+[[${boardkindEN}]]+"/list";
@@ -149,12 +158,9 @@ $(document).ready(function(e){
 		if(confirm("정말 추천하시겠습니까?")){
 			var sendData = {
 				userid:uid,
-				bno:boardBno,
-				csrf:csrf
+				bno:boardBno
 			}
-			boardManager.upRecommendcnt(sendData,function(result){
-				alert("추천하였습니다!");
-			});
+			boardManager.upRecommendcnt(sendData);
 		}
 	});
 	$("#downBtn").on("click",function(e){
@@ -172,17 +178,11 @@ $(document).ready(function(e){
 		if(confirm("정말 반대하시겠습니까?")){
 			var sendData = {
 				userid:uid,
-				bno:boardBno,
-				csrf:csrf
+				bno:boardBno
 			}
-			boardManager.downRecommendcnt(sendData,function(result){
-				alert("반대하였습니다!");
-			});
+			boardManager.downRecommendcnt(sendData);
 		}
 	});
-	//댓글 관련
-	replyMainAddress = [[${boardkindEN}]];
-	replyInit();
 });
 </script>
 </th:block>

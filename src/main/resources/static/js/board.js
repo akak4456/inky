@@ -1,6 +1,15 @@
-var boardMainAddress = "";
 var boardManager = (function(){
-	var add = function(obj, callback){
+	var formObj = null;
+	var boardMainAddress = null;
+	var loc = null;
+	var bno = null;
+	var init = function(obj){
+		formObj = obj.formObj;
+		boardMainAddress = obj.boardMainAddress;
+		loc = obj.loc;
+		bno = obj.bno;
+	}
+	var add = function(obj, callback,errorCallback){
 		console.log("add...");
 		console.log("boardData...");
 		console.log(obj);
@@ -8,18 +17,22 @@ var boardManager = (function(){
 			type:'post',
 			url:'/'+boardMainAddress+'/write',
 			data:JSON.stringify(obj),
-			beforeSend:function(xhr){
-				xhr.setRequestHeader(obj.csrf.headerName,obj.csrf.token);
-			},
 			contentType:"application/json",
-			success:callback,
-			error:function(error){
-				alert("추가할 수 없습니다!");
+			success:callback ||function(result){
+				alert(result);
+				var url = "/"+boardMainAddress+"/list";
+				console.log(url);
+				formObj.find("[name='dest']").val(loc);
+				formObj.attr("action",url);
+				formObj.submit();
+			},
+			error:errorCallback||function(error){
+				alert(error.responseText);
 				console.log(error);
 			}
 		});
 	};
-	var modify = function(obj,callback){
+	var modify = function(obj,callback,errorCallback){
 		console.log("modify...");
 		console.log("boardData...");
 		console.log(obj);
@@ -27,13 +40,17 @@ var boardManager = (function(){
 			type:'put',
 			url:'/'+boardMainAddress+'/modify/'+obj.bno,
 			data:JSON.stringify(obj),
-			beforeSend:function(xhr){
-				xhr.setRequestHeader(obj.csrf.headerName,obj.csrf.token);
-			},
 			contentType:"application/json",
-			success:callback,
-			error:function(error){
-				alert("수정하지 못하였습니다!");
+			success:callback||function(result){
+				alert(result);
+				var url = "/"+boardMainAddress+"/getOne/"+bno;
+				console.log(url);
+				formObj.find("[name='dest']").val(loc);
+				formObj.attr("action",url);
+				formObj.submit();
+			},
+			error:errorCallback||function(error){
+				alert(error.responseText);
 				console.log(error);
 			}
 		});
@@ -58,58 +75,61 @@ var boardManager = (function(){
 		}
 		return fileForm;
 	}
-	var deleteBoard = function(obj,callback){
+	var deleteBoard = function(obj,callback,errorCallback){
 		console.log("deleteBoard...");
 		$.ajax({
 			type:"delete",
 			url:'/'+boardMainAddress+'/delete/'+obj.bno,
 			data:obj.userid,
-			beforeSend:function(xhr){
-				xhr.setRequestHeader(obj.csrf.headerName,obj.csrf.token);
+			success:callback||function(result){
+				alert(result);
+				var url = "/"+boardMainAddress+"/list";
+				console.log(url);
+				formObj.find("[name='dest']").val(loc);
+				formObj.attr("action",url);
+				formObj.submit();
 			},
-			success:callback,
-			error:function(error){
-				alert("삭제하지못했습니다!");
+			error:errorCallback||function(error){
+				alert(error.responseText);
 				console.log(error);
 			}
 		});
 	}
-	var upRecommendcnt = function(obj,callback){
+	var upRecommendcnt = function(obj,callback,errorCallback){
 		console.log(boardMainAddress);
 		console.log("upRecommend.....");
 		$.ajax({
 			type:'post',
 			url:'/'+boardMainAddress+'/recommend/up',
 			data:JSON.stringify(obj),
-			beforeSend:function(xhr){
-				xhr.setRequestHeader(obj.csrf.headerName,obj.csrf.token);
-			},
 			contentType:"application/json",
-			success:callback,
-			error:function(error){
-				alert("추천하지 못했습니다!");
+			success:callback||function(result){
+				alert(result);
+			},
+			error:errorCallback||function(error){
+				alert(error.responseText);
 				console.log(error);
 			}
 		});
 	}
-	var downRecommendcnt = function(obj,callback){
+	var downRecommendcnt = function(obj,callback,errorCallback){
 		console.log("downRecommend.....");
 		$.ajax({
 			type:'post',
 			url:'/'+boardMainAddress+'/recommend/down',
 			data:JSON.stringify(obj),
-			beforeSend:function(xhr){
-				xhr.setRequestHeader(obj.csrf.headerName,obj.csrf.token);
-			},
 			contentType:"application/json",
-			success:callback,
-			error:function(error){
-				alert("반대하지 못했습니다!");
+			success:callback||function(result){
+				alert(result);
+			},
+			error:errorCallback||function(error){
+				alert(error.responseText);
 				console.log(error);
 			}
 		});
 	}
 	return {
+		init:init,
 		add : add,
 		modify: modify,
 		deleteBoard:deleteBoard,

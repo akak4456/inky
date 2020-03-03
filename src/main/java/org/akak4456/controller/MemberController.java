@@ -6,6 +6,8 @@ import javax.servlet.http.HttpSession;
 import javax.transaction.Transactional;
 import javax.validation.Valid;
 
+import org.akak4456.constant.Constants;
+import org.akak4456.constant.RegexpCheckConstants;
 import org.akak4456.service.MemberService;
 import org.akak4456.service.MemberService.Emailok;
 import org.akak4456.service.MemberService.Idok;
@@ -73,20 +75,20 @@ public class MemberController {
 			}
 		}
 		if(!memberService.ExistId(memberForm.getUid()).equals(Idok.OK)) {
-			return new ResponseEntity<>("이 아이디로 만들 수 없습니다! 중복확인을 해주세요", HttpStatus.BAD_REQUEST);
+			return new ResponseEntity<>(Constants.MAKE_MEMBER_FAIL_FOR_ID, HttpStatus.BAD_REQUEST);
 		}
 		if(!memberService.ExistEmail(memberForm.getUemail()).equals(Emailok.OK)) {
-			return new ResponseEntity<>("이 이메일로 만들 수 없습니다!", HttpStatus.BAD_REQUEST);
+			return new ResponseEntity<>(Constants.MAKE_MEMBER_FAIL_FOR_EMAIL, HttpStatus.BAD_REQUEST);
 		}
 		String checkedEmail = session.getAttribute("checkedEmail")==null?null:(String)(session.getAttribute("checkedEmail"));
 		if(checkedEmail == null) {
-			return new ResponseEntity<>("이 이메일로 만들 수 없습니다! 이메일 인증을 해주세요", HttpStatus.BAD_REQUEST);
+			return new ResponseEntity<>(Constants.MAKE_MEMBER_FAIL_FOR_EMAIL, HttpStatus.BAD_REQUEST);
 		}
 		session.removeAttribute("checkedEmail");
 		
 		
 		memberService.addMember(memberForm);
-		return new ResponseEntity<>("회원가입에 성공했습니다!", HttpStatus.OK);
+		return new ResponseEntity<>(Constants.MAKE_MEMBER_SUCCESS, HttpStatus.OK);
 	}
 
 	@Transactional
@@ -96,11 +98,11 @@ public class MemberController {
 		log.info("CHECK UID..." + uid);
 		Idok isok = memberService.ExistId(uid);
 		if (isok.equals(Idok.NOTAVAILABLE)) {
-			return new ResponseEntity<>("이 아이디는 만들 수 없습니다!", HttpStatus.BAD_REQUEST);
+			return new ResponseEntity<>(Constants.ID_FORMAT_NOTAVAILABLE, HttpStatus.BAD_REQUEST);
 		}
 		if (isok.equals(Idok.EXIST))
-			return new ResponseEntity<>("아이디가 이미 존재 합니다!", HttpStatus.BAD_REQUEST);
-		return new ResponseEntity<>("아이디를 만들 수 있습니다!", HttpStatus.OK);
+			return new ResponseEntity<>(Constants.ID_ALREADY_EXIST, HttpStatus.BAD_REQUEST);
+		return new ResponseEntity<>(Constants.MAKE_MEMBER_SUCCESS_FOR_ID, HttpStatus.OK);
 	}
 
 	@Transactional
@@ -113,7 +115,7 @@ public class MemberController {
 		 */
 		log.info("sendEmail..."+uemail);
 		if(!memberService.ExistEmail(uemail).equals(Emailok.OK)) {
-			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+			return new ResponseEntity<>(Constants.EMAIL_FORMAT_NOTAVAILABLE,HttpStatus.BAD_REQUEST);
 		}
 		SimpleMailMessage msg = new SimpleMailMessage();
 		msg.setTo(uemail);
@@ -129,7 +131,7 @@ public class MemberController {
 		session.setAttribute("code", code);
 		
 		log.info("sendEmailDone...");
-		return new ResponseEntity<>("이메일을 보냈습니다. 인증코드를 확인해주세요!", HttpStatus.OK);
+		return new ResponseEntity<>(Constants.SEND_EMAIL, HttpStatus.OK);
 	}
 
 	@Transactional
@@ -140,11 +142,11 @@ public class MemberController {
 		String storedCode = session.getAttribute("code") == null?null:(String)session.getAttribute("code");
 		log.info("storedCode..."+storedCode);
 		if (storedCode == null||!storedCode.equals(emailCodeCheckVO.getCode())) {
-			return new ResponseEntity<>("인증코드가 유효하지 않습니다!", HttpStatus.BAD_REQUEST);
+			return new ResponseEntity<>(Constants.EMAIL_CODE_NOTAVAILABLE, HttpStatus.BAD_REQUEST);
 		}
 		session.removeAttribute("code");
 		session.setAttribute("checkedEmail", emailCodeCheckVO.getEmail());
-		return new ResponseEntity<>("인증코드가 유효합니다!", HttpStatus.OK);
+		return new ResponseEntity<>(Constants.EMAIL_CODE_AVAILABLE, HttpStatus.OK);
 	}
 	
 	@Transactional
@@ -152,10 +154,10 @@ public class MemberController {
 	@ResponseBody
 	public ResponseEntity<String> findpw(@RequestBody FindpwVO findpwVO){
 		log.info("findpw..."+findpwVO.getUid() +" "+findpwVO.getUemail());
-		if(!findpwVO.getUid().matches(MemberForm.idregexp)) {
+		if(!findpwVO.getUid().matches(RegexpCheckConstants.ID_REGEXP)) {
 			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
 		}
-		if(!findpwVO.getUemail().matches(MemberForm.emailregexp)) {
+		if(!findpwVO.getUemail().matches(RegexpCheckConstants.EMAIL_REGEXP)) {
 			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
 		}
 		
@@ -173,7 +175,7 @@ public class MemberController {
 
 		javaMailSender.send(msg);
 		
-		return new ResponseEntity<>("success",HttpStatus.OK);
+		return new ResponseEntity<>(Constants.SEND_NEW_PW,HttpStatus.OK);
 	}
 	
 	@PreAuthorize("#userid == authentication.principal.member.uid")
@@ -181,7 +183,7 @@ public class MemberController {
 	@ResponseBody
 	public ResponseEntity<String> deleteUser(@PathVariable("userid")String userid){
 		memberService.deleteMember(userid);
-		return new ResponseEntity<>("success",HttpStatus.OK);
+		return new ResponseEntity<>(Constants.REMOVE_MEMBER_SUCCESS,HttpStatus.OK);
 	}
 	
 	@PreAuthorize("#mem.uid == authentication.principal.member.uid")
@@ -190,16 +192,16 @@ public class MemberController {
 	public ResponseEntity<String> modifyUser(@RequestBody MemberModifyFormVO mem,HttpSession session){
 		log.info("member modify...");
 		if(!memberService.updateMember(mem))
-			return new ResponseEntity<>("회원정보를 수정하지 못했습니다.",HttpStatus.BAD_REQUEST);
+			return new ResponseEntity<>(Constants.MODIFY_MEMBER_FAIL,HttpStatus.BAD_REQUEST);
 		session.invalidate();
-		return new ResponseEntity<>("회원정보 수정에 성공하였습니다. 다시 로그인 해주세요!",HttpStatus.OK);
+		return new ResponseEntity<>(Constants.MODIFY_MEMBER_SUCCESS,HttpStatus.OK);
 	}
 	
 	private String generateNewPW() {
 		//개선된 비밀번호 만들기 방식을 만들것
 		String newPW = "";
 		Random r = new Random();
-		while(!(newPW.length()>=10&&newPW.matches(MemberForm.pwregexp))) {
+		while(!(newPW.length()>=10&&newPW.matches(RegexpCheckConstants.PW_REGEXP))) {
 			char c = 'a';
 			switch(r.nextInt(3)) {
 			case 0:

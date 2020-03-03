@@ -6,6 +6,7 @@ import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
 
+import org.akak4456.constant.RegexpCheckConstants;
 import org.akak4456.domain.MemberProfile;
 
 import lombok.Getter;
@@ -13,26 +14,23 @@ import lombok.Setter;
 @Getter
 @Setter
 public class MemberForm {
-	public static final String idregexp = "^[A-Za-z0-9+]{5,50}$"; 
-	public static final String pwregexp = "^(?=.*[0-9]{1,50})(?=.*[~`!@#$%\\^&*()-+=]{1,50})(?=.*[a-zA-Z]{1,50}).{8,50}$";
-	public static final String emailregexp = "^[a-zA-Z0-9_!#$%&’*+/=?`{|}~^.-]+@[a-zA-Z0-9.-]+$";
-	@NotNull(message="아이디는 반드시 있어야 합니다")
-	@Pattern(regexp=idregexp,
-	message="아이디는 영어대소문자 숫자만 가능하며, 총 8글자 이상 50글자 이하 써야합니다")
+	@NotNull(message=RegexpCheckConstants.ID_NOTNULL_FAIL)
+	@Pattern(regexp=RegexpCheckConstants.ID_REGEXP,
+	message=RegexpCheckConstants.ID_REGEXP_FAIL)
 	private String uid;
 	
-	@NotNull(message="비밀번호는 반드시 있어야 합니다")
-	@Pattern(regexp=pwregexp,
-			message="비밀번호는 영어대소문자, 숫자, 특수문자를 각각 1자 이상씩 써야하며, 총 8글자 이상 50글자 이하 써야합니다")
+	@NotNull(message=RegexpCheckConstants.PW_NOTNULL_FAIL)
+	@Pattern(regexp=RegexpCheckConstants.PW_REGEXP,
+			message=RegexpCheckConstants.PW_REGEXP_FAIL)
 	private String upw;
 	
-	@NotNull(message="이메일은 반드시 있어야 합니다")
-	@NotEmpty(message="이메일은 반드시 있어야 합니다")
-	@Pattern(regexp=emailregexp,message="이메일 형식을 맞춰주세요")
+	@NotNull(message=RegexpCheckConstants.EMAIL_NOTNULL_FAIL)
+	@NotEmpty(message=RegexpCheckConstants.EMAIL_NOTNULL_FAIL)
+	@Pattern(regexp=RegexpCheckConstants.EMAIL_REGEXP,message=RegexpCheckConstants.EMAIL_REGEXP_FAIL)
 	private String uemail;
 	
-	@NotNull(message="사용자이름은 반드시 있어야 합니다")
-	@NotEmpty(message="사용자이름은 반드시 있어야 합니다")
+	@NotNull(message=RegexpCheckConstants.NAME_NOTNULL_FAIL)
+	@NotEmpty(message=RegexpCheckConstants.NAME_NOTNULL_FAIL)
 	private String uname;
 	
 	private List<MemberProfile> uploads;

@@ -1,3 +1,4 @@
+let editoro;
 class MyUploadAdapter {
     constructor( loader ) {
         // The file loader instance to use during the upload.
@@ -99,5 +100,3 @@ ClassicEditor.create( document.querySelector( '#editor' ), {
 .catch(function (error) {
 	console.log( error );
 } );
-
-let editoro;

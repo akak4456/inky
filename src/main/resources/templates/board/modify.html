@@ -1,7 +1,7 @@
 <html xmlns:th="http://www.thymeleaf.org"
 	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
 	xmlns:sec="http://www.thymeleaf.org/extras/spring-security"
-	layout:decorate="~{/layout/layout1}">
+	layout:decorate="~{/layout/board_main_layout}">
 <head>
 <meta charset="utf-8">
 <style>
@@ -45,47 +45,35 @@
 	<script th:inline="javascript" th:src="@{'/js/classiceditor.js'}"></script>
 	<script th:inline="javascript" th:src="@{'/js/isEmpty.js'}"></script>
 	<script th:inline="javascript">
-var csrf = JSON.parse('[[${_csrf}]]');
+
 $(document).ready(function(){
-	boardMainAddress = [[${boardkindEN}]];
-	console.log(csrf);
 	editoro.setData([[${board.content}]]);
 	var formObj = $("#f1");
 	var loc = window.location.href.toString().split(window.location.host)[1];
 	loc = loc.substring(0,loc.indexOf("?"))+"?"+$('#f1').find('input[name!=dest]').serialize();
 	console.log(loc);
+	boardManager.init({
+		boardMainAddress : [[${boardkindEN}]],
+		formObj : formObj,
+		loc:loc,
+		bno:[[${board.bno}]]
+	});
 	$("#modify").on("click",function(e){
 		var saveData = {
 			title:$("input[name='title']").val(),
 			content:editoro.getData(),
 			uploads:boardManager.getFileForm(editoro),
 			userid:[[${#authentication.principal.member.uid}]],
-			csrf:csrf,
 			bno:[[${board.bno}]]
 		};
-		boardManager.modify(saveData,function(result){
-			alert("수정하였습니다");
-			var url = "/"+[[${boardkindEN}]]+"/getOne/"+[[${board.bno}]];
-			console.log(url);
-			formObj.find("[name='dest']").val(loc);
-			formObj.attr("action",url);
-			formObj.submit();
-		})
+		boardManager.modify(saveData);
 	});
 	$("#delete").on("click",function(e){
 		var deleteData = {
 			userid:[[${#authentication.principal.member.uid}]],
-			bno:[[${board.bno}]],
-			csrf:csrf
+			bno:[[${board.bno}]]
 		};
-		boardManager.deleteBoard(deleteData,function(result){
-			alert("삭제하였습니다.");
-			var url = "/"+[[${boardkindEN}]]+"/list";
-			console.log(url);
-			formObj.find("[name='dest']").val(loc);
-			formObj.attr("action",url);
-			formObj.submit();
-		})
+		boardManager.deleteBoard(deleteData);
 	});
 });
 </script>

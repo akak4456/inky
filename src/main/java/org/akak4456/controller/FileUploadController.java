@@ -41,17 +41,13 @@ public class FileUploadController {
 	
 	@GetMapping("/fileget/{year}/{month}/{day}/{fileName}")
 	public ResponseEntity<byte[]> imageRead(@PathVariable("year") String year,@PathVariable("month") String month,
-			@PathVariable("day")String day,@PathVariable("fileName") String fileName){
+			@PathVariable("day")String day,@PathVariable("fileName") String fileName) throws IOException{
 		File file = fileService.getFile("/"+year+"/"+month+"/"+day+"/", fileName);
 		log.info("file: "+file);
 		ResponseEntity<byte[]> result = null;
-		try {
-			HttpHeaders header = new HttpHeaders();
-			header.add("Content-Type", Files.probeContentType(file.toPath()));
-			result = new ResponseEntity<>(FileCopyUtils.copyToByteArray(file),header,HttpStatus.OK);
-		}catch(IOException e) {
-			e.printStackTrace();
-		}
+		HttpHeaders header = new HttpHeaders();
+		header.add("Content-Type", Files.probeContentType(file.toPath()));
+		result = new ResponseEntity<>(FileCopyUtils.copyToByteArray(file),header,HttpStatus.OK);
 		return result;
 	}
 	@PostMapping("/profileUpload")

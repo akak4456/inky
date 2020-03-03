@@ -1,5 +1,6 @@
 package org.akak4456.controller;
 
+import org.akak4456.constant.Constants;
 import org.akak4456.domain.CommunityBoard;
 import org.akak4456.service.BoardService;
 import org.akak4456.service.RecommendService;
@@ -94,7 +95,7 @@ public class CommunityBoardController {
 		log.info("addBoard..."+board);
 		log.info("addBoardUploads..."+board.getUploads());
 		communityBoardService.save(board);
-		return new ResponseEntity<>("success",HttpStatus.OK);
+		return new ResponseEntity<>(Constants.BOARD_ADD_SUCCESS,HttpStatus.OK);
 	}
 	@PreAuthorize("#board.userid == authentication.principal.member.uid")
 	@PutMapping("/modify/{bno}")
@@ -102,7 +103,7 @@ public class CommunityBoardController {
 	public ResponseEntity<String> modifyBoard(@RequestBody CommunityBoard board){
 		log.info("modifyBoard..."+board);
 		communityBoardService.update(board);
-		return new ResponseEntity<>("success",HttpStatus.OK);
+		return new ResponseEntity<>(Constants.BOARD_MODIFY_SUCCESS,HttpStatus.OK);
 	}
 	@PreAuthorize("#userid == authentication.principal.member.uid")
 	@DeleteMapping("/delete/{bno}")
@@ -110,8 +111,8 @@ public class CommunityBoardController {
 	public ResponseEntity<String> deleteBoard(@PathVariable("bno") Long bno,String userid){
 		log.info("deleteBoard..."+bno);
 		if(communityBoardService.deleteBoard(bno))
-			return new ResponseEntity<>("success",HttpStatus.OK);
-		return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+			return new ResponseEntity<>(Constants.BOARD_REMOVE_SUCCESS,HttpStatus.OK);
+		return new ResponseEntity<>(Constants.BOARD_REMOVE_FAIL,HttpStatus.INTERNAL_SERVER_ERROR);
 	}
 	@Secured({"ROLE_BASIC","ROLE_ADMIN"})
 	@PostMapping("/recommend/{isupordown}")
@@ -120,14 +121,14 @@ public class CommunityBoardController {
 		log.info("change recommend..."+recommend);
 		if(isupordown.equals("up")) {
 			if(recommendService.upRecommendcnt(recommend.getUserid(), recommend.getBno())) {
-				return new ResponseEntity<>("success",HttpStatus.OK);
+				return new ResponseEntity<>(Constants.BOARD_RECOMMED_UP_SUCCESS,HttpStatus.OK);
 			}
-			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+			return new ResponseEntity<>(Constants.BOARD_RECOMMEND_UP_FAIL,HttpStatus.BAD_REQUEST);
 		}else if(isupordown.equals("down")) {
 			if(recommendService.downRecommendcnt(recommend.getUserid(), recommend.getBno())) {
-				return new ResponseEntity<>("success",HttpStatus.OK);
+				return new ResponseEntity<>(Constants.BOARD_RECOMMEND_DOWN_SUCCESS,HttpStatus.OK);
 			}
-			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+			return new ResponseEntity<>(Constants.BOARD_RECOMMEND_DOWN_FAIL,HttpStatus.BAD_REQUEST);
 		}
 		return null;
 	}

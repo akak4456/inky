@@ -3,6 +3,7 @@ package org.akak4456.service;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.akak4456.constant.RegexpCheckConstants;
 import org.akak4456.domain.Member;
 import org.akak4456.domain.MemberRole;
 import org.akak4456.persistence.MemberRepository;
@@ -41,7 +42,7 @@ public class MemberServiceImpl implements MemberService {
 	@Override
 	public Idok ExistId(String uid) {
 		// TODO Auto-generated method stub
-		if (!uid.matches(MemberForm.idregexp)) {
+		if (!uid.matches(RegexpCheckConstants.ID_REGEXP)) {
 			return Idok.NOTAVAILABLE;
 		}
 		if (memberRepo.findById(uid).isPresent())
@@ -52,7 +53,7 @@ public class MemberServiceImpl implements MemberService {
 	@Override
 	public Emailok ExistEmail(String uemail) {
 		// TODO Auto-generated method stub
-		if(!uemail.matches(MemberForm.emailregexp))
+		if(!uemail.matches(RegexpCheckConstants.EMAIL_REGEXP))
 			return Emailok.NOTAVAILABLE;
 		if(memberRepo.findByUemail(uemail).size() > 0) {
 			return Emailok.EXIST;
@@ -83,7 +84,7 @@ public class MemberServiceImpl implements MemberService {
 			mem.setUname(member.getUname());
 		}
 		if(member.getUpw() != null && member.getUpw().length() > 0) {
-			if(!member.getUpw().matches(MemberForm.pwregexp))
+			if(!member.getUpw().matches(RegexpCheckConstants.PW_REGEXP))
 				return false;
 			String encryptPw = pwEncoder.encode(member.getUpw());
 			mem.setUpw(encryptPw);

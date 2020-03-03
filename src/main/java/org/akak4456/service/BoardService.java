@@ -1,5 +1,6 @@
 package org.akak4456.service;
 
+import java.io.IOException;
 import java.util.List;
 import java.util.Optional;
 
@@ -55,7 +56,7 @@ public class BoardService<T extends Board> {
 		return true;
 	}
 	@Transactional
-	public boolean deleteBoard(Long bno) {
+	public boolean deleteBoard(Long bno) throws IOException {
 		// TODO Auto-generated method stub
 		//파일부터 삭제
 		List<UploadFile> uploadFiles = repo.findById(bno).get().getUploads();

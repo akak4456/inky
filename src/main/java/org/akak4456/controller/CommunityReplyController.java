@@ -1,5 +1,6 @@
 package org.akak4456.controller;
 
+import org.akak4456.constant.Constants;
 import org.akak4456.domain.CommunityBoard;
 import org.akak4456.domain.CommunityReply;
 import org.akak4456.service.ReplyService;
@@ -53,14 +54,14 @@ public class CommunityReplyController {
 		board.setBno(bno);
 		reply.setBoard(board);
 		replyService.addReply(reply);
-		return new ResponseEntity<>("success",HttpStatus.OK);
+		return new ResponseEntity<>(Constants.REPLY_ADD_SUCCESS,HttpStatus.OK);
 	}
 	@PreAuthorize("#userid == authentication.principal.member.uid")
 	@DeleteMapping("/delete/{rno}")
 	public ResponseEntity<String> deleteReply(@PathVariable("rno") Long rno,String userid){
 		log.info("deleteReply..."+rno);
 		replyService.deleteReply(rno);
-		return new ResponseEntity<>("success",HttpStatus.OK);
+		return new ResponseEntity<>(Constants.REPLY_DELETE_SUCCESS,HttpStatus.OK);
 	}
 	@PreAuthorize("#reply.replier == authentication.principal.member.uid")
 	@PutMapping("/modify/{bno}")
@@ -71,6 +72,6 @@ public class CommunityReplyController {
 		board.setBno(bno);
 		reply.setBoard(board);
 		replyService.updateReply(reply);
-		return new ResponseEntity<>("success",HttpStatus.OK);
+		return new ResponseEntity<>(Constants.REPLY_MODIFY_SUCCESS,HttpStatus.OK);
 	}
 }

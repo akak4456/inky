@@ -25,7 +25,7 @@ import lombok.extern.java.Log;
 @Log
 public class FileServiceImpl implements FileService {
 	private static final String pathPrefix = "C:/upload";
-	
+
 	private static final int thumbnailWidth = 100;
 
 	@Override
@@ -37,36 +37,43 @@ public class FileServiceImpl implements FileService {
 		String folderName = pathPrefix + "/" + time1;
 		// file create
 		String fileName = null;
-		for (MultipartFile multipart : uploadfile) {
-			UUID uuid = UUID.randomUUID();
-			fileName = uuid.toString() + "_" + multipart.getOriginalFilename();
-			String totalFileName = folderName + "/" + fileName;
-			File tofile = new File(totalFileName);
-			multipart.transferTo(tofile);
+		File tofile = null;
+		try {
+			for (MultipartFile multipart : uploadfile) {
+				UUID uuid = UUID.randomUUID();
+				fileName = uuid.toString() + "_" + multipart.getOriginalFilename();
+				String totalFileName = folderName + "/" + fileName;
+				tofile = new File(totalFileName);
+				multipart.transferTo(tofile);
+			}
+		} catch (IOException e) {
+			throw e;
 		}
 		return "/fileget/" + time1 + "/" + fileName;
 	}
 
 	@Override
-	public File getFile(String path, String fileName) {
+	public File getFile(String path, String fileName) throws IOException {
 		// TODO Auto-generated method stub
+		File file = null;
 		String totalFileName = pathPrefix + path + "/" + fileName;
 		log.info("totalFileName: " + totalFileName);
-		File file = new File(totalFileName);
+		file = new File(totalFileName);
 		return file;
 	}
 
 	@Override
-	public boolean deleteFile(String path, String fileName) {
+	public boolean deleteFile(String path, String fileName) throws IOException {
 		// TODO Auto-generated method stub
-		File file = new File(pathPrefix + path + "/" + fileName);
+		File file = null;
+		file = new File(pathPrefix + path + "/" + fileName);
 		if (!file.delete())
 			return false;
 		return true;
 	}
 
 	@Override
-	public String profileUpload(MultipartFile profile) {
+	public String profileUpload(MultipartFile profile) throws IOException {
 		// TODO Auto-generated method stub
 		FileOutputStream fos = null;
 		ByteArrayOutputStream baos = null;
@@ -91,7 +98,7 @@ public class FileServiceImpl implements FileService {
 				e.printStackTrace();
 			}
 		}
-		return "/fileget/"+time1 + "/"+fileName;
+		return "/fileget/" + time1 + "/" + fileName;
 	}
 
 	private String createFolder() throws IOException {
@@ -108,11 +115,18 @@ public class FileServiceImpl implements FileService {
 	}
 
 	private ByteArrayOutputStream createThumbnail(MultipartFile orginalFile, Integer width) throws IOException {
-		ByteArrayOutputStream thumbOutput = new ByteArrayOutputStream();
+		ByteArrayOutputStream thumbOutput = null;
 		BufferedImage thumbImg = null;
-		BufferedImage img = ImageIO.read(orginalFile.getInputStream());
-		thumbImg = Scalr.resize(img, Scalr.Method.AUTOMATIC, Scalr.Mode.AUTOMATIC, width, Scalr.OP_ANTIALIAS);
-		ImageIO.write(thumbImg, orginalFile.getContentType().split("/")[1], thumbOutput);
+		BufferedImage img = null;
+		try {
+			thumbOutput = new ByteArrayOutputStream();
+			img = ImageIO.read(orginalFile.getInputStream());
+			thumbImg = Scalr.resize(img, Scalr.Method.AUTOMATIC, Scalr.Mode.AUTOMATIC, width, Scalr.OP_ANTIALIAS);
+			ImageIO.write(thumbImg, orginalFile.getContentType().split("/")[1], thumbOutput);
+		} catch (IOException e) {
+			throw e;
+		} finally {
+		}
 		return thumbOutput;
 	}
 }
