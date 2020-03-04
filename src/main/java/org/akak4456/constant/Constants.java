@@ -49,6 +49,9 @@ public class Constants {
 	
 	public static final String MODIFY_MEMBER_SUCCESS = "회원정보를 수정하였습니다! 다시 로그인 해주세요!";
 	public static final String MODIFY_MEMBER_FAIL = "회원정보를 수정하지 못했습니다!";
+	
+	public static final String REPORT_SUCCESS = "신고가 완료되었습니다!";
+	public static final String REPORT_FAIL = "신고하지 못했습니다!";
 	private Constants() {
 		
 	}

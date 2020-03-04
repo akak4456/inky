@@ -1,5 +1,7 @@
 package org.akak4456.controller;
 
+import java.io.IOException;
+
 import org.akak4456.constant.Constants;
 import org.akak4456.domain.CommunityBoard;
 import org.akak4456.service.BoardService;
@@ -92,8 +94,6 @@ public class CommunityBoardController {
 	@PostMapping("/write")
 	@ResponseBody
 	public ResponseEntity<String> addBoard(@RequestBody CommunityBoard board){
-		log.info("addBoard..."+board);
-		log.info("addBoardUploads..."+board.getUploads());
 		communityBoardService.save(board);
 		return new ResponseEntity<>(Constants.BOARD_ADD_SUCCESS,HttpStatus.OK);
 	}
@@ -101,15 +101,13 @@ public class CommunityBoardController {
 	@PutMapping("/modify/{bno}")
 	@ResponseBody
 	public ResponseEntity<String> modifyBoard(@RequestBody CommunityBoard board){
-		log.info("modifyBoard..."+board);
 		communityBoardService.update(board);
 		return new ResponseEntity<>(Constants.BOARD_MODIFY_SUCCESS,HttpStatus.OK);
 	}
 	@PreAuthorize("#userid == authentication.principal.member.uid")
 	@DeleteMapping("/delete/{bno}")
 	@ResponseBody
-	public ResponseEntity<String> deleteBoard(@PathVariable("bno") Long bno,String userid){
-		log.info("deleteBoard..."+bno);
+	public ResponseEntity<String> deleteBoard(@PathVariable("bno") Long bno,String userid) throws IOException{
 		if(communityBoardService.deleteBoard(bno))
 			return new ResponseEntity<>(Constants.BOARD_REMOVE_SUCCESS,HttpStatus.OK);
 		return new ResponseEntity<>(Constants.BOARD_REMOVE_FAIL,HttpStatus.INTERNAL_SERVER_ERROR);
@@ -118,7 +116,6 @@ public class CommunityBoardController {
 	@PostMapping("/recommend/{isupordown}")
 	@ResponseBody
 	public ResponseEntity<String> changeRecommend(@PathVariable("isupordown")String isupordown,@RequestBody RecommendVO recommend){
-		log.info("change recommend..."+recommend);
 		if(isupordown.equals("up")) {
 			if(recommendService.upRecommendcnt(recommend.getUserid(), recommend.getBno())) {
 				return new ResponseEntity<>(Constants.BOARD_RECOMMED_UP_SUCCESS,HttpStatus.OK);

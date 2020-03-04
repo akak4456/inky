@@ -1,0 +1,56 @@
+<html xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	xmlns:sec="http://www.thymeleaf.org/extras/spring-security"
+	layout:decorate="~{/layout/admin_main_layout}">
+<head>
+<meta charset="utf-8">
+<style>
+</style>
+</head>
+<section layout:fragment="content">
+	<div class="btn-group">
+		<button class="btn btn-lg btn-primary add-new-manager">새로운 관리자 등록</button>
+		<button class="btn btn-lg btn-primary remove-manager">등록된 관리자 삭제</button>
+		<button class="btn btn-lg btn-primary go-to-report">신고내역보기</button>
+	</div>
+</section>
+<th:block layout:fragment="script">
+<script th:inline="javascript" th:src="@{'/js/admin.js'}"></script>
+	<script th:inline="javascript">
+		$(document).ready(function() {
+			var formObj = $("#f1");
+			var loc = window.location.href.toString().split(window.location.host)[1];
+			loc = loc.substring(0, loc.indexOf("?")) + "?" + $('#f1').find('input[name!=dest]').serialize();
+			console.log(loc);
+			$(".add-new-manager").on("click",function(e){
+				e.preventDefault();
+				var upgradeId = prompt("관리자로 상향시킬 아이디를 입력해주세요.");
+				var sendData = {
+						upgradeId:upgradeId
+				};
+				if(confirm("정말로 관리자로 추가하길 원하십니까?")){
+					adminManager.upgradeToAdmin(sendData);
+				}
+			});
+			$(".remove-manager").on("click",function(e){
+				e.preventDefault();
+				var removeId = prompt("관리자에서 배제할 아이디를 입력해주세요.");
+				var sendData = {
+						removeId:removeId
+				};
+				if(confirm("정말로 관리자로 제거하길 원하십니까?")){
+					adminManager.removeFromAdmin(sendData);
+				}
+			});
+			$(".go-to-report").on("click",function(e){
+				e.preventDefault();
+				var url ="/report/list";
+				console.log(url);
+				formObj.find("[name='dest']").val(loc);
+				formObj.attr("action",url);
+				formObj.submit();
+			});
+		});
+	</script>
+</th:block>
+</html>

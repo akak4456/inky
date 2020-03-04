@@ -31,7 +31,6 @@ public class FileServiceImpl implements FileService {
 	@Override
 	public String uploadFile(List<MultipartFile> uploadfile) throws IOException {
 		// TODO Auto-generated method stub
-		log.info("originalfileName: " + uploadfile.get(0).getOriginalFilename());
 		// folder create
 		String time1 = createFolder();
 		String folderName = pathPrefix + "/" + time1;
@@ -57,7 +56,6 @@ public class FileServiceImpl implements FileService {
 		// TODO Auto-generated method stub
 		File file = null;
 		String totalFileName = pathPrefix + path + "/" + fileName;
-		log.info("totalFileName: " + totalFileName);
 		file = new File(totalFileName);
 		return file;
 	}

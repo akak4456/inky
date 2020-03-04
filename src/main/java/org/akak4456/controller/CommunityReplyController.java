@@ -33,7 +33,6 @@ public class CommunityReplyController {
 	private ReplyService replyService;
 	@GetMapping("/list/{bno}")
 	public ResponseEntity<PageMaker<CommunityReply>> getList(PageVO pageVO,@PathVariable("bno") Long bno){
-		log.info("getListReply..."+pageVO.getPage());
 		Page<CommunityReply> result = null;
 		if(pageVO.getPage() == 0) {
 			//마지막 페이지를 요구하면
@@ -49,7 +48,6 @@ public class CommunityReplyController {
 	@Secured({"ROLE_BASIC","ROLE_ADMIN"})
 	@PostMapping("/write/{bno}")
 	public ResponseEntity<String> write(@RequestBody CommunityReply reply,@PathVariable("bno")Long bno){
-		log.info("addReply..."+bno);
 		CommunityBoard board = new CommunityBoard();
 		board.setBno(bno);
 		reply.setBoard(board);
@@ -59,15 +57,12 @@ public class CommunityReplyController {
 	@PreAuthorize("#userid == authentication.principal.member.uid")
 	@DeleteMapping("/delete/{rno}")
 	public ResponseEntity<String> deleteReply(@PathVariable("rno") Long rno,String userid){
-		log.info("deleteReply..."+rno);
 		replyService.deleteReply(rno);
 		return new ResponseEntity<>(Constants.REPLY_DELETE_SUCCESS,HttpStatus.OK);
 	}
 	@PreAuthorize("#reply.replier == authentication.principal.member.uid")
 	@PutMapping("/modify/{bno}")
 	public ResponseEntity<String> modifyReply(@PathVariable("bno") Long bno, @RequestBody CommunityReply reply){
-		log.info("modifyReply..."+bno);
-		log.info("reply..."+reply);
 		CommunityBoard board = new CommunityBoard();
 		board.setBno(bno);
 		reply.setBoard(board);

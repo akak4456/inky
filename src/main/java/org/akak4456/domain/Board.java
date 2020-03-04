@@ -23,7 +23,7 @@ import lombok.Setter;
 @Getter
 @Setter
 @MappedSuperclass
-public abstract class Board <R extends Reply> {
+public abstract class Board <R extends Reply, U extends UploadFile> {
 	@Id
 	@GeneratedValue(strategy=GenerationType.IDENTITY)
 	private Long bno;
@@ -45,7 +45,7 @@ public abstract class Board <R extends Reply> {
 	
 	@OneToMany(cascade=CascadeType.ALL,orphanRemoval=true)
 	@JoinColumn(name="bno")
-	private List<UploadFile> uploads;
+	private List<U> uploads;
 	
 	@OneToMany(mappedBy="board", cascade=CascadeType.ALL)
 	private List<R> replies;

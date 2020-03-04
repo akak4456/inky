@@ -19,6 +19,6 @@ import lombok.ToString;
 @Entity
 @Table(name="tbl_community_board")
 @EqualsAndHashCode(of="bno")
-public class CommunityBoard extends Board<CommunityReply> {
+public class CommunityBoard extends Board<CommunityReply,CommunityUploadFile> {
 	
 }

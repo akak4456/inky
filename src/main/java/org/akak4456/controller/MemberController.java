@@ -63,10 +63,8 @@ public class MemberController {
 	@PostMapping("/join")
 	@ResponseBody
 	public ResponseEntity<String> joinPost(@Valid @RequestBody MemberForm memberForm, BindingResult bindingResult,HttpSession session) {
-		log.info("MEMBER: " + memberForm);
 		if (bindingResult.hasErrors()) {
 			// join form 이 맞지 않을 때
-			log.info("JOIN FORM MATCH FAILED...");
 			for (Object object : bindingResult.getAllErrors()) {
 				if (object instanceof FieldError) {
 					FieldError fieldError = (FieldError) object;
@@ -95,7 +93,6 @@ public class MemberController {
 	@PostMapping("/checkid")
 	@ResponseBody
 	public ResponseEntity<String> checkId(@RequestBody String uid) {
-		log.info("CHECK UID..." + uid);
 		Idok isok = memberService.ExistId(uid);
 		if (isok.equals(Idok.NOTAVAILABLE)) {
 			return new ResponseEntity<>(Constants.ID_FORMAT_NOTAVAILABLE, HttpStatus.BAD_REQUEST);
@@ -113,7 +110,6 @@ public class MemberController {
 		 * 이메일 주소가 잘못되면 어찌할 것인가
 		 * 그거에 대해서 생각하기!!!!!
 		 */
-		log.info("sendEmail..."+uemail);
 		if(!memberService.ExistEmail(uemail).equals(Emailok.OK)) {
 			return new ResponseEntity<>(Constants.EMAIL_FORMAT_NOTAVAILABLE,HttpStatus.BAD_REQUEST);
 		}
@@ -130,7 +126,6 @@ public class MemberController {
 		
 		session.setAttribute("code", code);
 		
-		log.info("sendEmailDone...");
 		return new ResponseEntity<>(Constants.SEND_EMAIL, HttpStatus.OK);
 	}
 
@@ -138,9 +133,7 @@ public class MemberController {
 	@PostMapping("/checkEmail")
 	@ResponseBody
 	public ResponseEntity<String> checkEmail(@RequestBody EmailCodeCheckVO emailCodeCheckVO,HttpSession session) {
-		log.info("checkemail..."+emailCodeCheckVO.getEmail()+" "+emailCodeCheckVO.getCode());
 		String storedCode = session.getAttribute("code") == null?null:(String)session.getAttribute("code");
-		log.info("storedCode..."+storedCode);
 		if (storedCode == null||!storedCode.equals(emailCodeCheckVO.getCode())) {
 			return new ResponseEntity<>(Constants.EMAIL_CODE_NOTAVAILABLE, HttpStatus.BAD_REQUEST);
 		}
@@ -153,7 +146,6 @@ public class MemberController {
 	@PostMapping("/findpw")
 	@ResponseBody
 	public ResponseEntity<String> findpw(@RequestBody FindpwVO findpwVO){
-		log.info("findpw..."+findpwVO.getUid() +" "+findpwVO.getUemail());
 		if(!findpwVO.getUid().matches(RegexpCheckConstants.ID_REGEXP)) {
 			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
 		}
@@ -190,7 +182,6 @@ public class MemberController {
 	@PostMapping("/modify")
 	@ResponseBody
 	public ResponseEntity<String> modifyUser(@RequestBody MemberModifyFormVO mem,HttpSession session){
-		log.info("member modify...");
 		if(!memberService.updateMember(mem))
 			return new ResponseEntity<>(Constants.MODIFY_MEMBER_FAIL,HttpStatus.BAD_REQUEST);
 		session.invalidate();

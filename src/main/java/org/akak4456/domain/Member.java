@@ -42,7 +42,7 @@ public class Member {
 	@UpdateTimestamp
 	private LocalDateTime updatedate;
 	
-	@OneToMany(cascade=CascadeType.ALL)
+	@OneToMany(cascade=CascadeType.ALL,orphanRemoval=true)
 	@LazyCollection(LazyCollectionOption.FALSE)
 	@JoinColumn(name="mem")
 	private List<MemberRole> roles;

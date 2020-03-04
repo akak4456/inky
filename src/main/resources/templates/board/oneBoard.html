@@ -63,6 +63,7 @@ ul {
 			<button
 				th:if="${auth} ne 'anonymousUser' and ${auth.member.uid} eq ${board.userid}"
 				class="btn btn-danger float-right" id="modifyBtn">수정/삭제</button>
+			<button class="btn btn-primary float-right" id="reportBtn">신고하기</button>
 		</div>
 		<div class="card-body text-center">
 			<div class="reply-content"></div>
@@ -182,6 +183,30 @@ $(document).ready(function(e){
 			}
 			boardManager.downRecommendcnt(sendData);
 		}
+	});
+	$("#reportBtn").on("click",function(e){
+		e.preventDefault();
+		var reason = prompt("신고이유를 적어주세요");
+		var sendData = {
+				target_no:boardBno,
+				target_kind:'B',
+				reason:reason,
+				reporterId:uid,
+				title:[[${board.title}]],
+				content:[[${board.content}]]
+		}
+		$.ajax({
+			type:'post',
+			url:'/report/writeReport',
+			contentType:'application/json',
+			data:JSON.stringify(sendData),
+			success:function(result){
+				alert(result);
+			},
+			error:function(error){
+				console.log(error);
+			}
+		});
 	});
 });
 </script>

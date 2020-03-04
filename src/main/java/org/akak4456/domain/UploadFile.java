@@ -21,10 +21,7 @@ import lombok.ToString;
 
 @Getter
 @Setter
-@ToString
-@Entity
-@Table(name="tbl_uploadfile")
-@EqualsAndHashCode(of="fno")
+@MappedSuperclass
 public class UploadFile {
 	@Id
 	@GeneratedValue(strategy=GenerationType.IDENTITY)

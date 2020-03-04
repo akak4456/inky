@@ -43,7 +43,6 @@ public class FileUploadController {
 	public ResponseEntity<byte[]> imageRead(@PathVariable("year") String year,@PathVariable("month") String month,
 			@PathVariable("day")String day,@PathVariable("fileName") String fileName) throws IOException{
 		File file = fileService.getFile("/"+year+"/"+month+"/"+day+"/", fileName);
-		log.info("file: "+file);
 		ResponseEntity<byte[]> result = null;
 		HttpHeaders header = new HttpHeaders();
 		header.add("Content-Type", Files.probeContentType(file.toPath()));
@@ -52,7 +51,6 @@ public class FileUploadController {
 	}
 	@PostMapping("/profileUpload")
 	public ResponseEntity<String> uploadProfile(@RequestParam("uploadfile") MultipartFile uploadfile) throws Exception{
-		log.info("profile..."+uploadfile.getOriginalFilename());
 		String retName = fileService.profileUpload(uploadfile);
 		return new ResponseEntity<>(retName,HttpStatus.OK);
 	}
