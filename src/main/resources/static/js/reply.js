@@ -90,19 +90,13 @@ var replyManager = (function(){
 		}else{
 		str += "<div class='rereply-content-main' data-idx='"+i+"' data-rno='"+c.rno+"' data-parent_rno='"+c.parent_rno+"'>";	
 		}
-		str += "	<div class='replier text-left'>";
-		str += "		<table>";
-		str += "			<tr>";
-		str += "				<td>";
-		str += "					<span>"+c.replier+"</span>";
-		str += "				</td>";
-		str += "			</tr>";
-		str += "			<tr>";
-		str += "				<td>";
-		str += "					"+c.replydate;
-		str += "				</td>";
-		str += "			</tr>";
-		str += "		</table>";
+		str += "	<div class='replier row'>";
+		str += "		<div class='col-md-6 text-left'>";
+		str += "			<span>"+c.replier+"</span><br><span>"+c.replydate+"</span>";
+		str += "		</div>";
+		str += "		<div class='col-md-6 text-left report' data-idx='"+i+"'>";
+		str += "			<i class='fas fa-bell'></i><br><span>신고</span>"
+		str += "		</div>" 
 		str += "	</div>";
 		str += "	<div class='text-left editor-reply'>"+c.reply+"</div>";
 		str += "</div>";
@@ -115,6 +109,32 @@ var replyManager = (function(){
 		}
 		str += "<hr>";
 		replyContent.html(str);
+		//신고버튼
+		$(".report").on("click",function(e){
+			var idx = $(this).data("idx");
+			var reason = prompt("신고이유를 적어주세요");
+			var sendData = {
+					target_no:boardBno,
+					target_kind:'R',
+					reason:reason,
+					reporterId:uid,
+					title:"댓글입니다",
+					content:result.result.content[idx].reply
+			}
+			$.ajax({
+				type:'post',
+				url:'/report/writeReport',
+				contentType:'application/json',
+				data:JSON.stringify(sendData),
+				success:function(result){
+					alert(result);
+					$(".rereply-edit").remove();
+				},
+				error:function(error){
+					console.log(error);
+				}
+			});
+		});
 		//댓글창 만들기
 		$(".reply-btns .btn-primary").on("click",function(e){
 			//댓글수정버튼 클릭

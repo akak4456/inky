@@ -12,16 +12,15 @@
 		<button class="btn btn-lg btn-primary add-new-manager">새로운 관리자 등록</button>
 		<button class="btn btn-lg btn-primary remove-manager">등록된 관리자 삭제</button>
 		<button class="btn btn-lg btn-primary go-to-report">신고내역보기</button>
+		<button class="btn btn-lg btn-primary remove-all-report">신고내역 모두 삭제하기</button>
+		<button class="btn btn-lg btn-primary block-user">유저 차단</button>
+		<button class="btn btn-lg btn-primary unblock-user">유저 차단 해제</button>
 	</div>
 </section>
 <th:block layout:fragment="script">
 <script th:inline="javascript" th:src="@{'/js/admin.js'}"></script>
 	<script th:inline="javascript">
 		$(document).ready(function() {
-			var formObj = $("#f1");
-			var loc = window.location.href.toString().split(window.location.host)[1];
-			loc = loc.substring(0, loc.indexOf("?")) + "?" + $('#f1').find('input[name!=dest]').serialize();
-			console.log(loc);
 			$(".add-new-manager").on("click",function(e){
 				e.preventDefault();
 				var upgradeId = prompt("관리자로 상향시킬 아이디를 입력해주세요.");
@@ -44,11 +43,41 @@
 			});
 			$(".go-to-report").on("click",function(e){
 				e.preventDefault();
-				var url ="/report/list";
-				console.log(url);
-				formObj.find("[name='dest']").val(loc);
-				formObj.attr("action",url);
-				formObj.submit();
+				window.location.href= "/report/list";
+			});
+			$(".remove-all-report").on("click",function(e){
+				if(confirm("정말로 삭제하시겠습니까?")){
+					$.ajax({
+						type:'delete',
+						url:'/report/deleteAll',
+						success:function(result){
+							alert(result);
+						},
+						error:function(error){
+							console.log(error);
+						}
+					});
+				}
+			});
+			$(".block-user").on("click",function(e){
+				e.preventDefault();
+				var blockId = prompt("차단시킬 유저 id를 입력해주세요");
+				var sendData = {
+						blockId:blockId
+				};
+				if(confirm("정말로 차단하시겠습니까?")){
+					adminManager.blockUser(sendData);
+				}
+			});
+			$(".unblock-user").on("click",function(e){
+				e.preventDefault();
+				var unblockId = prompt("차단 해제시킬 유저 id를 입력해주세요");
+				var sendData = {
+						unblockId:unblockId
+				};
+				if(confirm("정말로 차단 해제하시겠습니까?")){
+					adminManager.unblockUser(sendData);
+				}
 			});
 		});
 	</script>

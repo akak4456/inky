@@ -27,10 +27,37 @@ var adminManager = (function(){
 			}
 		});
 	}
+	
+	var blockUser = function(sendData,successCallback,errorCallback){
+		$.ajax({
+			type:'post',
+			url:'/admin/blockUser/'+sendData.blockId,
+			success:successCallback||function(result){
+				console.log(result);
+				alert(result);
+			},
+			error:errorCallback||function(error){
+				console.log(error)
+			}
+		});
+	}
+	var unblockUser = function(sendData,successCallback,errorCallback){
+		$.ajax({
+			type:'post',
+			url:'/admin/unblockUser/'+sendData.unblockId,
+			success:successCallback||function(result){
+				console.log(result);
+				alert(result);
+			},
+			error:errorCallback||function(error){
+				console.log(error)
+			}
+		});
+	}
 	return {
 		upgradeToAdmin : upgradeToAdmin,
-		removeFromAdmin : removeFromAdmin
-		
-		
+		removeFromAdmin : removeFromAdmin,
+		blockUser:blockUser,
+		unblockUser:unblockUser
 	};
 })();

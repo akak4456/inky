@@ -20,5 +20,10 @@ public class ReportServiceImpl implements ReportService {
 		// TODO Auto-generated method stub
 		return reportRepo.findAll(reportRepo.makePredicate(),pageable);
 	}
+	@Override
+	public void deleteAllReport() {
+		// TODO Auto-generated method stub
+		reportRepo.deleteAll();
+	}
 
 }

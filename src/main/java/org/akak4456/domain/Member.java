@@ -37,6 +37,8 @@ public class Member {
 	
 	private String uname;
 	
+	char isblock = 'N';
+	
 	@CreationTimestamp
 	private LocalDateTime regdate;
 	@UpdateTimestamp

@@ -7,4 +7,5 @@ import org.springframework.data.domain.Pageable;
 public interface ReportService {
 	public void writeReport(Report report);
 	public Page<Report> getListWithPaging(Pageable pageable);
+	public void deleteAllReport();
 }

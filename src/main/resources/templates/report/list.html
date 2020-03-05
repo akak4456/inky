@@ -17,26 +17,30 @@
 		<div class="card-body">
 			<ul class="list-group">
 			</ul>
+			<div class="board-body">
+				<div class="form-group">
+					<label>제목</label> <input class="form-control" type="text"
+						name="title" readonly="readonly">
+				</div>
+				<div class="form-group">
+					<label>내용</label>
+					<div class="editor"></div>
+				</div>
+			</div>
 		</div>
 		<div class="mx-auto">
 			<ul class="pagination">
 			</ul>
 		</div>
 	</div>
-	<form id="gotoPage" method='post' action='/report/showPage'>
-		<input type='hidden' name='title'>
-		<input type='hidden' name='content'>
-		<input type="hidden" th:name="${_csrf.parameterName}"
-							th:value="${_csrf.token}" />
-	</form>
 </section>
 <th:block layout:fragment="script">
+	<script
+		src="https://cdn.ckeditor.com/ckeditor5/16.0.0/classic/ckeditor.js"></script>
+<script th:inline="javascript"
+		th:src="@{'/js/classiceditorReadonly.js'}"></script>
 	<script th:inline="javascript">
 $(document).ready(function(){
-	var formObj = $("#f1");
-	var loc = window.location.href.toString().split(window.location.host)[1];
-	loc = loc.substring(0,loc.indexOf("?"))+"?"+$('#f1').find('input[name!=dest]').serialize();
-	console.log(loc);
 	function getListWithPaging(sendData){
 		console.log("getlistWithPaging");
 		$.getJSON("/report/listPage",sendData,function(result){
@@ -66,10 +70,36 @@ $(document).ready(function(){
 			$(".report-list a").on("click",function(e){
 				e.preventDefault();
 				var idx = $(this).data("idx");
-				var formObj = $("#gotoPage");
-				formObj.find("[name='title']").val(content[idx].title);
-				formObj.find("[name='content']").val(content[idx].content);
-				formObj.submit();
+				$("input[name='title']").val(content[idx].title);
+				editoro.setData(content[idx].content);
+			});
+			//페이지 번호 매기기
+			str = "";
+			if(result.prevPage != null){
+			str += "<li class='page-item'>";
+			str += "	<a class='page-link' href='"+(result.prevPage.pageNumber+1)+"'>이전</a>";
+			str += "</li>";
+			}
+			for(var i=0;i<result.pageList.length;i++){
+			var p = result.pageList[i];
+			var active = '';
+			if(p.pageNumber+1==pageNum)
+			active = 'active';
+			str += "<li class='page-item "+active+"'>";
+			str += "	<a class='page-link' href='"+(p.pageNumber+1)+"'>"+(p.pageNumber+1)+"</a>";
+			str += "</li>";
+			}
+			if(result.nextPage != null){
+			str += "<li class='page-item'>";
+			str += "	<a class='page-link' href='"+(result.nextPage.pageNumber+1)+"'>다음</a>";
+			str += "</li>";
+			}
+			$(".pagination").html(str);
+			$("li.page-item a").on("click",function(e){
+				//댓글 페이지 번호 클릭시
+				e.preventDefault();
+				pageNum = $(this).attr('href');
+				getListWithPaging({page:pageNum});
 			});
 		});
 	}
