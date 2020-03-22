@@ -1,8 +1,10 @@
 package org.akak4456.service;
 
+import org.akak4456.error.IdNotExist;
+
 public interface AdminService {
-	public boolean upgradeToAdminById(String id);
-	public boolean removeFromAdminById(String id);
-	public boolean blockUser(String id);
-	public boolean unblockUser(String id);
+	public void upgradeToAdminById(String id) throws IdNotExist;
+	public void removeFromAdminById(String id) throws IdNotExist;
+	public void blockUser(String id) throws IdNotExist;
+	public void unblockUser(String id) throws IdNotExist;
 }

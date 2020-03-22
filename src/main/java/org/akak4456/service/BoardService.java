@@ -19,13 +19,12 @@ public class BoardService<T extends Board> {
 	@Autowired
 	private FileService fileService;
 	@Transactional
-	public boolean save(T board)  {
+	public void save(T board)  {
 		/*
 		 * boardForm.getFileForm().forEach(fileForm->{ log.info("fileForm: "+fileForm);
 		 * });
 		 */
 		board = repo.save(board);
-		return true;
 	}
 	@Transactional
 	public Page<T> getListWithPaging(String type, String keyword,Pageable pageable) {
@@ -42,7 +41,7 @@ public class BoardService<T extends Board> {
 		return null;
 	}
 	@Transactional
-	public boolean update(T board) {
+	public void update(T board) {
 		// TODO Auto-generated method stub
 		//log.info("uploads..."+(board.getUploads()==null));
 		T newBoard = repo.findById(board.getBno()).get();
@@ -53,19 +52,17 @@ public class BoardService<T extends Board> {
 			newBoard.getUploads().addAll(board.getUploads());
 		}
 		newBoard = repo.save(newBoard);
-		return true;
 	}
 	@Transactional
-	public boolean deleteBoard(Long bno) throws IOException {
+	public void deleteBoard(Long bno) throws IOException {
 		// TODO Auto-generated method stub
 		//파일부터 삭제
 		List<UploadFile> uploadFiles = repo.findById(bno).get().getUploads();
 		for(UploadFile uploadFile:uploadFiles) {
 			if(!fileService.deleteFile("/"+uploadFile.getUploadPath(), uploadFile.getUploadFileName())) {
-				return false;
+				throw new IOException("파일이 존재하지 않습니다!");
 			}
 		}
 		repo.deleteById(bno);
-		return true;
 	}
 }

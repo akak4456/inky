@@ -15,6 +15,7 @@
 		<button class="btn btn-lg btn-primary remove-all-report">신고내역 모두 삭제하기</button>
 		<button class="btn btn-lg btn-primary block-user">유저 차단</button>
 		<button class="btn btn-lg btn-primary unblock-user">유저 차단 해제</button>
+		<button class="btn btn-lg btn-primary notify-write">공지 등록하기</button>
 	</div>
 </section>
 <th:block layout:fragment="script">
@@ -43,20 +44,11 @@
 			});
 			$(".go-to-report").on("click",function(e){
 				e.preventDefault();
-				window.location.href= "/report/list";
+				window.location.href= "/admin/report/list";
 			});
 			$(".remove-all-report").on("click",function(e){
 				if(confirm("정말로 삭제하시겠습니까?")){
-					$.ajax({
-						type:'delete',
-						url:'/report/deleteAll',
-						success:function(result){
-							alert(result);
-						},
-						error:function(error){
-							console.log(error);
-						}
-					});
+					adminManager.removeAllReport();
 				}
 			});
 			$(".block-user").on("click",function(e){
@@ -78,6 +70,9 @@
 				if(confirm("정말로 차단 해제하시겠습니까?")){
 					adminManager.unblockUser(sendData);
 				}
+			});
+			$(".notify-write").on("click",function(e){
+				window.location.href = "/admin/notify/write";
 			});
 		});
 	</script>

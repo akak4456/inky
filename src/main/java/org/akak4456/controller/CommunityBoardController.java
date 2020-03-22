@@ -4,6 +4,7 @@ import java.io.IOException;
 
 import org.akak4456.constant.Constants;
 import org.akak4456.domain.CommunityBoard;
+import org.akak4456.error.IdExist;
 import org.akak4456.service.BoardService;
 import org.akak4456.service.RecommendService;
 import org.akak4456.vo.PageMaker;
@@ -107,25 +108,35 @@ public class CommunityBoardController {
 	@PreAuthorize("#userid == authentication.principal.member.uid")
 	@DeleteMapping("/delete/{bno}")
 	@ResponseBody
-	public ResponseEntity<String> deleteBoard(@PathVariable("bno") Long bno,String userid) throws IOException{
-		if(communityBoardService.deleteBoard(bno))
+	public ResponseEntity<String> deleteBoard(@PathVariable("bno") Long bno,String userid){
+		try {
+			communityBoardService.deleteBoard(bno);
 			return new ResponseEntity<>(Constants.BOARD_REMOVE_SUCCESS,HttpStatus.OK);
-		return new ResponseEntity<>(Constants.BOARD_REMOVE_FAIL,HttpStatus.INTERNAL_SERVER_ERROR);
+		}catch(IOException e) {
+			e.printStackTrace();
+			return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+		}
 	}
 	@Secured({"ROLE_BASIC","ROLE_ADMIN"})
 	@PostMapping("/recommend/{isupordown}")
 	@ResponseBody
 	public ResponseEntity<String> changeRecommend(@PathVariable("isupordown")String isupordown,@RequestBody RecommendVO recommend){
 		if(isupordown.equals("up")) {
-			if(recommendService.upRecommendcnt(recommend.getUserid(), recommend.getBno())) {
+			try {
+				recommendService.upRecommendcnt(recommend.getUserid(), recommend.getBno());
 				return new ResponseEntity<>(Constants.BOARD_RECOMMED_UP_SUCCESS,HttpStatus.OK);
-			}
-			return new ResponseEntity<>(Constants.BOARD_RECOMMEND_UP_FAIL,HttpStatus.BAD_REQUEST);
+			}catch(IdExist e) {
+				e.printStackTrace();
+				return new ResponseEntity<>(Constants.BOARD_RECOMMEND_UP_FAIL,HttpStatus.BAD_REQUEST);
+			}	
 		}else if(isupordown.equals("down")) {
-			if(recommendService.downRecommendcnt(recommend.getUserid(), recommend.getBno())) {
+			try {
+				recommendService.downRecommendcnt(recommend.getUserid(), recommend.getBno());
 				return new ResponseEntity<>(Constants.BOARD_RECOMMEND_DOWN_SUCCESS,HttpStatus.OK);
+			}catch(IdExist e) {
+				e.printStackTrace();
+				return new ResponseEntity<>(Constants.BOARD_RECOMMEND_DOWN_FAIL,HttpStatus.BAD_REQUEST);
 			}
-			return new ResponseEntity<>(Constants.BOARD_RECOMMEND_DOWN_FAIL,HttpStatus.BAD_REQUEST);
 		}
 		return null;
 	}

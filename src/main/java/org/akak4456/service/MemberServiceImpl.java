@@ -6,6 +6,13 @@ import java.util.List;
 import org.akak4456.constant.RegexpCheckConstants;
 import org.akak4456.domain.Member;
 import org.akak4456.domain.MemberRole;
+import org.akak4456.error.EmailExist;
+import org.akak4456.error.EmailNotAvailable;
+import org.akak4456.error.IdAndEmailNotMatch;
+import org.akak4456.error.IdExist;
+import org.akak4456.error.IdNotAvailable;
+import org.akak4456.error.IdNotExist;
+import org.akak4456.error.PasswordNotAvailable;
 import org.akak4456.persistence.MemberRepository;
 import org.akak4456.vo.MemberForm;
 import org.akak4456.vo.MemberModifyFormVO;
@@ -21,7 +28,7 @@ public class MemberServiceImpl implements MemberService {
 	private MemberRepository memberRepo;
 
 	@Override
-	public boolean addMember(MemberForm memberForm) {
+	public void addMember(MemberForm memberForm) {
 		// TODO Auto-generated method stub
 		String encryptPw = pwEncoder.encode(memberForm.getUpw());
 		List<MemberRole> roles = new ArrayList<>();
@@ -36,56 +43,52 @@ public class MemberServiceImpl implements MemberService {
 		member.setUploads(memberForm.getUploads());
 		member.setRoles(roles);
 		memberRepo.save(member);
-		return true;
 	}
 
 	@Override
-	public Idok ExistId(String uid) {
+	public void ExistId(String uid) throws IdExist, IdNotAvailable {
 		// TODO Auto-generated method stub
 		if (!uid.matches(RegexpCheckConstants.ID_REGEXP)) {
-			return Idok.NOTAVAILABLE;
+			throw new IdNotAvailable();
 		}
 		if (memberRepo.findById(uid).isPresent())
-			return Idok.EXIST;
-		return Idok.OK;
+			throw new IdExist();
 	}
 
 	@Override
-	public Emailok ExistEmail(String uemail) {
+	public void ExistEmail(String uemail) throws EmailExist, EmailNotAvailable {
 		// TODO Auto-generated method stub
 		if(!uemail.matches(RegexpCheckConstants.EMAIL_REGEXP))
-			return Emailok.NOTAVAILABLE;
+			throw new EmailNotAvailable();
 		if(memberRepo.findByUemail(uemail).size() > 0) {
-			return Emailok.EXIST;
+			throw new EmailExist();
 		}
-		return Emailok.OK;
 	}
 
 	@Override
-	public boolean ExistMemberForIdAndEmail(String uid, String uemail) {
+	public void ExistMemberForIdAndEmail(String uid, String uemail) throws IdNotExist,IdAndEmailNotMatch {
 		// TODO Auto-generated method stub
 		if(!memberRepo.findById(uid).isPresent())
 			//아이디가 존재하지 않으면
-			return false;
+			throw new IdNotExist();
 		Member mem = memberRepo.findById(uid).get();
 		if(!mem.getUemail().equals(uemail))
 			//기존 회원정보의 이메일과 같지 않으면
-			return false;
-		return true;
+			throw new IdAndEmailNotMatch();
 	}
 
 	@Override
-	public boolean updateMember(MemberModifyFormVO member) {
+	public void updateMember(MemberModifyFormVO member) throws IdNotExist,PasswordNotAvailable {
 		// TODO Auto-generated method stub
 		if(!memberRepo.findById(member.getUid()).isPresent())
-			return false;
+			throw new IdNotExist();
 		Member mem = memberRepo.findById(member.getUid()).get();
 		if(member.getUname() != null && member.getUname().length() > 0) {
 			mem.setUname(member.getUname());
 		}
 		if(member.getUpw() != null && member.getUpw().length() > 0) {
 			if(!member.getUpw().matches(RegexpCheckConstants.PW_REGEXP))
-				return false;
+				throw new PasswordNotAvailable();
 			String encryptPw = pwEncoder.encode(member.getUpw());
 			mem.setUpw(encryptPw);
 		}
@@ -94,15 +97,13 @@ public class MemberServiceImpl implements MemberService {
 			mem.getUploads().addAll(member.getUploads());
 		}
 		memberRepo.save(mem);
-		
-		return true;
 	}
 
 	@Override
-	public void updatePW(String uid, String upw) {
+	public void updatePW(String uid, String upw) throws IdNotExist {
 		// TODO Auto-generated method stub
 		if(!memberRepo.findById(uid).isPresent())
-			return;
+			throw new IdNotExist();
 		Member mem = memberRepo.findById(uid).get();
 		String encryptPw = pwEncoder.encode(upw);
 		mem.setUpw(encryptPw);

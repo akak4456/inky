@@ -1,24 +1,28 @@
 package org.akak4456.service;
 
+import org.akak4456.error.EmailExist;
+import org.akak4456.error.EmailNotAvailable;
+import org.akak4456.error.IdAndEmailNotMatch;
+import org.akak4456.error.IdExist;
+import org.akak4456.error.IdNotAvailable;
+import org.akak4456.error.IdNotExist;
+import org.akak4456.error.PasswordNotAvailable;
 import org.akak4456.vo.MemberForm;
 import org.akak4456.vo.MemberModifyFormVO;
 
 public interface MemberService {
-	enum Idok {EXIST,OK,NOTAVAILABLE};
 	
-	enum Emailok {EXIST,OK,NOTAVAILABLE};
+	public void addMember(MemberForm member);
 	
-	public boolean addMember(MemberForm member);
+	public void ExistId(String uid) throws IdExist, IdNotAvailable;
 	
-	public Idok ExistId(String uid);
+	public void ExistEmail(String uemail) throws EmailExist, EmailNotAvailable;
 	
-	public Emailok ExistEmail(String uemail);
+	public void ExistMemberForIdAndEmail(String uid,String uemail) throws IdNotExist,IdAndEmailNotMatch;
 	
-	public boolean ExistMemberForIdAndEmail(String uid,String uemail);
+	public void updatePW(String uid,String upw) throws IdNotExist;
 	
-	public void updatePW(String uid,String upw);
-	
-	public boolean updateMember(MemberModifyFormVO member);
+	public void updateMember(MemberModifyFormVO member) throws IdNotExist,PasswordNotAvailable;
 	
 	public void deleteMember(String uid);
 }

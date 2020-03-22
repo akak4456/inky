@@ -1,3 +1,4 @@
+
 package org.akak4456.service;
 
 import java.awt.image.BufferedImage;
@@ -25,6 +26,8 @@ import lombok.extern.java.Log;
 @Log
 public class FileServiceImpl implements FileService {
 	private static final String pathPrefix = "C:/upload";
+	
+	private static final String sep = File.separator;
 
 	private static final int thumbnailWidth = 100;
 
@@ -33,7 +36,7 @@ public class FileServiceImpl implements FileService {
 		// TODO Auto-generated method stub
 		// folder create
 		String time1 = createFolder();
-		String folderName = pathPrefix + "/" + time1;
+		String folderName = pathPrefix + sep + time1;
 		// file create
 		String fileName = null;
 		File tofile = null;
@@ -54,17 +57,15 @@ public class FileServiceImpl implements FileService {
 	@Override
 	public File getFile(String path, String fileName) throws IOException {
 		// TODO Auto-generated method stub
-		File file = null;
-		String totalFileName = pathPrefix + path + "/" + fileName;
-		file = new File(totalFileName);
+		String totalFileName = pathPrefix + path + sep + fileName;
+		File file = new File(totalFileName);
 		return file;
 	}
 
 	@Override
 	public boolean deleteFile(String path, String fileName) throws IOException {
 		// TODO Auto-generated method stub
-		File file = null;
-		file = new File(pathPrefix + path + "/" + fileName);
+		File file = new File(pathPrefix + path + sep + fileName);
 		if (!file.delete())
 			return false;
 		return true;
@@ -81,7 +82,7 @@ public class FileServiceImpl implements FileService {
 			time1 = createFolder();
 			UUID uuid = UUID.randomUUID();
 			fileName = uuid.toString() + "_" + profile.getOriginalFilename();
-			fos = new FileOutputStream(new File(pathPrefix + "/" + time1 + "/" + fileName));
+			fos = new FileOutputStream(new File(pathPrefix + sep + time1 + sep + fileName));
 
 			baos = createThumbnail(profile, thumbnailWidth);
 
@@ -103,7 +104,7 @@ public class FileServiceImpl implements FileService {
 		SimpleDateFormat format1 = new SimpleDateFormat("yyyy/MM/dd");
 		Date time = new Date();
 		String time1 = format1.format(time);
-		String folderName = pathPrefix + "/" + time1;
+		String folderName = pathPrefix + sep + time1;
 		Path path = Paths.get(folderName);
 
 		if (!Files.exists(path)) {
@@ -120,7 +121,7 @@ public class FileServiceImpl implements FileService {
 			thumbOutput = new ByteArrayOutputStream();
 			img = ImageIO.read(orginalFile.getInputStream());
 			thumbImg = Scalr.resize(img, Scalr.Method.AUTOMATIC, Scalr.Mode.AUTOMATIC, width, Scalr.OP_ANTIALIAS);
-			ImageIO.write(thumbImg, orginalFile.getContentType().split("/")[1], thumbOutput);
+			ImageIO.write(thumbImg, orginalFile.getContentType().split(sep)[1], thumbOutput);
 		} catch (IOException e) {
 			throw e;
 		} finally {

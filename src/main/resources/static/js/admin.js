@@ -54,10 +54,23 @@ var adminManager = (function(){
 			}
 		});
 	}
+	var removeAllReport = function(sendData,successCallback,errorCallback){
+		$.ajax({
+			type:'delete',
+			url:'/admin/report/deleteAll',
+			success:function(result){
+				alert(result);
+			},
+			error:function(error){
+				console.log(error);
+			}
+		});
+	}
 	return {
 		upgradeToAdmin : upgradeToAdmin,
 		removeFromAdmin : removeFromAdmin,
 		blockUser:blockUser,
+		removeAllReport:removeAllReport,
 		unblockUser:unblockUser
 	};
 })();

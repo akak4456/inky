@@ -18,22 +18,20 @@ public class ReplyService<B extends Board,R extends Reply> {
 	@Autowired
 	private ReplyRepository<R> replyRepo;
 	@Transactional
-	public boolean addReply(R reply) {
+	public void addReply(R reply) {
 		// TODO Auto-generated method stub
 		B board = boardRepo.findById(reply.getBoard().getBno()).get();
 		board.setReplycnt(board.getReplycnt()+1);
 		boardRepo.save(board);
 		//board reply 수 증가
 		replyRepo.save(reply);
-		return true;
 	}
 	@Transactional
-	public boolean updateReply(R reply) {
+	public void updateReply(R reply) {
 		// TODO Auto-generated method stub
 		R newReply = replyRepo.findById(reply.getRno()).get();
 		newReply.setReply(reply.getReply());
 		replyRepo.save(newReply);
-		return true;
 	}
 	@Transactional
 	public Page<R> getListWithPaging(Long bno,Pageable pageable) {
@@ -42,7 +40,7 @@ public class ReplyService<B extends Board,R extends Reply> {
 		//return replyRepo.findAll(replyRepo.makePredicate(),pageable);
 	}
 	@Transactional
-	public boolean deleteReply(Long rno) {
+	public void deleteReply(Long rno) {
 		// TODO Auto-generated method stub
 		R newReply = replyRepo.findById(rno).get();
 		B board = boardRepo.findById(newReply.getBoard().getBno()).get();
@@ -53,6 +51,5 @@ public class ReplyService<B extends Board,R extends Reply> {
 		newReply.setReply("삭제된 내용");
 		newReply.setIsdelete('Y');
 		replyRepo.save(newReply);
-		return true;
 	}
 }
