@@ -6,6 +6,7 @@ var notifyManager = (function(){
 			data:JSON.stringify(obj),
 			contentType:"application/json",
 			success:callback ||function(result){
+				alert("공지를 올렸습니다!");
 				window.location.href = "/admin/main";
 			},
 			error:errorCallback||function(error){

@@ -1,0 +1,63 @@
+<html xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	xmlns:sec="http://www.thymeleaf.org/extras/spring-security"
+	layout:decorate="~{/layout/admin_main_layout}">
+<head>
+<meta charset="utf-8">
+<style>
+.board-body .ck-editor__editable_inline {
+	min-height: 400px;
+}
+
+.btn {
+	margin-right: 5px;
+}
+
+ul {
+	list-style-type: none;
+}
+
+.replier span {
+	font-size: 20px;
+}
+
+.reply-content .ck-editor__main {
+	background-color: red;
+}
+</style>
+</head>
+<section layout:fragment="content">
+	<div class="card" th:with="auth=${#authentication.principal} ">
+		<div class="card-header">
+			<h1>공지사항</h1>
+		</div>
+		<div class="card-body board-body">
+			<div class="form-group">
+				<label>제목</label> <input class="form-control" type="text"
+					name="title" th:value="${board.title}" readonly="readonly">
+			</div>
+			<div class="form-group">
+				<label>내용</label>
+				<div class="editor"></div>
+			</div>
+			<button class="btn btn-primary float-right" id="retBtn">돌아가기</button>
+		</div>
+	</div>
+</section>
+<th:block layout:fragment="script">
+	<script
+		src="https://cdn.ckeditor.com/ckeditor5/16.0.0/classic/ckeditor.js"></script>
+	<script th:inline="javascript"
+		th:src="@{'/js/classiceditorReadonly.js'}"></script>
+	<script th:inline="javascript">
+$(document).ready(function(e){
+	//게시판 관련
+	editoro.setData([[${board.content}]]);
+	$("#retBtn").on("click",function(e){
+		e.preventDefault();
+		window.location.href = "/admin/notify/list";
+	});
+});
+</script>
+</th:block>
+</html>

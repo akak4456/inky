@@ -27,7 +27,7 @@ var boardManager = (function(){
 				formObj.submit();
 			},
 			error:errorCallback||function(error){
-				alert(error.responseText);
+				alert("제목과 내용은 비어있지 않아야 하며, 제목의 최대 글자수는 100자 입니다");
 				console.log(error);
 			}
 		});
@@ -50,7 +50,7 @@ var boardManager = (function(){
 				formObj.submit();
 			},
 			error:errorCallback||function(error){
-				alert(error.responseText);
+				alert("제목과 내용은 비어있지 않아야 하며, 제목의 최대 글자수는 100자 입니다");
 				console.log(error);
 			}
 		});

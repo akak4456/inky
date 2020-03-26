@@ -14,6 +14,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -113,5 +114,16 @@ public class AdminController {
 	public ResponseEntity<String> writePost(@RequestBody NotifyBoard board) {
 		notifyBoardService.save(board);
 		return new ResponseEntity<>("success",HttpStatus.OK);
+	}
+	@GetMapping("/notify/list")
+	public void getList(PageVO pageVO,Model model) {
+		Page<NotifyBoard> boards = notifyBoardService.getList(pageVO.makePageable(0, "bno"));
+		model.addAttribute("pageVO",pageVO);
+		model.addAttribute("result",new PageMaker<NotifyBoard>(boards));
+	}
+	@GetMapping("/notify/getOne/{bno}")
+	public String getOne(@PathVariable("bno") Long bno,Model model) {
+		model.addAttribute("board",notifyBoardService.getOne(bno));
+		return "/admin/notify/oneBoard";
 	}
 }

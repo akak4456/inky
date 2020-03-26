@@ -1,0 +1,73 @@
+<html xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	xmlns:sec="http://www.thymeleaf.org/extras/spring-security"
+	layout:decorate="~{/layout/admin_main_layout}">
+<head>
+<meta charset="utf-8">
+<style>
+</style>
+</head>
+<section layout:fragment="content">
+	<div class="card">
+		<div class="card-header">
+			<div>
+				<h2 class="float-left">공지사항</h2>
+				<button class="float-right btn btn-success" id="retBtn">돌아가기</button>
+			</div>
+		</div>
+		<div class="card-body">
+			<ul class="list-group">
+				<li class="list-group-item" th:each="board:${result.result.content}">
+					<table width="100%">
+						<tr>
+							<td class="bno" width="20%">#[[${board.bno}]]</td>
+							<td class="title" width="80%"><a th:href="${board.bno}">[[${board.title}]]</a></td>
+						</tr>
+					</table>
+				</li>
+			</ul>
+		</div>
+		<div class="mx-auto">
+			<ul class="pagination">
+				<li class="page-item" th:if="${result.prevPage}"><a
+					class="page-link" th:href="${result.prevPage.pageNumber}+1">PREV</a></li>
+
+				<li class="page-item"
+					th:classappend="${p.pageNumber == result.currentPageNum -1}?active:''"
+					th:each="p:${result.pageList}"><a class="page-link"
+					th:href="${p.pageNumber}+1">[[${p.pageNumber}+1]]</a></li>
+
+				<li class="page-item" th:if="${result.nextPage}"><a
+					class="page-link" th:href="${result.nextPage.pageNumber}+1">NEXT</a></li>
+			</ul>
+		</div>
+	</div>
+	<form id="f1">
+		<input type="hidden" name="page" th:value="${pageVO.page}">
+	</form>
+</section>
+<th:block layout:fragment="script">
+	<script th:inline="javascript">
+$(document).ready(function(){
+	var formObj = $("#f1");
+	var loc = window.location.href.toString().split(window.location.host)[1];
+	loc = loc.substring(0,loc.indexOf("?"))+"?"+$('#f1').find('input[name!=dest]').serialize();
+	console.log(loc);
+	$(".card-body li a").on("click",function(e){
+		e.preventDefault();
+		window.location.href = "/admin/notify/getOne/"+$(this).attr('href');
+	});
+	$("#retBtn").on("click",function(e){
+		window.location.href = "/";
+	});
+	$(".pagination a").on("click",function(e){
+		e.preventDefault();
+		var url ="/admin/notify/list";
+		formObj.attr("action",url);
+		formObj.find("[name='page']").val($(this).attr("href"));
+		formObj.submit();
+	});
+});
+</script>
+</th:block>
+</html>
