@@ -13,6 +13,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.annotation.Secured;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -36,10 +37,11 @@ public class AdminController {
 	@Autowired
 	private NotifyBoardService notifyBoardService;
 	//main
+	@Secured({"ROLE_ADMIN"})
 	@GetMapping("/main")
 	public void main() {
 	}
-	
+	@Secured({"ROLE_ADMIN"})
 	@PostMapping("/upgradeToAdmin/{upgradeId}")
 	public ResponseEntity<String> upgradeToAdmin(@PathVariable("upgradeId")String upgradeId){
 		try {
@@ -50,7 +52,7 @@ public class AdminController {
 			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
 		}	
 	}
-	
+	@Secured({"ROLE_ADMIN"})
 	@DeleteMapping("/removeFromAdmin/{removeId}")
 	public ResponseEntity<String> removeFromAdmin(@PathVariable("removeId")String removeId){
 		try {
@@ -61,6 +63,7 @@ public class AdminController {
 			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
 		}
 	}
+	@Secured({"ROLE_ADMIN"})
 	@PostMapping("/blockUser/{blockId}")
 	public ResponseEntity<String> blockUser(@PathVariable("blockId")String blockId){
 		try {
@@ -70,6 +73,7 @@ public class AdminController {
 			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
 		}
 	}
+	@Secured({"ROLE_ADMIN"})
 	@PostMapping("/unblockUser/{unblockId}")
 	public ResponseEntity<String> unblockUser(@PathVariable("unblockId")String blockId){
 		try {
@@ -80,9 +84,11 @@ public class AdminController {
 		}
 	}
 	//report
+	@Secured({"ROLE_ADMIN"})
 	@GetMapping("/report/list")
 	public void list() {
 	}
+	@Secured({"ROLE_ADMIN"})
 	@GetMapping("/report/listPage")
 	@ResponseBody
 	public ResponseEntity<PageMaker<Report>> listPage(PageVO pageVO){
@@ -90,12 +96,14 @@ public class AdminController {
 		result = reportService.getListWithPaging(pageVO.makePageable(0, "rno"));
 		return new ResponseEntity<>(new PageMaker<Report>(result),HttpStatus.OK);
 	}
+	@Secured({"ROLE_BASIC","ROLE_ADMIN"})
 	@PostMapping("/report/writeReport")
 	@ResponseBody
 	public ResponseEntity<String> writeReport(@RequestBody Report report){
 		reportService.writeReport(report);
 		return new ResponseEntity<>(Constants.REPORT_SUCCESS,HttpStatus.OK);
 	}
+	@Secured({"ROLE_ADMIN"})
 	@DeleteMapping("/report/deleteAll")
 	@ResponseBody
 	public ResponseEntity<String> deleteAll(){
@@ -105,10 +113,12 @@ public class AdminController {
 	
 	
 	//notify
+	@Secured({"ROLE_ADMIN"})
 	@GetMapping("/notify/write")
 	public void write() {
 		
 	}
+	@Secured({"ROLE_ADMIN"})
 	@PostMapping("/notify/write")
 	@ResponseBody
 	public ResponseEntity<String> writePost(@RequestBody NotifyBoard board) {

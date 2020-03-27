@@ -27,6 +27,10 @@
 					th:if="${#authentication.principal} ne 'anonymousUser'"><a
 					class="nav-link getmy" href="#"><i
 						class="glyphicon glyphicon-user"></i> <span>마이페이지</span></a></li>
+				<li class="nav-item"
+					th:if="${#authentication.principal} ne 'anonymousUser'"><a
+					class="nav-link" href="/logout"><i
+						class="glyphicon glyphicon-user"></i> <span>로그아웃</span></a></li>
 				<li class="nav-item dropdown"><a
 					class="nav-link dropdown-toggle" href="#" id="navbarDropdown"
 					role="button" data-toggle="dropdown" aria-haspopup="true"

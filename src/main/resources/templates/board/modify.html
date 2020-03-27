@@ -32,7 +32,7 @@
 				<label>내용</label>
 				<div id="editor"></div>
 			</div>
-			<button class="btn float-right">취소</button>
+			<button class="btn float-right" id="undo">취소</button>
 			<button class="btn btn-primary float-right" id="modify">수정하기</button>
 			<button class="btn btn-danger float-right" id="delete">삭제하기</button>
 		</div>
@@ -58,6 +58,14 @@ $(document).ready(function(){
 		loc:loc,
 		bno:[[${board.bno}]]
 	});
+	$("#undo").on("click",function(e){
+		e.preventDefault();
+		var url = "/"+[[${boardkindEN}]]+"/getOne/"+[[${board.bno}]];
+		console.log(url);
+		formObj.find("[name='dest']").val(loc);
+		formObj.attr("action",url);
+		formObj.submit();
+	})
 	$("#modify").on("click",function(e){
 		var saveData = {
 			title:$("input[name='title']").val(),

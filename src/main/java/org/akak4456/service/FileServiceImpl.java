@@ -121,8 +121,9 @@ public class FileServiceImpl implements FileService {
 			thumbOutput = new ByteArrayOutputStream();
 			img = ImageIO.read(orginalFile.getInputStream());
 			thumbImg = Scalr.resize(img, Scalr.Method.AUTOMATIC, Scalr.Mode.AUTOMATIC, width, Scalr.OP_ANTIALIAS);
-			ImageIO.write(thumbImg, orginalFile.getContentType().split(sep)[1], thumbOutput);
+			ImageIO.write(thumbImg, orginalFile.getContentType().split("/")[1], thumbOutput);
 		} catch (IOException e) {
+			e.printStackTrace();
 			throw e;
 		} finally {
 		}

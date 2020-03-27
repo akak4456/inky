@@ -63,11 +63,7 @@ hr {
 			console.log(loc);
 			$(".getmy").on("click", function(e) {
 				e.preventDefault();
-				var url = "/member/getmy";
-				console.log(url);
-				formObj.find("[name='dest']").val(loc);
-				formObj.attr("action", url);
-				formObj.submit();
+				window.location.href="/member/getmy";
 			});
 		});
 	</script>

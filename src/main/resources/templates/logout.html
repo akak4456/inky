@@ -5,6 +5,9 @@
 <head>
 <meta charset="utf-8">
 <style>
+h3,h6{
+color:white;
+}
 </style>
 </head>
 <section layout:fragment="content">
@@ -21,11 +24,11 @@
 							th:value="${_csrf.token}" />
 						<div class="form-group">
 							<input type="submit" value="돌아가기"
-								class="btn float-right redo_btn">
+								class="btn float-right member_btn redo_btn">
 						</div>
 						<div class="form-group">
 							<input type="submit" value="로그아웃"
-								class="btn float-right membeer_btn">
+								class="btn float-right member_btn">
 						</div>
 					</form>
 				</div>
@@ -33,4 +36,14 @@
 		</div>
 	</div>
 </section>
+<th:block layout:fragment="script">
+	<script th:inline="javascript">
+$(document).ready(function(){
+	$(".redo_btn").on("click",function(e){
+		e.preventDefault();
+		window.location.href = "/";
+	});
+});
+</script>
+</th:block>
 </html>

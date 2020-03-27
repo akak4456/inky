@@ -56,6 +56,7 @@ var memberManager = (function(){
 		}
 	}
 	var fileUpload = function(sendData,successCallback,errorCallback){
+		console.log(sendData);
 		$.ajax({
 			url : "/profileUpload",
 			type : "POST",
