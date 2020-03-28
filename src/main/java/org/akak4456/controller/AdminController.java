@@ -36,6 +36,7 @@ public class AdminController {
 	private ReportService reportService;
 	@Autowired
 	private NotifyBoardService notifyBoardService;
+	
 	//main
 	@Secured({"ROLE_ADMIN"})
 	@GetMapping("/main")
