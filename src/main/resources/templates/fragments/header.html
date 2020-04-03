@@ -17,15 +17,15 @@
 			<ul class="navbar-nav mr-auto">
 				<li class="nav-item"
 					th:if="${#authentication.principal} eq 'anonymousUser'"><a
-					class="nav-link" href="#"><i class="glyphicon glyphicon-pencil"></i>
+					class="nav-link" href="/login"><i class="glyphicon glyphicon-pencil"></i>
 						</i><span>로그인</span> </a></li>
 				<li class="nav-item"
 					th:if="${#authentication.principal} eq 'anonymousUser'"><a
-					class="nav-link" href="#"><i class="glyphicon glyphicon-user"></i>
+					class="nav-link" href="/member/join"><i class="glyphicon glyphicon-user"></i>
 						<span>회원가입</span></a></li>
 				<li class="nav-item"
 					th:if="${#authentication.principal} ne 'anonymousUser'"><a
-					class="nav-link getmy" href="#"><i
+					class="nav-link getmy" href="/member/getmy"><i
 						class="glyphicon glyphicon-user"></i> <span>마이페이지</span></a></li>
 				<li class="nav-item"
 					th:if="${#authentication.principal} ne 'anonymousUser'"><a
@@ -36,11 +36,11 @@
 					role="button" data-toggle="dropdown" aria-haspopup="true"
 					aria-expanded="false"> 게시판 종류 </a>
 					<div class="dropdown-menu" aria-labelledby="navbarDropdown">
-						<a class="dropdown-item" href="#"><i
+						<a class="dropdown-item" href="/qna/list"><i
 							class="glyphicon glyphicon-search"></i> <span>QnA</span></a> <a
-							class="dropdown-item" href="#"><i
+							class="dropdown-item" href="/community/list"><i
 							class="glyphicon glyphicon-heart-empty"></i> <span>커뮤니티</span></a> <a
-							class="dropdown-item" href="#"><i
+							class="dropdown-item" href="/tech/list"><i
 							class="glyphicon glyphicon-star-empty"></i> <span>Tech</span></a>
 					</div></li>
 			</ul>

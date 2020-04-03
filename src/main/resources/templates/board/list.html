@@ -23,7 +23,6 @@
 						<button type="button" class="btn btn-secondary"
 							id="orderByRecommend">추천순</button>
 						<button type="button" class="btn btn-secondary" id="orderByReply">댓글순</button>
-						<button type="button" class="btn btn-secondary" id="orderByView">조회순</button>
 					</div>
 					<div class="col-lg-9 form-group h-25">
 						<select id="searchType" class="form-control w-25 float-left">
@@ -147,14 +146,6 @@ $(document).ready(function(){
 		var url ="/"+[[${boardkindEN}]]+"/list";
 		console.log(url);
 		formObj.find("[name='orderBy']").val("2");
-		formObj.find("[name='dest']").val(loc);
-		formObj.attr("action",url);
-		formObj.submit();
-	});
-	$("#orderByView").on("click",function(e){
-		var url ="/"+[[${boardkindEN}]]+"/list";
-		console.log(url);
-		formObj.find("[name='orderBy']").val("3");
 		formObj.find("[name='dest']").val(loc);
 		formObj.attr("action",url);
 		formObj.submit();

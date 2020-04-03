@@ -2,6 +2,8 @@ package org.akak4456.controller;
 
 import org.akak4456.domain.CommunityBoard;
 import org.akak4456.domain.NotifyBoard;
+import org.akak4456.domain.QnABoard;
+import org.akak4456.domain.TechBoard;
 import org.akak4456.service.BoardService;
 import org.akak4456.service.NotifyBoardService;
 import org.akak4456.vo.PageMaker;
@@ -22,11 +24,21 @@ public class IndexController {
 	@Qualifier("communityBoardServiceImpl")
 	private BoardService communityBoardService;
 	@Autowired
+	@Qualifier("techBoardServiceImpl")
+	private BoardService techBoardService;
+	@Autowired
+	@Qualifier("qnABoardServiceImpl")
+	private BoardService qnaBoardService;
+	@Autowired
 	private NotifyBoardService notifyBoardService;
 	@GetMapping("/")
 	public String getIndex(Model model) {
 		Page<CommunityBoard> community = communityBoardService.getListWithPaging(null, null, new PageVO().makePageable(0, "bno"));
+		Page<TechBoard> tech = techBoardService.getListWithPaging(null, null, new PageVO().makePageable(0, "bno"));
+		Page<QnABoard> qna = qnaBoardService.getListWithPaging(null, null, new PageVO().makePageable(0, "bno"));
 		model.addAttribute("community", new PageMaker<CommunityBoard>(community));
+		model.addAttribute("tech", new PageMaker<TechBoard>(tech));
+		model.addAttribute("qna", new PageMaker<QnABoard>(qna));
 		Page<NotifyBoard> notify = notifyBoardService.getList(new PageVO().makePageable(0, "bno"));
 		model.addAttribute("notify", new PageMaker<NotifyBoard>(notify));
 		model.addAttribute("pageVO",new PageVO());

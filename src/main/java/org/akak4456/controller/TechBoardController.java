@@ -54,10 +54,6 @@ public class TechBoardController {
 		}else if(pageVO.getOrderBy() == 2) {
 			//댓글순
 			order = pageVO.makePageable(0, "replycnt");
-		}else if(pageVO.getOrderBy() == 3) {
-			//조회순
-			order = pageVO.makePageable(0, "bno");
-			//order = pageVO.makePageable(0, props)
 		}
 		Page<TechBoard> boards = boardService.getListWithPaging(pageVO.getType(), pageVO.getKeyword(), 
 				order);
@@ -95,14 +91,14 @@ public class TechBoardController {
 	@Secured({"ROLE_BASIC","ROLE_ADMIN"})
 	@PostMapping("/write")
 	@ResponseBody
-	public ResponseEntity<String> addBoard(@RequestBody CommunityBoard board){
+	public ResponseEntity<String> addBoard(@RequestBody TechBoard board){
 		boardService.save(board);
 		return new ResponseEntity<>(Constants.BOARD_ADD_SUCCESS,HttpStatus.OK);
 	}
 	@PreAuthorize("#board.userid == authentication.principal.member.uid")
 	@PutMapping("/modify/{bno}")
 	@ResponseBody
-	public ResponseEntity<String> modifyBoard(@RequestBody CommunityBoard board){
+	public ResponseEntity<String> modifyBoard(@RequestBody TechBoard board){
 		boardService.update(board);
 		return new ResponseEntity<>(Constants.BOARD_MODIFY_SUCCESS,HttpStatus.OK);
 	}

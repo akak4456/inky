@@ -3,7 +3,8 @@ package org.akak4456.controller;
 import java.io.IOException;
 
 import org.akak4456.constant.Constants;
-import org.akak4456.domain.CommunityBoard;
+import org.akak4456.domain.QnABoard;
+import org.akak4456.domain.TechBoard;
 import org.akak4456.error.IdExist;
 import org.akak4456.service.BoardService;
 import org.akak4456.service.RecommendService;
@@ -33,13 +34,13 @@ import lombok.extern.java.Log;
 
 @Controller
 @Log
-@RequestMapping("/community/**")
-public class CommunityBoardController {
+@RequestMapping("/qna/**")
+public class QnABoardController {
 	@Autowired
-	@Qualifier("communityBoardServiceImpl")
-	private BoardService communityBoardService;
+	@Qualifier("qnABoardServiceImpl")
+	private BoardService boardService;
 	@Autowired
-	@Qualifier("communityRecommendServiceImpl")
+	@Qualifier("qnARecommendServiceImpl")
 	private RecommendService recommendService;
 	@GetMapping("/list") 
 	public String method2(PageVO pageVO,Model model) {
@@ -54,51 +55,51 @@ public class CommunityBoardController {
 			//댓글순
 			order = pageVO.makePageable(0, "replycnt");
 		}
-		Page<CommunityBoard> boards = communityBoardService.getListWithPaging(pageVO.getType(), pageVO.getKeyword(), 
+		Page<QnABoard> boards = boardService.getListWithPaging(pageVO.getType(), pageVO.getKeyword(), 
 				order);
 		model.addAttribute("pageVO",pageVO);
-		model.addAttribute("boardkindKO","커뮤니티");
-		model.addAttribute("boardkindEN","community");
-		model.addAttribute("result", new PageMaker<CommunityBoard>(boards));
+		model.addAttribute("boardkindKO","QnA");
+		model.addAttribute("boardkindEN","qna");
+		model.addAttribute("result", new PageMaker<QnABoard>(boards));
 		return "/board/list"; 
 	}
 	@GetMapping("/getOne/{bno}")
 	public String getBoard(@PathVariable("bno")Long bno,PageVO pageVO,Model model) {
-		model.addAttribute("board",communityBoardService.getOne(bno));
+		model.addAttribute("board",boardService.getOne(bno));
 		model.addAttribute("pageVO", pageVO);
-		model.addAttribute("boardkindKO","커뮤니티");
-		model.addAttribute("boardkindEN","community");
+		model.addAttribute("boardkindKO","QnA");
+		model.addAttribute("boardkindEN","qna");
 		return "/board/oneBoard";
 	}
 	@Secured({"ROLE_BASIC","ROLE_ADMIN"})
 	@GetMapping("/modify/{bno}")
 	public String modifyBoard(@PathVariable("bno")Long bno,PageVO pageVO,Model model) {
-		model.addAttribute("board",communityBoardService.getOne(bno));
+		model.addAttribute("board",boardService.getOne(bno));
 		model.addAttribute("pageVO",pageVO);
-		model.addAttribute("boardkindKO","커뮤니티");
-		model.addAttribute("boardkindEN","community");
+		model.addAttribute("boardkindKO","QnA");
+		model.addAttribute("boardkindEN","qna");
 		return "/board/modify";
 	}
 	@Secured({"ROLE_BASIC","ROLE_ADMIN"})
 	@GetMapping("/write") 
 	public String writeget(PageVO pageVO,Model model) { 
 		model.addAttribute("pageVO",pageVO);
-		model.addAttribute("boardkindKO","커뮤니티");
-		model.addAttribute("boardkindEN","community");
+		model.addAttribute("boardkindKO","QnA");
+		model.addAttribute("boardkindEN","qna");
 		return "/board/write"; 
 	}
 	@Secured({"ROLE_BASIC","ROLE_ADMIN"})
 	@PostMapping("/write")
 	@ResponseBody
-	public ResponseEntity<String> addBoard(@RequestBody CommunityBoard board){
-		communityBoardService.save(board);
+	public ResponseEntity<String> addBoard(@RequestBody QnABoard board){
+		boardService.save(board);
 		return new ResponseEntity<>(Constants.BOARD_ADD_SUCCESS,HttpStatus.OK);
 	}
 	@PreAuthorize("#board.userid == authentication.principal.member.uid")
 	@PutMapping("/modify/{bno}")
 	@ResponseBody
-	public ResponseEntity<String> modifyBoard(@RequestBody CommunityBoard board){
-		communityBoardService.update(board);
+	public ResponseEntity<String> modifyBoard(@RequestBody QnABoard board){
+		boardService.update(board);
 		return new ResponseEntity<>(Constants.BOARD_MODIFY_SUCCESS,HttpStatus.OK);
 	}
 	@PreAuthorize("#userid == authentication.principal.member.uid")
@@ -106,7 +107,7 @@ public class CommunityBoardController {
 	@ResponseBody
 	public ResponseEntity<String> deleteBoard(@PathVariable("bno") Long bno,String userid){
 		try {
-			communityBoardService.deleteBoard(bno);
+			boardService.deleteBoard(bno);
 			return new ResponseEntity<>(Constants.BOARD_REMOVE_SUCCESS,HttpStatus.OK);
 		}catch(IOException e) {
 			e.printStackTrace();

@@ -56,6 +56,60 @@
 					</div>
 				</div>
 			</div>
+			<div class="col-lg-6">
+				<div class="card h-100">
+					<div class="card-header">
+						<h2>테크</h2>
+					</div>
+					<div class="card-body tech">
+						<ul class="list-group">
+							<li class="list-group-item" th:each="board:${tech.result.content}">
+								<table width="100%">
+									<tr>
+										<td class="bno" width="60%">#[[${board.bno}]]</td>
+										<td rowspan="2" width="30%">[[${board.userid}]]</td>
+										<td rowspan="2" width="20%">
+										[[${#strings.replace(board.regdate,'T',' ')}]]</td>
+									</tr>
+									<tr>
+										<td class="title" colspan="2"><a th:href="${board.bno}">[[${board.title}]]</a>
+										<span th:if="${board.recommendcnt != 0}"><i
+										class="far fa-thumbs-up"></i>[[${board.recommendcnt}]]</span> <span
+										th:if="${board.replycnt != 0}"><i class="far fa-comments"></i>[[${board.replycnt}]]</span></td>
+									</tr>
+								</table>
+							</li>
+						</ul>
+					</div>
+				</div>
+			</div>
+			<div class="col-lg-6">
+				<div class="card h-100">
+					<div class="card-header">
+						<h2>QnA</h2>
+					</div>
+					<div class="card-body qna">
+						<ul class="list-group">
+							<li class="list-group-item" th:each="board:${qna.result.content}">
+								<table width="100%">
+									<tr>
+										<td class="bno" width="60%">#[[${board.bno}]]</td>
+										<td rowspan="2" width="30%">[[${board.userid}]]</td>
+										<td rowspan="2" width="20%">
+										[[${#strings.replace(board.regdate,'T',' ')}]]</td>
+									</tr>
+									<tr>
+										<td class="title" colspan="2"><a th:href="${board.bno}">[[${board.title}]]</a>
+										<span th:if="${board.recommendcnt != 0}"><i
+										class="far fa-thumbs-up"></i>[[${board.recommendcnt}]]</span> <span
+										th:if="${board.replycnt != 0}"><i class="far fa-comments"></i>[[${board.replycnt}]]</span></td>
+									</tr>
+								</table>
+							</li>
+						</ul>
+					</div>
+				</div>
+			</div>
 		</div>
 		<div class="row">
 			<div class="col-lg-6">
@@ -76,6 +130,22 @@ $(document).ready(function(){
 	$(".community li a").on("click",function(e){
 		e.preventDefault();
 		var url = "/community/getOne/"+$(this).attr('href');
+		console.log(url);
+		formObj.find("[name='dest']").val(loc);
+		formObj.attr("action",url);
+		formObj.submit();
+	});
+	$(".tech li a").on("click",function(e){
+		e.preventDefault();
+		var url = "/tech/getOne/"+$(this).attr('href');
+		console.log(url);
+		formObj.find("[name='dest']").val(loc);
+		formObj.attr("action",url);
+		formObj.submit();
+	});
+	$(".qna li a").on("click",function(e){
+		e.preventDefault();
+		var url = "/qna/getOne/"+$(this).attr('href');
 		console.log(url);
 		formObj.find("[name='dest']").val(loc);
 		formObj.attr("action",url);
